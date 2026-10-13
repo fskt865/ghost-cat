@@ -1,0 +1,3069 @@
+{
+ "area": "street",
+ "description": "the street block at night: the coffee shop (warm sill, a little table with two chairs and tiny cups, the chalkboard, a pop-up espresso cart), the alley mouth with the tabby's nook, the corner shop, the ramen window, the grill and the burger stand; two streetlamps with moths, string lights across the street, puddles with the moon in them, steam from the ramen window and the drains, the park at the end",
+ "size_m": [
+  12,
+  24
+ ],
+ "coords": "three.js/glTF metres: +Y up, piece fronts face +Z, position = piece origin (ASSETS.md), rotationY radians",
+ "schema": {
+  "pieces": "id = the lines.js thing id (or a name the game uses); role: static (merged) | prop (batched, can wobble) | keep (its own mesh: it has nodes that move); collide: mesh (default) | none",
+  "things": "every touchable / secret spot: id (lines.js things[] / secrets[] / cats[]), kind thing|secret|cat|door, position (where to stand or the thing's centre), radius (touch range), piece (index into pieces), node (glb child node or anchor that moves or marks the spot)",
+  "lights": "three.js PointLight(colour, intensity, distance, decay 2) as src/layout.js reads it (halo, flicker, pool). priority 1 = a real light; priority 2 = halo + pool only (intensity 0, the value is in intensity_full)",
+  "spots": "touch points with no piece of their own (secrets, nodes on a bigger piece): {id, position}",
+  "fx": "particles the engine draws: steam (rising wisps), moths (circle a lamp), fireflies (drift in a box), drips",
+  "routes": "safe climbs: waypoints are surfaces Ghost stands on in order (top = surface height); every step up <= 0.85 m and every gap <= 2.0 m"
+ },
+ "ambient": {
+  "sky_top": "#090c26",
+  "sky_horizon": "#2b3a78",
+  "hemisphere": {
+   "sky": "#4a58a0",
+   "ground": "#2a2036",
+   "intensity": 0.45
+  },
+  "moon": {
+   "colour": "#8d9ee8",
+   "intensity": 0.18,
+   "direction": [
+    -0.35,
+    -0.5,
+    -0.8
+   ]
+  },
+  "fog": {
+   "colour": "#161a3e",
+   "near": 9,
+   "far": 34
+  },
+  "haze": "thin; lamps glow in it (bloom)"
+ },
+ "ground": [
+  {
+   "name": "under",
+   "top_y": -0.02,
+   "centre": [
+    0,
+    -0.02,
+    -2.0
+   ],
+   "size_xz": [
+    30,
+    34
+   ],
+   "colour": "#22202e",
+   "thickness": 0.2
+  }
+ ],
+ "pieces": [
+  {
+   "glb": "assets/outdoor/street_4m.glb",
+   "position": [
+    0,
+    0,
+    8
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/sidewalk_4m.glb",
+   "position": [
+    -4.25,
+    0,
+    8
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/sidewalk_4m.glb",
+   "position": [
+    4.25,
+    0,
+    8
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/street_4m.glb",
+   "position": [
+    0,
+    0,
+    4
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/sidewalk_4m.glb",
+   "position": [
+    -4.25,
+    0,
+    4
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/sidewalk_4m.glb",
+   "position": [
+    4.25,
+    0,
+    4
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/street_4m.glb",
+   "position": [
+    0,
+    0,
+    0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/sidewalk_4m.glb",
+   "position": [
+    -4.25,
+    0,
+    0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/sidewalk_4m.glb",
+   "position": [
+    4.25,
+    0,
+    0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/street_4m.glb",
+   "position": [
+    0,
+    0,
+    -4
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/sidewalk_4m.glb",
+   "position": [
+    -4.25,
+    0,
+    -4
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/sidewalk_4m.glb",
+   "position": [
+    4.25,
+    0,
+    -4
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/crosswalk_4m.glb",
+   "position": [
+    0,
+    0,
+    -8
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/sidewalk_4m.glb",
+   "position": [
+    -4.25,
+    0,
+    -8
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/sidewalk_4m.glb",
+   "position": [
+    4.25,
+    0,
+    -8
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/sidewalk_4m.glb",
+   "position": [
+    -4,
+    0,
+    -11.25
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static",
+   "note": "the park's sidewalk across the far end"
+  },
+  {
+   "glb": "assets/outdoor/sidewalk_4m.glb",
+   "position": [
+    0,
+    0,
+    -11.25
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static",
+   "note": "the park's sidewalk across the far end"
+  },
+  {
+   "glb": "assets/outdoor/sidewalk_4m.glb",
+   "position": [
+    4,
+    0,
+    -11.25
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static",
+   "note": "the park's sidewalk across the far end"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    -5.5,
+    0.0,
+    7.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    -5.5,
+    0.9,
+    8.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    -5.5,
+    0.9,
+    6.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/food/coffee_shop_front.glb",
+   "position": [
+    -5.5,
+    0,
+    3.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "coffeeShop",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/shop_front.glb",
+   "position": [
+    -5.5,
+    0,
+    -3.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "cornerShopDoor",
+   "role": "keep",
+   "note": "the corner shop; its door leads into area corner_shop"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    -5.5,
+    0.0,
+    -7.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    -5.5,
+    0.9,
+    -6.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    -5.5,
+    0.9,
+    -8.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    -5.5,
+    3.0,
+    7.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    -5.5,
+    3.9,
+    8.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    -5.5,
+    3.9,
+    6.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    -5.5,
+    6.0,
+    8.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    -5.5,
+    6.0,
+    6.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    -5.5,
+    3.0,
+    3.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    -5.5,
+    3.9,
+    4.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    -5.5,
+    3.9,
+    2.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    -5.5,
+    6.0,
+    4.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    -5.5,
+    6.0,
+    2.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    -5.5,
+    3.0,
+    -3.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    -5.5,
+    3.9,
+    -2.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    -5.5,
+    3.9,
+    -4.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    -5.5,
+    6.0,
+    -2.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    -5.5,
+    6.0,
+    -4.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    -5.5,
+    3.0,
+    -7.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    -5.5,
+    3.9,
+    -6.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    -5.5,
+    3.9,
+    -8.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    -5.5,
+    6.0,
+    -6.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    -5.5,
+    6.0,
+    -8.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    -5.5,
+    0.0,
+    9
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    -5.5,
+    3.0,
+    9
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    -5.5,
+    0.0,
+    5
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    -5.5,
+    3.0,
+    5
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    -5.5,
+    0.0,
+    1
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    -5.5,
+    3.0,
+    1
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    -5.5,
+    0.0,
+    -1
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    -5.5,
+    3.0,
+    -1
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    -5.5,
+    0.0,
+    -5
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    -5.5,
+    3.0,
+    -5
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    -5.5,
+    0.0,
+    -9
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    -5.5,
+    3.0,
+    -9
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/chimney.glb",
+   "position": [
+    -6.6,
+    6.0,
+    3.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/chimney.glb",
+   "position": [
+    -6.9,
+    6.0,
+    -6.2
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/town/cafe_sill.glb",
+   "position": [
+    -5.5,
+    0.21,
+    3.7
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "coffeeSill",
+   "role": "static",
+   "note": "the warm sill: board top 0.47 m, cushion at its near end"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m.glb",
+   "position": [
+    -7.5,
+    0,
+    1.0
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m.glb",
+   "position": [
+    -7.5,
+    0,
+    -1.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_2m.glb",
+   "position": [
+    -9.6,
+    0,
+    -0.0
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static",
+   "note": "the alley's far end"
+  },
+  {
+   "glb": "assets/outdoor/alley/alley_floor_2m.glb",
+   "position": [
+    -6.5,
+    0,
+    0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/alley/alley_floor_2m_drain.glb",
+   "position": [
+    -8.5,
+    0,
+    0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/alley/cat_nook.glb",
+   "position": [
+    -6.35,
+    0,
+    0.55
+   ],
+   "rotationY": 1.3208,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "catNook",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/alley/dumpster.glb",
+   "position": [
+    -8.6,
+    0,
+    -0.45
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "dumpster",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/alley/crates_1.glb",
+   "position": [
+    -7.45,
+    0,
+    -0.62
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "crates",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/alley/crates_2.glb",
+   "position": [
+    -9.2,
+    0,
+    0.62
+   ],
+   "rotationY": 0.1,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/alley/trash_bag_a.glb",
+   "position": [
+    -7.9,
+    0,
+    0.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/alley/steam_vent.glb",
+   "position": [
+    -8.2,
+    1.1,
+    0.98
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/alley/alley_lights.glb",
+   "position": [
+    -7.6,
+    2.35,
+    -0.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/alley/alley_puddle.glb",
+   "position": [
+    -7.0,
+    0.0,
+    -0.1
+   ],
+   "rotationY": 0.3,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    5.5,
+    0.0,
+    7.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    5.5,
+    0.9,
+    6.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    5.5,
+    0.9,
+    8.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/food/ramen_window.glb",
+   "position": [
+    5.5,
+    0,
+    3.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "ramenWindow",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/food/grill_front.glb",
+   "position": [
+    5.5,
+    0,
+    -1.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "medGrill",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    5.5,
+    0.0,
+    -5.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    5.5,
+    0.9,
+    -6.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    5.5,
+    0.9,
+    -4.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    5.5,
+    0.0,
+    -9.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    5.5,
+    0.9,
+    -10.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    5.5,
+    0.9,
+    -8.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    5.5,
+    3.0,
+    7.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    5.5,
+    3.9,
+    6.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    5.5,
+    3.9,
+    8.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    5.5,
+    6.0,
+    8.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    5.5,
+    6.0,
+    6.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    5.5,
+    3.0,
+    3.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    5.5,
+    3.9,
+    2.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    5.5,
+    3.9,
+    4.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    5.5,
+    6.0,
+    4.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    5.5,
+    6.0,
+    2.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    5.5,
+    3.0,
+    -1.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    5.5,
+    3.9,
+    -2.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    5.5,
+    3.9,
+    -0.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    5.5,
+    6.0,
+    -0.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    5.5,
+    6.0,
+    -2.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    5.5,
+    3.0,
+    -5.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    5.5,
+    3.9,
+    -6.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    5.5,
+    3.9,
+    -4.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    5.5,
+    6.0,
+    -4.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    5.5,
+    6.0,
+    -6.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    5.5,
+    3.0,
+    -9.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    5.5,
+    3.9,
+    -10.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    5.5,
+    3.9,
+    -8.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    5.5,
+    6.0,
+    -8.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    5.5,
+    6.0,
+    -10.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    5.5,
+    0.0,
+    9
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    5.5,
+    3.0,
+    9
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    5.5,
+    0.0,
+    5
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    5.5,
+    3.0,
+    5
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    5.5,
+    0.0,
+    1
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    5.5,
+    3.0,
+    1
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    5.5,
+    0.0,
+    -3
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    5.5,
+    3.0,
+    -3
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    5.5,
+    0.0,
+    -7
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    5.5,
+    3.0,
+    -7
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    5.5,
+    0.0,
+    -11
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_pillar.glb",
+   "position": [
+    5.5,
+    3.0,
+    -11
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/chimney.glb",
+   "position": [
+    6.7,
+    6.0,
+    1.2
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/antenna.glb",
+   "position": [
+    6.6,
+    6.0,
+    -4.2
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/town/pot_cluster.glb",
+   "position": [
+    -5.05,
+    0.15,
+    5.55
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/alley/milk_crate.glb",
+   "position": [
+    -3.85,
+    0.15,
+    1.95
+   ],
+   "rotationY": 0.2,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop",
+   "note": "climb step 1 (top 0.45)"
+  },
+  {
+   "glb": "assets/outdoor/alley/crates_2.glb",
+   "position": [
+    -4.45,
+    0.15,
+    1.98
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop",
+   "note": "climb step 2 (top 1.05)"
+  },
+  {
+   "glb": "assets/outdoor/alley/crates_3.glb",
+   "position": [
+    -4.45,
+    0.15,
+    2.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop",
+   "note": "climb step 3 (top 1.50), then the awning"
+  },
+  {
+   "glb": "assets/outdoor/food/cafe_table_set.glb",
+   "position": [
+    -3.85,
+    0.15,
+    3.7
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "cafeTable",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/food/espresso_cups.glb",
+   "position": [
+    -3.83,
+    0.95,
+    3.65
+   ],
+   "rotationY": 0.4,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "espressoCups",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/food/sandwich_board.glb",
+   "position": [
+    -4.05,
+    0.15,
+    5.0
+   ],
+   "rotationY": 0.9708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "chalkboard",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/decor/chalk_drawing.glb",
+   "position": [
+    -4.3,
+    0.153,
+    0.55
+   ],
+   "rotationY": 1.7708,
+   "scale": 1.0,
+   "collide": "none",
+   "id": "chalk",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/alley/crates_1.glb",
+   "position": [
+    -5.15,
+    0.15,
+    0.62
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop",
+   "note": "the pop-up espresso cart"
+  },
+  {
+   "glb": "assets/outdoor/food/espresso_machine.glb",
+   "position": [
+    -5.12,
+    0.6,
+    0.62
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "espressoMachine",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/props/lamppost.glb",
+   "position": [
+    -3.4,
+    0.15,
+    0.1
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "slamp",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/town/pot_cluster.glb",
+   "position": [
+    -5.1,
+    0.15,
+    -1.3
+   ],
+   "rotationY": 1.8708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/bike.glb",
+   "position": [
+    -5.08,
+    0.15,
+    -3.1
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "bike",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/mailbox.glb",
+   "position": [
+    -3.45,
+    0.15,
+    -4.3
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "mail",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/newspaper_box.glb",
+   "position": [
+    -5.08,
+    0.15,
+    -5.55
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/town/pot_cluster.glb",
+   "position": [
+    -5.05,
+    0.15,
+    -8.6
+   ],
+   "rotationY": 1.1708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/drain.glb",
+   "position": [
+    -3.05,
+    0.005,
+    -6.2
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/trash_bins.glb",
+   "position": [
+    5.0,
+    0.15,
+    6.1
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/alley/milk_crate.glb",
+   "position": [
+    4.55,
+    0.15,
+    6.5
+   ],
+   "rotationY": 0.5,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/bench.glb",
+   "position": [
+    4.95,
+    0.15,
+    2.75
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static",
+   "note": "the bench under the ramen window"
+  },
+  {
+   "glb": "assets/outdoor/hydrant.glb",
+   "position": [
+    3.45,
+    0.15,
+    -0.55
+   ],
+   "rotationY": -0.4,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "hydrant",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/drain.glb",
+   "position": [
+    3.05,
+    0.005,
+    1.75
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "none",
+   "id": "drain",
+   "role": "static"
+  },
+  {
+   "glb": "assets/props/lamppost.glb",
+   "position": [
+    3.4,
+    0.15,
+    -2.5
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop",
+   "note": "the second streetlamp"
+  },
+  {
+   "glb": "assets/outdoor/vending_machine.glb",
+   "position": [
+    5.0,
+    0.15,
+    -3.55
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "vend",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/food/burger_stand.glb",
+   "position": [
+    4.2,
+    0.15,
+    -6.1
+   ],
+   "rotationY": -1.4508,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "burgerStand",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/alley/milk_crate.glb",
+   "position": [
+    3.55,
+    0.15,
+    -7.7
+   ],
+   "rotationY": 0.3,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/alley/box_pile.glb",
+   "position": [
+    5.05,
+    0.15,
+    -7.8
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/tree_round.glb",
+   "position": [
+    3.6,
+    0.15,
+    5.3
+   ],
+   "rotationY": 0.6,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/tree_round.glb",
+   "position": [
+    -3.55,
+    0.15,
+    -7.2
+   ],
+   "rotationY": 2.1,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/puddle.glb",
+   "position": [
+    1.1,
+    0.0,
+    3.6
+   ],
+   "rotationY": 0.4,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/town/moon_glint.glb",
+   "position": [
+    1.2,
+    0.004,
+    3.55
+   ],
+   "rotationY": 0.0,
+   "scale": 0.45,
+   "collide": "none",
+   "role": "keep",
+   "note": "the moon in the puddle"
+  },
+  {
+   "glb": "assets/outdoor/puddle.glb",
+   "position": [
+    -1.7,
+    0.0,
+    -1.8
+   ],
+   "rotationY": -0.5,
+   "scale": 0.8,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/town/moon_glint.glb",
+   "position": [
+    -1.6,
+    0.004,
+    -1.85
+   ],
+   "rotationY": 0.0,
+   "scale": 0.36000000000000004,
+   "collide": "none",
+   "role": "keep",
+   "note": "the moon in the puddle"
+  },
+  {
+   "glb": "assets/outdoor/puddle.glb",
+   "position": [
+    0.6,
+    0.0,
+    -6.4
+   ],
+   "rotationY": 1.2,
+   "scale": 0.7,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/town/moon_glint.glb",
+   "position": [
+    0.7,
+    0.004,
+    -6.45
+   ],
+   "rotationY": 0.0,
+   "scale": 0.315,
+   "collide": "none",
+   "role": "keep",
+   "note": "the moon in the puddle"
+  },
+  {
+   "glb": "assets/outdoor/town/festoon_10m.glb",
+   "position": [
+    0,
+    3.55,
+    2.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/town/festoon_10m.glb",
+   "position": [
+    0,
+    3.65,
+    -3.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/park_gate.glb",
+   "position": [
+    0.0,
+    0.15,
+    -12.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "keep",
+   "note": "to area park",
+   "open_nodes": {
+    "gate_L": 0.5,
+    "gate_R": -0.5
+   }
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    -2.6,
+    0.15,
+    -12.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    -4.6,
+    0.15,
+    -12.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    2.6,
+    0.15,
+    -12.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    4.6,
+    0.15,
+    -12.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/park_lamp.glb",
+   "position": [
+    1.9,
+    0.15,
+    -12.9
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/tree_round.glb",
+   "position": [
+    -3.6,
+    0.0,
+    -14.4
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/tree_round.glb",
+   "position": [
+    3.9,
+    0.0,
+    -15.2
+   ],
+   "rotationY": 1.2,
+   "scale": 1.15,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/tree_tall.glb",
+   "position": [
+    -0.8,
+    0.0,
+    -16.5
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/bush_large.glb",
+   "position": [
+    -1.9,
+    0.0,
+    -13.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/bush_medium.glb",
+   "position": [
+    2.6,
+    0.0,
+    -13.5
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/skyline_backdrop.glb",
+   "position": [
+    -10,
+    -14,
+    -95
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sky/moon.glb",
+   "position": [
+    16.0,
+    30.0,
+    -80
+   ],
+   "rotationY": 0.0,
+   "scale": 2.2,
+   "collide": "none",
+   "role": "keep",
+   "note": "billboard; phase from the date"
+  }
+ ],
+ "cats": [
+  {
+   "glb": "assets/cats/cat_tabby.glb",
+   "position": [
+    -6.33,
+    0.04,
+    0.57
+   ],
+   "rotationY": 1.3208,
+   "pose": {
+    "sleep": 1.0
+   },
+   "id": "tabby",
+   "note": "the stray, asleep in the cat nook at the alley mouth (lines.js area alley)"
+  }
+ ],
+ "ghost": {
+  "position": [
+   -3.35,
+   0.15,
+   6.4
+  ],
+  "rotationY": 2.5916
+ },
+ "things": [
+  {
+   "id": "warm-sill",
+   "kind": "secret",
+   "area": "street",
+   "position": [
+    -5.33,
+    0.47,
+    4.3
+   ],
+   "radius": 0.35,
+   "piece": 60,
+   "node": "anchor_sit",
+   "note": "sit on the cushion 4 s",
+   "sit": true
+  },
+  {
+   "id": "cafeTable",
+   "kind": "thing",
+   "area": "street",
+   "position": [
+    -3.85,
+    0.15,
+    3.7
+   ],
+   "radius": 0.7,
+   "piece": 128
+  },
+  {
+   "id": "the-little-table",
+   "kind": "secret",
+   "area": "street",
+   "position": [
+    -3.85,
+    0.63,
+    3.7
+   ],
+   "radius": 0.6,
+   "piece": 128,
+   "note": "sit on a chair or the table 3 s while the espresso machine hisses",
+   "sit": true
+  },
+  {
+   "id": "espressoCups",
+   "kind": "thing",
+   "area": "street",
+   "position": [
+    -3.83,
+    0.95,
+    3.65
+   ],
+   "radius": 0.4,
+   "piece": 129,
+   "node": "anchor_steam"
+  },
+  {
+   "id": "chalkboard",
+   "kind": "thing",
+   "area": "street",
+   "position": [
+    -4.05,
+    0.15,
+    5.0
+   ],
+   "radius": 0.5,
+   "piece": 130
+  },
+  {
+   "id": "chalk",
+   "kind": "thing",
+   "area": "street",
+   "position": [
+    -4.3,
+    0.15,
+    0.55
+   ],
+   "radius": 0.55,
+   "piece": 131
+  },
+  {
+   "id": "espressoMachine",
+   "kind": "thing",
+   "area": "street",
+   "position": [
+    -5.12,
+    0.6,
+    0.62
+   ],
+   "radius": 0.5,
+   "piece": 133,
+   "node": "anchor_steam"
+  },
+  {
+   "id": "slamp",
+   "kind": "thing",
+   "area": "street",
+   "position": [
+    -3.4,
+    0.15,
+    0.1
+   ],
+   "radius": 0.5,
+   "piece": 134,
+   "node": "anchor_light"
+  },
+  {
+   "id": "moths-into-stars",
+   "kind": "secret",
+   "area": "street",
+   "position": [
+    -3.4,
+    0.15,
+    0.1
+   ],
+   "radius": 0.6,
+   "piece": 134,
+   "note": "bat the streetlamp 3 times in one night"
+  },
+  {
+   "id": "bike",
+   "kind": "thing",
+   "area": "street",
+   "position": [
+    -4.95,
+    0.15,
+    -3.1
+   ],
+   "radius": 0.6,
+   "piece": 136,
+   "node": "bell"
+  },
+  {
+   "id": "mail",
+   "kind": "thing",
+   "area": "street",
+   "position": [
+    -3.45,
+    0.15,
+    -4.3
+   ],
+   "radius": 0.45,
+   "piece": 137,
+   "node": "flap"
+  },
+  {
+   "id": "hydrant",
+   "kind": "thing",
+   "area": "street",
+   "position": [
+    3.45,
+    0.15,
+    -0.55
+   ],
+   "radius": 0.45,
+   "piece": 144
+  },
+  {
+   "id": "drain",
+   "kind": "thing",
+   "area": "street",
+   "position": [
+    3.05,
+    0.0,
+    1.75
+   ],
+   "radius": 0.5,
+   "piece": 145,
+   "node": "anchor_sound"
+  },
+  {
+   "id": "singing-drain",
+   "kind": "secret",
+   "area": "street",
+   "position": [
+    3.3,
+    0.0,
+    1.75
+   ],
+   "radius": 0.6,
+   "piece": 145,
+   "note": "sit by the drain 3 s",
+   "sit": true
+  },
+  {
+   "id": "vend",
+   "kind": "thing",
+   "area": "street",
+   "position": [
+    4.4,
+    0.15,
+    -3.55
+   ],
+   "radius": 0.6,
+   "piece": 147,
+   "node": "anchor_dispense"
+  },
+  {
+   "id": "burgerStand",
+   "kind": "thing",
+   "area": "street",
+   "position": [
+    3.207,
+    0.15,
+    -5.98
+   ],
+   "radius": 0.9,
+   "piece": 148
+  },
+  {
+   "id": "coffeeShop",
+   "kind": "thing",
+   "area": "street",
+   "position": [
+    -4.6,
+    0.15,
+    3.7
+   ],
+   "radius": 1.2,
+   "piece": 21,
+   "node": "door"
+  },
+  {
+   "id": "ramenWindow",
+   "kind": "thing",
+   "area": "street",
+   "position": [
+    4.7,
+    0.15,
+    2.5
+   ],
+   "radius": 1.1,
+   "piece": 77,
+   "node": "noren"
+  },
+  {
+   "id": "medGrill",
+   "kind": "thing",
+   "area": "street",
+   "position": [
+    4.3,
+    0.15,
+    -1.6
+   ],
+   "radius": 1.1,
+   "piece": 78,
+   "node": "spit"
+  },
+  {
+   "id": "cornerShopDoor",
+   "kind": "door",
+   "area": "street",
+   "position": [
+    -4.9,
+    0.15,
+    -4.35
+   ],
+   "radius": 0.6,
+   "piece": 22,
+   "node": "door",
+   "note": "walk in: area corner_shop"
+  },
+  {
+   "id": "food-tour",
+   "kind": "secret",
+   "area": "street",
+   "position": [
+    3.2,
+    0.15,
+    -1.0
+   ],
+   "radius": 0.0,
+   "note": "no spot of its own: touch the three food places (their things) in one night",
+   "parts": [
+    "burgerStand",
+    "ramenWindow",
+    "medGrill"
+   ]
+  },
+  {
+   "id": "catNook",
+   "kind": "thing",
+   "area": "alley",
+   "position": [
+    -6.35,
+    0.0,
+    0.55
+   ],
+   "radius": 0.5
+  },
+  {
+   "id": "dumpster",
+   "kind": "thing",
+   "area": "alley",
+   "position": [
+    -8.6,
+    0.0,
+    -0.45
+   ],
+   "radius": 1.0,
+   "node": "lid"
+  },
+  {
+   "id": "crates",
+   "kind": "thing",
+   "area": "alley",
+   "position": [
+    -7.45,
+    0.0,
+    -0.62
+   ],
+   "radius": 0.5
+  }
+ ],
+ "lights": [
+  {
+   "id": "slamp",
+   "type": "point",
+   "position": [
+    -3.38,
+    2.65,
+    0.09
+   ],
+   "colour": "#ffac5c",
+   "intensity": 8.0,
+   "intensity_full": 8.0,
+   "distance": 10.0,
+   "decay": 2,
+   "priority": 1,
+   "source": "streetlamp (left, the moths)",
+   "halo": true,
+   "flicker": 0.015,
+   "pool": {
+    "y": 0.16,
+    "r": 3.2
+   },
+   "castShadow": true
+  },
+  {
+   "id": "slamp2",
+   "type": "point",
+   "position": [
+    3.42,
+    2.65,
+    -2.51
+   ],
+   "colour": "#ffac5c",
+   "intensity": 7.0,
+   "intensity_full": 7.0,
+   "distance": 9.0,
+   "decay": 2,
+   "priority": 1,
+   "source": "streetlamp (right)",
+   "halo": true,
+   "flicker": 0.015,
+   "pool": {
+    "y": 0.16,
+    "r": 2.95
+   }
+  },
+  {
+   "id": "coffeeWindow",
+   "type": "point",
+   "position": [
+    -4.9,
+    1.3,
+    3.7
+   ],
+   "colour": "#ffc47a",
+   "intensity": 4.0,
+   "intensity_full": 4.0,
+   "distance": 6.0,
+   "decay": 2,
+   "priority": 1,
+   "source": "coffee shop window",
+   "halo": true,
+   "flicker": 0.015,
+   "pool": {
+    "y": 0.16,
+    "r": 1.9
+   }
+  },
+  {
+   "id": "shopWindow",
+   "type": "point",
+   "position": [
+    -4.9,
+    1.4,
+    -2.3
+   ],
+   "colour": "#ffcb80",
+   "intensity": 3.5,
+   "intensity_full": 3.5,
+   "distance": 6.0,
+   "decay": 2,
+   "priority": 1,
+   "source": "corner shop window",
+   "halo": true,
+   "flicker": 0.015,
+   "pool": {
+    "y": 0.16,
+    "r": 1.72
+   }
+  },
+  {
+   "id": "ramenWindow",
+   "type": "point",
+   "position": [
+    4.9,
+    1.5,
+    2.5
+   ],
+   "colour": "#ffaa66",
+   "intensity": 3.5,
+   "intensity_full": 3.5,
+   "distance": 6.0,
+   "decay": 2,
+   "priority": 1,
+   "source": "ramen window and lantern",
+   "halo": true,
+   "flicker": 0.03,
+   "pool": {
+    "y": 0.16,
+    "r": 1.72
+   }
+  },
+  {
+   "id": "burgerStand",
+   "type": "point",
+   "position": [
+    3.803,
+    2.15,
+    -6.052
+   ],
+   "colour": "#ffc98a",
+   "intensity": 2.2,
+   "intensity_full": 2.2,
+   "distance": 5.5,
+   "decay": 2,
+   "priority": 1,
+   "source": "burger stand",
+   "halo": true,
+   "flicker": 0.015,
+   "pool": {
+    "y": 0.16,
+    "r": 1.27
+   }
+  },
+  {
+   "id": "grillWindow",
+   "type": "point",
+   "position": [
+    4.9,
+    1.3,
+    -1.6
+   ],
+   "colour": "#ffb070",
+   "intensity": 0,
+   "intensity_full": 2.0,
+   "distance": 5.5,
+   "decay": 2,
+   "priority": 2,
+   "source": "grill window",
+   "halo": true,
+   "flicker": 0.015,
+   "pool": {
+    "y": 0.16,
+    "r": 1.2
+   }
+  },
+  {
+   "id": "festoonA",
+   "type": "point",
+   "position": [
+    0,
+    3.7,
+    2.0
+   ],
+   "colour": "#ffd9a0",
+   "intensity": 0,
+   "intensity_full": 1.4,
+   "distance": 6.0,
+   "decay": 2,
+   "priority": 2,
+   "source": "string lights across the street (near)",
+   "halo": true,
+   "flicker": 0.03,
+   "pool": {
+    "y": 0.16,
+    "r": 0.99
+   }
+  },
+  {
+   "id": "festoonB",
+   "type": "point",
+   "position": [
+    0,
+    3.8,
+    -3.6
+   ],
+   "colour": "#ffd9a0",
+   "intensity": 0,
+   "intensity_full": 1.4,
+   "distance": 6.0,
+   "decay": 2,
+   "priority": 2,
+   "source": "string lights across the street (far)",
+   "halo": true,
+   "flicker": 0.03,
+   "pool": {
+    "y": 0.16,
+    "r": 0.99
+   }
+  },
+  {
+   "id": "alleyLights",
+   "type": "point",
+   "position": [
+    -7.6,
+    2.25,
+    -0.0
+   ],
+   "colour": "#ffc88a",
+   "intensity": 0,
+   "intensity_full": 1.0,
+   "distance": 4.0,
+   "decay": 2,
+   "priority": 2,
+   "source": "alley string lights",
+   "halo": true,
+   "flicker": 0.03,
+   "pool": {
+    "y": 0.16,
+    "r": 0.85
+   }
+  },
+  {
+   "id": "vend",
+   "type": "point",
+   "position": [
+    4.25,
+    1.2,
+    -3.55
+   ],
+   "colour": "#cfe0ff",
+   "intensity": 0,
+   "intensity_full": 0.7,
+   "distance": 3.0,
+   "decay": 2,
+   "priority": 2,
+   "source": "vending machine panel",
+   "halo": true,
+   "flicker": 0.015
+  },
+  {
+   "id": "upperL",
+   "type": "point",
+   "position": [
+    -5.1,
+    4.6,
+    2.0
+   ],
+   "colour": "#ffcf8a",
+   "intensity": 0,
+   "intensity_full": 0.6,
+   "distance": 3.0,
+   "decay": 2,
+   "priority": 2,
+   "source": "lit upstairs window (left)",
+   "halo": true,
+   "flicker": 0.015
+  },
+  {
+   "id": "upperR",
+   "type": "point",
+   "position": [
+    5.1,
+    4.6,
+    -0.0
+   ],
+   "colour": "#ffc07a",
+   "intensity": 0,
+   "intensity_full": 0.6,
+   "distance": 3.0,
+   "decay": 2,
+   "priority": 2,
+   "source": "lit upstairs window (right)",
+   "halo": true,
+   "flicker": 0.015
+  },
+  {
+   "id": "parkLamp",
+   "type": "point",
+   "position": [
+    1.9,
+    2.45,
+    -12.9
+   ],
+   "colour": "#ffd08a",
+   "intensity": 0,
+   "intensity_full": 1.5,
+   "distance": 6.0,
+   "decay": 2,
+   "priority": 2,
+   "source": "the park's lamp across the road",
+   "halo": true,
+   "flicker": 0.015,
+   "pool": {
+    "y": 0.16,
+    "r": 1.02
+   }
+  }
+ ],
+ "spots": [
+  {
+   "id": "warm-sill",
+   "position": [
+    -5.33,
+    0.47,
+    4.3
+   ]
+  },
+  {
+   "id": "the-little-table",
+   "position": [
+    -3.85,
+    0.63,
+    3.7
+   ]
+  },
+  {
+   "id": "moths-into-stars",
+   "position": [
+    -3.4,
+    0.15,
+    0.1
+   ]
+  },
+  {
+   "id": "singing-drain",
+   "position": [
+    3.3,
+    0.0,
+    1.75
+   ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "steam",
+   "position": [
+    5.35,
+    1.05,
+    2.3
+   ],
+   "height": 1.0,
+   "rate": 1.2,
+   "note": "ramen window"
+  },
+  {
+   "kind": "steam",
+   "position": [
+    3.05,
+    0.02,
+    1.75
+   ],
+   "height": 0.9,
+   "rate": 0.8,
+   "note": "the singing drain"
+  },
+  {
+   "kind": "steam",
+   "position": [
+    -3.05,
+    0.02,
+    -6.2
+   ],
+   "height": 0.8,
+   "rate": 0.6,
+   "note": "the far drain"
+  },
+  {
+   "kind": "steam",
+   "position": [
+    -5.12,
+    0.9,
+    0.45
+   ],
+   "height": 0.35,
+   "width": 0.05,
+   "rate": 0.4,
+   "note": "espresso machine wand"
+  },
+  {
+   "kind": "steam",
+   "position": [
+    -3.83,
+    1.01,
+    3.65
+   ],
+   "height": 0.25,
+   "width": 0.03,
+   "rate": 0.3,
+   "note": "the tiny cups"
+  },
+  {
+   "kind": "steam",
+   "position": [
+    -8.2,
+    1.25,
+    0.8
+   ],
+   "height": 0.7,
+   "rate": 0.6,
+   "note": "alley vent"
+  },
+  {
+   "kind": "moths",
+   "position": [
+    -3.4,
+    2.65,
+    0.1
+   ],
+   "count": 6,
+   "radius": 0.42,
+   "note": "the slamp moths"
+  },
+  {
+   "kind": "moths",
+   "position": [
+    3.4,
+    2.65,
+    -2.5
+   ],
+   "count": 4,
+   "radius": 0.4
+  },
+  {
+   "kind": "drips",
+   "position": [
+    -9.3,
+    2.0,
+    -0.6
+   ],
+   "note": "alley AC drip, optional"
+  }
+ ],
+ "routes": [
+  {
+   "name": "up to the awning",
+   "note": "by the coffee shop door: milk crate, two crate stacks, then onto the green awning (it slopes 2.2 m at the front edge to 2.4 m at the wall). A nap spot up there with the string lights at eye level.",
+   "max_step_m": 0.85,
+   "max_gap_m": 2.0,
+   "waypoints": [
+    {
+     "position": [
+      -3.6,
+      0.15,
+      1.3
+     ],
+     "top": 0.15,
+     "on": "sidewalk"
+    },
+    {
+     "position": [
+      -3.85,
+      0.45,
+      1.95
+     ],
+     "top": 0.45,
+     "on": "milk crate"
+    },
+    {
+     "position": [
+      -4.45,
+      1.05,
+      1.98
+     ],
+     "top": 1.05,
+     "on": "two crates"
+    },
+    {
+     "position": [
+      -4.45,
+      1.5,
+      2.6
+     ],
+     "top": 1.5,
+     "on": "three crates"
+    },
+    {
+     "position": [
+      -5.05,
+      2.25,
+      2.75
+     ],
+     "top": 2.25,
+     "on": "awning, front edge"
+    },
+    {
+     "position": [
+      -5.15,
+      2.32,
+      4.3
+     ],
+     "top": 2.32,
+     "on": "awning, over the warm sill"
+    }
+   ]
+  }
+ ],
+ "camera": {
+  "position": [
+   -3.119,
+   0.983,
+   8.314
+  ],
+  "target": [
+   -3.35,
+   0.45,
+   6.4
+  ],
+  "fov_deg": 55.0,
+  "distance_m": 2.0,
+  "pitch_rad": 0.27,
+  "lens_mm": 21.61,
+  "note": "game camera: behind Ghost, low and close (follow-camera distance and pitch); preview assets/preview/areas/street-game.png"
+ },
+ "camera_overview": {
+  "position": [
+   1.5,
+   14.0,
+   17.5
+  ],
+  "target": [
+   -0.5,
+   0.6,
+   -1.5
+  ],
+  "lens_mm": 24,
+  "note": "overview of the whole area; preview assets/preview/areas/street-overview.png"
+ },
+ "doors": [
+  {
+   "to": "corner_shop",
+   "thing": "cornerShopDoor"
+  },
+  {
+   "to": "park",
+   "position": [
+    0.0,
+    0.15,
+    -12.4
+   ],
+   "note": "the park gate"
+  }
+ ]
+}

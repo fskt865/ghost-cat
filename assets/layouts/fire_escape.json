@@ -1,0 +1,1227 @@
+{
+ "area": "fire_escape",
+ "description": "the back of the building: the fire escape climbs from the living-room window landing (planters, crates, the AC, the drainpipe ledge) to the upper landing (the neighbour's goldfish, the washing line, the pigeon) and up the stair to the roof. Below: the courtyard with the back door lamp; across it, the low building with the lit windows.",
+ "coords": "three.js/glTF metres: +Y up, piece fronts face +Z, position = piece origin (ASSETS.md), rotationY radians. All positions are relative to `place`, which src/layout.js adds back (home.js puts both areas at their own `place`).",
+ "place": {
+  "position": [
+   -0.75,
+   0.0,
+   -2.572
+  ],
+  "rotationY": 0.0,
+  "note": "the living-room window landing's back edge, at the apartment's floor level (home.js)"
+ },
+ "ground": [
+  {
+   "name": "courtyard",
+   "top_y": -3.25,
+   "centre": [
+    -1.25,
+    -3.25,
+    -3.828
+   ],
+   "size_xz": [
+    18.0,
+    7.7
+   ],
+   "colour": "#3b3442",
+   "noise": 0.3,
+   "collide": true
+  }
+ ],
+ "pieces": [
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    -2.95,
+    3.65,
+    -0.13
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    1.95,
+    3.65,
+    -0.13
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    4.65,
+    3.65,
+    -0.13
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    -5.52,
+    3.63,
+    -0.13
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "role": "static",
+   "note": "the neighbour upstairs: the goldfish lives on this sill"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    -6.85,
+    -2.25,
+    -0.13
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    2.65,
+    -2.25,
+    -0.13
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    4.65,
+    -2.25,
+    -0.13
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/alley/back_door.glb",
+   "position": [
+    -2.65,
+    -3.25,
+    -0.1
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "note": "the shop's back door, its lamp on"
+  },
+  {
+   "glb": "assets/outdoor/alley/drainpipe.glb",
+   "position": [
+    -3.87,
+    -0.3,
+    0.0
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "note": "the drainpipe the ledge is built round"
+  },
+  {
+   "glb": "assets/outdoor/alley/drainpipe.glb",
+   "position": [
+    5.65,
+    -3.25,
+    0.0
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/fire_escape_landing.glb",
+   "position": [
+    0.0,
+    0.64,
+    0.012
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/fire_escape_ladder.glb",
+   "position": [
+    0.8,
+    -2.05,
+    -0.86
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "role": "static",
+   "note": "the drop ladder, pulled up"
+  },
+  {
+   "glb": "assets/decor/herb_box.glb",
+   "position": [
+    0.75,
+    0.72,
+    -0.03
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "id": "herbs",
+   "collide": "mesh"
+  },
+  {
+   "glb": "assets/outdoor/pinwheel.glb",
+   "position": [
+    0.8,
+    0.72,
+    -0.82
+   ],
+   "rotationY": 3.5416,
+   "scale": 1.0,
+   "id": "pinwheel",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/decor/floor_cushion.glb",
+   "position": [
+    -0.3,
+    0.72,
+    -0.62
+   ],
+   "rotationY": 0.3,
+   "scale": 0.8,
+   "note": "a cushion by the window: the warmest seat out here"
+  },
+  {
+   "glb": "assets/props/cozy/jar_candle.glb",
+   "position": [
+    0.45,
+    0.72,
+    -0.84
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "role": "keep"
+  },
+  {
+   "glb": "assets/props/mug.glb",
+   "position": [
+    1.05,
+    1.08,
+    -0.12
+   ],
+   "rotationY": 2.2,
+   "scale": 1.0,
+   "id": "feMug",
+   "role": "keep",
+   "note": "on the herb box, cold coffee"
+  },
+  {
+   "glb": "assets/decor/balcony_lights.glb",
+   "position": [
+    0.0,
+    2.38,
+    -0.06
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "role": "keep",
+   "id": "feLights",
+   "note": "strung over the window"
+  },
+  {
+   "glb": "assets/outdoor/alley/crates_1.glb",
+   "position": [
+    -0.7,
+    0.72,
+    -0.3
+   ],
+   "rotationY": 3.2216,
+   "scale": 1.0,
+   "collide": "mesh",
+   "note": "step 1 (+0.45)"
+  },
+  {
+   "glb": "assets/outdoor/alley/milk_crate.glb",
+   "position": [
+    -0.75,
+    0.72,
+    -0.82
+   ],
+   "rotationY": 0.3,
+   "scale": 1.0,
+   "collide": "mesh"
+  },
+  {
+   "glb": "assets/outdoor/alley/ac_unit.glb",
+   "position": [
+    -1.67,
+    1.4,
+    0.0
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "feAC",
+   "note": "step 2: the living room's AC (top 1.85)"
+  },
+  {
+   "glb": "assets/sets/planter_box.glb",
+   "position": [
+    -2.79,
+    1.92,
+    -0.28
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "collide": "mesh",
+   "note": "step 3 (top ~2.55)"
+  },
+  {
+   "glb": "assets/outdoor/pigeon.glb",
+   "position": [
+    -3.65,
+    3.02,
+    -0.4
+   ],
+   "rotationY": 2.6416,
+   "scale": 0.85,
+   "note": "a second pigeon, asleep"
+  },
+  {
+   "glb": "assets/outdoor/fire_escape_landing.glb",
+   "position": [
+    -7.58,
+    3.39,
+    0.012
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/fire_escape_landing.glb",
+   "position": [
+    -5.52,
+    3.39,
+    0.012
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/washing_line.glb",
+   "position": [
+    -7.5,
+    3.47,
+    -0.3
+   ],
+   "rotationY": 3.1416,
+   "scale": 0.7,
+   "id": "socks",
+   "role": "keep",
+   "note": "the neighbour's line: shirts, a towel, the loose sock"
+  },
+  {
+   "glb": "assets/outdoor/alley/milk_crate.glb",
+   "position": [
+    -5.52,
+    3.47,
+    -0.24
+   ],
+   "rotationY": 0.1,
+   "scale": 1.0,
+   "collide": "mesh"
+  },
+  {
+   "glb": "assets/props/fishbowl.glb",
+   "position": [
+    -5.52,
+    3.77,
+    -0.24
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "id": "goldfish",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/pigeon.glb",
+   "position": [
+    -4.85,
+    3.47,
+    -0.36
+   ],
+   "rotationY": 4.0416,
+   "scale": 1.0,
+   "id": "pigeon",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/flower_bed.glb",
+   "position": [
+    -6.25,
+    3.47,
+    -0.74
+   ],
+   "rotationY": 3.1416,
+   "scale": 0.42,
+   "id": "geranium",
+   "collide": "mesh",
+   "note": "geraniums in a long box along the rail"
+  },
+  {
+   "glb": "assets/sets/tomato_cage.glb",
+   "position": [
+    -8.3,
+    3.47,
+    -0.74
+   ],
+   "rotationY": 0.4,
+   "scale": 0.8
+  },
+  {
+   "glb": "assets/sets/watering_can.glb",
+   "position": [
+    -7.85,
+    3.47,
+    -0.79
+   ],
+   "rotationY": 2.4,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/decor/birdhouse.glb",
+   "position": [
+    -6.85,
+    4.55,
+    -0.01
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/alley/alley_lights.glb",
+   "position": [
+    -6.55,
+    5.05,
+    -0.05
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "id": "feBulbs"
+  },
+  {
+   "glb": "assets/outdoor/fire_escape_landing.glb",
+   "position": [
+    -0.2,
+    5.67,
+    0.012
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/flower_bed.glb",
+   "position": [
+    0.15,
+    5.75,
+    -0.74
+   ],
+   "rotationY": 3.1416,
+   "scale": 0.38,
+   "note": "more geraniums"
+  },
+  {
+   "glb": "assets/outdoor/alley/dumpster.glb",
+   "position": [
+    -5.45,
+    -3.25,
+    -0.75
+   ],
+   "rotationY": 3.1916,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/alley/trash_bag_a.glb",
+   "position": [
+    -4.25,
+    -3.25,
+    -0.6
+   ],
+   "rotationY": 0.4,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/alley/trash_bag_b.glb",
+   "position": [
+    -6.85,
+    -3.25,
+    -1.4
+   ],
+   "rotationY": 1.1,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/alley/crates_3.glb",
+   "position": [
+    1.65,
+    -3.25,
+    -0.4
+   ],
+   "rotationY": 3.3416,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/alley/pallet.glb",
+   "position": [
+    2.75,
+    -3.25,
+    -0.7
+   ],
+   "rotationY": 0.3,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/alley/alley_puddle.glb",
+   "position": [
+    -1.45,
+    -3.246,
+    -2.828
+   ],
+   "rotationY": 0.3,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/bike.glb",
+   "position": [
+    4.15,
+    -3.25,
+    -2.628
+   ],
+   "rotationY": -0.9,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/alley/fence_panel.glb",
+   "position": [
+    -10.25,
+    -3.25,
+    -2.428
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/alley/fence_panel.glb",
+   "position": [
+    7.65,
+    -3.25,
+    -2.428
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/skylight.glb",
+   "position": [
+    -3.25,
+    2.75,
+    -10.428
+   ],
+   "rotationY": 0.2,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/chimney.glb",
+   "position": [
+    5.25,
+    2.75,
+    -11.928
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/sets/planter_box.glb",
+   "position": [
+    -8.25,
+    2.75,
+    -8.028
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/sets/planter_box.glb",
+   "position": [
+    -6.85,
+    2.75,
+    -8.028
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/alley/alley_lights.glb",
+   "position": [
+    -1.25,
+    3.6,
+    -7.828
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/alley/alley_lights.glb",
+   "position": [
+    2.75,
+    3.6,
+    -7.828
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/water_tower.glb",
+   "position": [
+    7.25,
+    2.75,
+    -10.928
+   ],
+   "rotationY": 0.3,
+   "scale": 1.0,
+   "role": "keep",
+   "fade": true
+  }
+ ],
+ "cats": [],
+ "ghost": {
+  "position": [
+   0.0,
+   0.72,
+   -0.5
+  ],
+  "rotationY": 3.141592653589793
+ },
+ "lights": [
+  {
+   "type": "point",
+   "position": [
+    0.1,
+    2.15,
+    -0.45
+   ],
+   "colour": "#ffbf75",
+   "intensity": 2.4,
+   "distance": 6.5,
+   "halo": 0.9,
+   "flicker": 0.02,
+   "pool": {
+    "y": 0.725,
+    "r": 1.3
+   }
+  },
+  {
+   "type": "point",
+   "position": [
+    -5.75,
+    4.7,
+    -0.75
+   ],
+   "colour": "#ffc27a",
+   "intensity": 2.2,
+   "distance": 6.5,
+   "halo": 0.7,
+   "flicker": 0.02,
+   "pool": {
+    "y": 3.475,
+    "r": 1.4
+   }
+  },
+  {
+   "type": "point",
+   "position": [
+    -2.65,
+    -0.95,
+    -0.6
+   ],
+   "colour": "#ffb86b",
+   "intensity": 0.0,
+   "distance": 5.0,
+   "halo": 1.1,
+   "flicker": 0.04,
+   "pool": {
+    "y": -3.244,
+    "r": 2.0
+   }
+  }
+ ],
+ "camera": {
+  "position": [
+   -0.45,
+   2.6,
+   -3.028
+  ],
+  "target": [
+   -1.85,
+   2.0,
+   0.0
+  ],
+  "lens_mm": 24,
+  "note": "game camera on the fire escape: outside, looking at the wall"
+ },
+ "solids": [
+  {
+   "type": "brick",
+   "plane": "z",
+   "at": 0.0,
+   "u0": -9.01,
+   "u1": 6.11,
+   "y0": -3.25,
+   "y1": -0.3,
+   "facing": -1,
+   "colours": [
+    "#5c3a40",
+    "#7a4a48"
+   ],
+   "holes": []
+  },
+  {
+   "type": "brick",
+   "plane": "z",
+   "at": 0.0,
+   "u0": -9.01,
+   "u1": 6.11,
+   "y0": -0.3,
+   "y1": 2.75,
+   "facing": -1,
+   "colours": [
+    "#5c3a40",
+    "#7a4a48"
+   ],
+   "holes": [
+    [
+     -5.25,
+     0.5,
+     0.86,
+     2.11
+    ],
+    [
+     0.0,
+     0.5,
+     0.86,
+     2.11
+    ],
+    [
+     3.65,
+     0.36,
+     1.32,
+     2.22
+    ]
+   ]
+  },
+  {
+   "type": "brick",
+   "plane": "z",
+   "at": 0.0,
+   "u0": -9.01,
+   "u1": 6.11,
+   "y0": 2.75,
+   "y1": 5.75,
+   "facing": -1,
+   "colours": [
+    "#5c3a40",
+    "#7a4a48"
+   ],
+   "holes": []
+  },
+  {
+   "type": "brick",
+   "plane": "x",
+   "at": -9.01,
+   "u0": 0.0,
+   "u1": 5.132,
+   "y0": 2.75,
+   "y1": 5.75,
+   "facing": -1,
+   "colours": [
+    "#5c3a40",
+    "#7a4a48"
+   ],
+   "holes": []
+  },
+  {
+   "type": "brick",
+   "plane": "x",
+   "at": 6.11,
+   "u0": 0.0,
+   "u1": 5.132,
+   "y0": 2.75,
+   "y1": 5.75,
+   "facing": 1,
+   "colours": [
+    "#5c3a40",
+    "#7a4a48"
+   ],
+   "holes": []
+  },
+  {
+   "type": "box",
+   "centre": [
+    -1.45,
+    2.765,
+    -0.065
+   ],
+   "size": [
+    15.2,
+    0.13,
+    0.13
+   ],
+   "colour": "#d9c3a0",
+   "collide": false
+  },
+  {
+   "type": "box",
+   "centre": [
+    -1.45,
+    -0.295,
+    -0.065
+   ],
+   "size": [
+    15.2,
+    0.13,
+    0.13
+   ],
+   "colour": "#d9c3a0",
+   "collide": false
+  },
+  {
+   "type": "box",
+   "centre": [
+    -1.45,
+    4.15,
+    0.165
+   ],
+   "size": [
+    15.12,
+    2.8,
+    0.33
+   ],
+   "collide": true,
+   "visible": false,
+   "note": "storey above: wall"
+  },
+  {
+   "type": "box",
+   "centre": [
+    -1.45,
+    -1.775,
+    0.165
+   ],
+   "size": [
+    15.12,
+    2.95,
+    0.33
+   ],
+   "collide": true,
+   "visible": false,
+   "note": "ground floor: wall"
+  },
+  {
+   "type": "box",
+   "centre": [
+    0.0,
+    0.67,
+    -0.52
+   ],
+   "size": [
+    2.06,
+    0.1,
+    -1.04
+   ],
+   "collide": true,
+   "visible": false,
+   "note": "L0 deck"
+  },
+  {
+   "type": "box",
+   "centre": [
+    0.0,
+    1.72,
+    -1.11
+   ],
+   "size": [
+    2.26,
+    2.0,
+    0.1
+   ],
+   "visible": false,
+   "note": "L0 front"
+  },
+  {
+   "type": "box",
+   "centre": [
+    1.1,
+    1.72,
+    -0.52
+   ],
+   "size": [
+    0.1,
+    2.0,
+    -1.04
+   ],
+   "visible": false,
+   "note": "L0 east"
+  },
+  {
+   "type": "box",
+   "centre": [
+    -1.1,
+    1.72,
+    -0.77
+   ],
+   "size": [
+    0.1,
+    2.0,
+    -0.54
+   ],
+   "visible": false,
+   "note": "L0 west, outer half (the inner half is the way up)"
+  },
+  {
+   "type": "box",
+   "centre": [
+    -1.1,
+    0.87,
+    -0.25
+   ],
+   "size": [
+    0.1,
+    0.3,
+    -0.5
+   ],
+   "visible": false,
+   "note": "L0 west, inner half: a lip, hop over it"
+  },
+  {
+   "type": "box",
+   "centre": [
+    -2.79,
+    1.88,
+    -0.28
+   ],
+   "size": [
+    1.32,
+    0.08,
+    -0.56
+   ],
+   "colour": "#2c2b3d",
+   "collide": true
+  },
+  {
+   "type": "pole",
+   "from": [
+    -3.25,
+    1.35,
+    -0.02
+   ],
+   "to": [
+    -3.25,
+    1.86,
+    -0.5
+   ],
+   "radius": 0.025,
+   "colour": "#2c2b3d"
+  },
+  {
+   "type": "pole",
+   "from": [
+    -2.33,
+    1.35,
+    -0.02
+   ],
+   "to": [
+    -2.33,
+    1.86,
+    -0.5
+   ],
+   "radius": 0.025,
+   "colour": "#2c2b3d"
+  },
+  {
+   "type": "box",
+   "centre": [
+    -3.85,
+    2.96,
+    -0.265
+   ],
+   "size": [
+    0.7,
+    0.12,
+    -0.53
+   ],
+   "colour": "#d9c3a0",
+   "collide": true
+  },
+  {
+   "type": "box",
+   "centre": [
+    -3.85,
+    2.85,
+    -0.2
+   ],
+   "size": [
+    0.6,
+    0.1,
+    -0.4
+   ],
+   "colour": "#b8a184",
+   "collide": false
+  },
+  {
+   "type": "box",
+   "centre": [
+    -6.55,
+    3.42,
+    -0.52
+   ],
+   "size": [
+    4.12,
+    0.1,
+    -1.04
+   ],
+   "collide": true,
+   "visible": false,
+   "note": "L1 deck"
+  },
+  {
+   "type": "box",
+   "centre": [
+    -6.55,
+    4.47,
+    -1.11
+   ],
+   "size": [
+    4.32,
+    2.0,
+    0.1
+   ],
+   "visible": false,
+   "note": "L1 front"
+  },
+  {
+   "type": "box",
+   "centre": [
+    -8.68,
+    4.47,
+    -0.52
+   ],
+   "size": [
+    0.1,
+    2.0,
+    -1.04
+   ],
+   "visible": false,
+   "note": "L1 west"
+  },
+  {
+   "type": "stair",
+   "from": [
+    -4.49,
+    3.47,
+    -0.79
+   ],
+   "to": [
+    -1.23,
+    5.75,
+    -0.79
+   ],
+   "width": 0.52,
+   "colour": "#2c2b3d",
+   "rails": [
+    true,
+    true
+   ],
+   "fade": true
+  },
+  {
+   "type": "box",
+   "centre": [
+    -0.2,
+    5.7,
+    -0.52
+   ],
+   "size": [
+    2.06,
+    0.1,
+    -1.04
+   ],
+   "collide": true,
+   "visible": false,
+   "note": "L2 deck"
+  },
+  {
+   "type": "box",
+   "centre": [
+    -0.2,
+    6.75,
+    -1.11
+   ],
+   "size": [
+    2.26,
+    2.0,
+    0.1
+   ],
+   "visible": false,
+   "note": "L2 front"
+  },
+  {
+   "type": "box",
+   "centre": [
+    0.9,
+    6.75,
+    -0.52
+   ],
+   "size": [
+    0.1,
+    2.0,
+    -1.04
+   ],
+   "visible": false,
+   "note": "L2 east"
+  },
+  {
+   "type": "box",
+   "centre": [
+    -1.3,
+    6.75,
+    -0.275
+   ],
+   "size": [
+    0.1,
+    2.0,
+    -0.55
+   ],
+   "visible": false,
+   "note": "L2 west, inner half"
+  },
+  {
+   "type": "block",
+   "min": [
+    -13.25,
+    -3.25,
+    -14.428
+   ],
+   "max": [
+    9.75,
+    2.75,
+    -7.428
+   ],
+   "faces": [
+    "+z",
+    "+x",
+    "-x"
+   ],
+   "colours": [
+    "#5c3a40",
+    "#7a4a48"
+   ],
+   "roof": "#3b3550",
+   "parapet": 0.45,
+   "windows": {
+    "faces": [
+     "+z"
+    ],
+    "cols": 18,
+    "rows": 2,
+    "lit": 0.55,
+    "y0": -2.55
+   },
+   "seed": 3
+  }
+ ],
+ "spots": [],
+ "zones": [
+  {
+   "min": [
+    -9.25,
+    0.2,
+    -3.428
+   ],
+   "max": [
+    1.25,
+    5.4,
+    0.122
+   ],
+   "zoom": 1.12,
+   "pitch": 0.32,
+   "aim": 0.3,
+   "yawRange": [
+    2.641592653589793,
+    3.641592653589793
+   ],
+   "priority": 2,
+   "name": "fire escape"
+  },
+  {
+   "min": [
+    -4.65,
+    3.3,
+    -3.428
+   ],
+   "max": [
+    -1.05,
+    5.9,
+    0.122
+   ],
+   "zoom": 1.18,
+   "pitch": 0.24,
+   "aim": 0.45,
+   "yawRange": [
+    2.721592653589793,
+    3.561592653589793
+   ],
+   "priority": 3,
+   "name": "the stair"
+  },
+  {
+   "min": [
+    -1.35,
+    5.5,
+    -3.428
+   ],
+   "max": [
+    1.25,
+    7.5,
+    0.122
+   ],
+   "zoom": 1.15,
+   "pitch": 0.3,
+   "aim": 0.3,
+   "yawRange": [
+    2.3415926535897933,
+    3.941592653589793
+   ],
+   "priority": 3,
+   "name": "top landing"
+  }
+ ],
+ "pits": [
+  {
+   "min": [
+    -15.25,
+    -6.0,
+    -9.428
+   ],
+   "max": [
+    10.75,
+    0.2,
+    -0.05
+   ],
+   "note": "a drop into the courtyard floats Ghost back up"
+  }
+ ]
+}

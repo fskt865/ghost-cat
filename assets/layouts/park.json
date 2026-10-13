@@ -1,0 +1,2490 @@
+{
+ "area": "park",
+ "description": "the little park at night: paper lanterns along the path, a pond with the moon in it, lily pads and the frog, a bench with a blanket under a big climbable tree (three mossy pads up to a crook, the birdhouse), the swing, closed moonflowers, fireflies, bushes with the shy grey kitten, string lights, houses beyond",
+ "size_m": [
+  12,
+  10
+ ],
+ "coords": "three.js/glTF metres: +Y up, piece fronts face +Z, position = piece origin (ASSETS.md), rotationY radians",
+ "schema": {
+  "pieces": "id = the lines.js thing id (or a name the game uses); role: static (merged) | prop (batched, can wobble) | keep (its own mesh: it has nodes that move); collide: mesh (default) | none",
+  "things": "every touchable / secret spot: id (lines.js things[] / secrets[] / cats[]), kind thing|secret|cat|door, position (where to stand or the thing's centre), radius (touch range), piece (index into pieces), node (glb child node or anchor that moves or marks the spot)",
+  "lights": "three.js PointLight(colour, intensity, distance, decay 2) as src/layout.js reads it (halo, flicker, pool). priority 1 = a real light; priority 2 = halo + pool only (intensity 0, the value is in intensity_full)",
+  "spots": "touch points with no piece of their own (secrets, nodes on a bigger piece): {id, position}",
+  "fx": "particles the engine draws: steam (rising wisps), moths (circle a lamp), fireflies (drift in a box), drips",
+  "routes": "safe climbs: waypoints are surfaces Ghost stands on in order (top = surface height); every step up <= 0.85 m and every gap <= 2.0 m"
+ },
+ "ambient": {
+  "sky_top": "#090c26",
+  "sky_horizon": "#2b3a78",
+  "hemisphere": {
+   "sky": "#4a5aa8",
+   "ground": "#1f2a2a",
+   "intensity": 0.45
+  },
+  "moon": {
+   "colour": "#8d9ee8",
+   "intensity": 0.22,
+   "direction": [
+    -0.35,
+    -0.5,
+    -0.8
+   ]
+  },
+  "fog": {
+   "colour": "#141a3a",
+   "near": 8,
+   "far": 30
+  },
+  "haze": "thin, a little mist on the pond"
+ },
+ "ground": [
+  {
+   "name": "grass",
+   "top_y": 0.0,
+   "centre": [
+    0,
+    0.0,
+    -0.5
+   ],
+   "size_xz": [
+    30,
+    30
+   ],
+   "colour": "#3f6a3e",
+   "thickness": 0.2,
+   "noise": 0.25
+  },
+  {
+   "name": "path",
+   "top_y": 0.012,
+   "centre": [
+    0,
+    0.012,
+    2.4
+   ],
+   "size_xz": [
+    1.4,
+    4.6
+   ],
+   "colour": "#a89a86",
+   "thickness": 0.2
+  },
+  {
+   "name": "plaza",
+   "top_y": 0.014,
+   "centre": [
+    0.2,
+    0.014,
+    -0.6
+   ],
+   "size_xz": [
+    2.8,
+    2.8
+   ],
+   "colour": "#a89a86",
+   "thickness": 0.2,
+   "shape": "disc"
+  },
+  {
+   "name": "path_bench",
+   "top_y": 0.012,
+   "centre": [
+    -1.0,
+    0.012,
+    -1.0
+   ],
+   "size_xz": [
+    1.0,
+    2.0
+   ],
+   "colour": "#a89a86",
+   "thickness": 0.2,
+   "rotationY": 1.2
+  },
+  {
+   "name": "path_back",
+   "top_y": 0.012,
+   "centre": [
+    0.0,
+    0.012,
+    -3.0
+   ],
+   "size_xz": [
+    1.0,
+    3.2
+   ],
+   "colour": "#a89a86",
+   "thickness": 0.2,
+   "rotationY": 0.15
+  }
+ ],
+ "pieces": [
+  {
+   "glb": "assets/outdoor/park_gate.glb",
+   "position": [
+    0.0,
+    0,
+    4.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "keep",
+   "note": "from the street",
+   "open_nodes": {
+    "gate_L": 1.1,
+    "gate_R": -1.1
+   }
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    -2.6,
+    0,
+    4.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    -4.6,
+    0,
+    4.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    2.6,
+    0,
+    4.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    4.6,
+    0,
+    4.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    -5,
+    0,
+    -5.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    -3,
+    0,
+    -5.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    -1,
+    0,
+    -5.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    1,
+    0,
+    -5.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    3,
+    0,
+    -5.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    5,
+    0,
+    -5.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    -6.0,
+    0.0,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    -7.0,
+    0.9,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    -5.0,
+    0.9,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    -6.0,
+    3.0,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    -7.0,
+    3.9,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    -5.0,
+    3.9,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    -7.0,
+    6.0,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    -5.0,
+    6.0,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    -2.0,
+    0.0,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    -3.0,
+    0.9,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    -1.0,
+    0.9,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    -2.0,
+    3.0,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    -3.0,
+    3.9,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    -1.0,
+    3.9,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    -3.0,
+    6.0,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    -1.0,
+    6.0,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    2.0,
+    0.0,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    1.0,
+    0.9,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    3.0,
+    0.9,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    2.0,
+    3.0,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    1.0,
+    3.9,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_lit.glb",
+   "position": [
+    3.0,
+    3.9,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    1.0,
+    6.0,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    3.0,
+    6.0,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    6.0,
+    0.0,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    5.0,
+    0.9,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    7.0,
+    0.9,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    6.0,
+    3.0,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    5.0,
+    3.9,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    7.0,
+    3.9,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    5.0,
+    6.0,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/parapet_2m.glb",
+   "position": [
+    7.0,
+    6.0,
+    -12.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/tree_round.glb",
+   "position": [
+    -4.5,
+    0,
+    -7.991
+   ],
+   "rotationY": -4.5,
+   "scale": 1.1,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/tree_round.glb",
+   "position": [
+    -1.2,
+    0,
+    -7.227
+   ],
+   "rotationY": -1.2,
+   "scale": 1.1,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/tree_round.glb",
+   "position": [
+    2.4,
+    0,
+    -7.87
+   ],
+   "rotationY": 2.4,
+   "scale": 1.1,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/tree_round.glb",
+   "position": [
+    5.2,
+    0,
+    -7.247
+   ],
+   "rotationY": 5.2,
+   "scale": 1.1,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/pond_water.glb",
+   "position": [
+    2.9,
+    0.05,
+    -1.3
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "pond",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/pond_corner.glb",
+   "position": [
+    2.9,
+    0.05,
+    -1.3
+   ],
+   "rotationY": 0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/pond_corner.glb",
+   "position": [
+    2.9,
+    0.05,
+    -1.3
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/pond_corner.glb",
+   "position": [
+    2.9,
+    0.05,
+    -1.3
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/pond_corner.glb",
+   "position": [
+    2.9,
+    0.05,
+    -1.3
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/town/moon_glint.glb",
+   "position": [
+    3.4,
+    0.035,
+    -1.9
+   ],
+   "rotationY": 0.0,
+   "scale": 1.6,
+   "collide": "none",
+   "role": "keep",
+   "note": "the moon in the pond (shimmer the glint node)"
+  },
+  {
+   "glb": "assets/outdoor/lily_pads.glb",
+   "position": [
+    3.3,
+    0.03,
+    -0.8
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/lily_pads.glb",
+   "position": [
+    2.0,
+    0.03,
+    -1.6
+   ],
+   "rotationY": 2.0,
+   "scale": 0.8,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/frog.glb",
+   "position": [
+    3.32,
+    0.042,
+    -0.82
+   ],
+   "rotationY": -0.4,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "frog",
+   "role": "keep",
+   "note": "on a lily pad"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    4.034,
+    0.0,
+    -3.244
+   ],
+   "rotationY": 2.3444,
+   "scale": 1.1692697062572277,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    1.552,
+    0.0,
+    -3.102
+   ],
+   "rotationY": 0.0404,
+   "scale": 1.3513910400261042,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    1.392,
+    0.0,
+    -2.97
+   ],
+   "rotationY": 0.5075,
+   "scale": 1.3771352340891432,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    3.085,
+    0.0,
+    -3.542
+   ],
+   "rotationY": 0.2568,
+   "scale": 1.2895098021977178,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    2.521,
+    0.0,
+    -3.518
+   ],
+   "rotationY": 2.8387,
+   "scale": 1.4625326842911046,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    5.123,
+    0.0,
+    -1.649
+   ],
+   "rotationY": 1.4947,
+   "scale": 1.1554737639890074,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    3.782,
+    0.0,
+    -3.37
+   ],
+   "rotationY": 5.8017,
+   "scale": 1.3952142285679563,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    2.077,
+    0.0,
+    -3.394
+   ],
+   "rotationY": 2.4094,
+   "scale": 1.4730476084622144,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    5.15,
+    0.0,
+    -1.288
+   ],
+   "rotationY": 1.8286,
+   "scale": 1.4371180006276858,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/town/climb_tree.glb",
+   "position": [
+    -3.2,
+    0,
+    -1.8
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "tree",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/bench.glb",
+   "position": [
+    -1.33,
+    0,
+    -1.19
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "bench",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/town/bench_blanket.glb",
+   "position": [
+    -1.33,
+    0,
+    -1.19
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/decor/birdhouse.glb",
+   "position": [
+    -3.18,
+    1.85,
+    -1.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "birdhouse",
+   "role": "keep",
+   "note": "on the trunk, beside pad 1"
+  },
+  {
+   "glb": "assets/outdoor/town/pot_cluster.glb",
+   "position": [
+    -2.45,
+    0,
+    -2.35
+   ],
+   "rotationY": 0.6,
+   "scale": 0.85,
+   "collide": "mesh",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/decor/paper_lanterns.glb",
+   "position": [
+    -1.9,
+    3.85,
+    -1.35
+   ],
+   "rotationY": -0.3,
+   "scale": 0.45,
+   "collide": "none",
+   "role": "static",
+   "note": "hung from the lowest branch on the bench side: warm on pad 1, the bench and up the pads"
+  },
+  {
+   "glb": "assets/props/cozy/jar_candle.glb",
+   "position": [
+    6.08,
+    1.0,
+    2.62
+   ],
+   "rotationY": 0.0,
+   "scale": 1.6,
+   "collide": "none",
+   "role": "static",
+   "note": "a candle in a jar on the fence post by the kitten's bush"
+  },
+  {
+   "glb": "assets/outdoor/swing_set.glb",
+   "position": [
+    -3.5,
+    0,
+    2.2
+   ],
+   "rotationY": 0.28,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "swing",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/town/lantern_post.glb",
+   "position": [
+    -1.44,
+    0,
+    2.7
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/town/lantern_post.glb",
+   "position": [
+    1.44,
+    0,
+    2.7
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/decor/paper_lanterns.glb",
+   "position": [
+    0.0,
+    1.93,
+    2.7
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/town/lantern_post.glb",
+   "position": [
+    -1.44,
+    0,
+    0.3
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/town/lantern_post.glb",
+   "position": [
+    1.44,
+    0,
+    0.3
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/decor/paper_lanterns.glb",
+   "position": [
+    0.0,
+    1.93,
+    0.3
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/town/lantern_post.glb",
+   "position": [
+    -3.0,
+    0,
+    -4.9
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/town/lantern_post.glb",
+   "position": [
+    3.0,
+    0,
+    -4.9
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/town/festoon_6m.glb",
+   "position": [
+    0.0,
+    1.86,
+    -4.9
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/park_lamp.glb",
+   "position": [
+    1.8,
+    0,
+    3.8
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/park_lamp.glb",
+   "position": [
+    -0.55,
+    0,
+    -2.35
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static",
+   "note": "by the bench and the tree"
+  },
+  {
+   "glb": "assets/outdoor/park_lamp.glb",
+   "position": [
+    1.15,
+    0,
+    -3.35
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static",
+   "note": "by the pond"
+  },
+  {
+   "glb": "assets/outdoor/moonflowers.glb",
+   "position": [
+    -0.9,
+    0,
+    -4.75
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "flowers",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/flower_bed.glb",
+   "position": [
+    2.35,
+    0,
+    1.9
+   ],
+   "rotationY": 1.4708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/flower_bed.glb",
+   "position": [
+    -1.6,
+    0,
+    3.7
+   ],
+   "rotationY": 0.05,
+   "scale": 0.8,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/bush_large.glb",
+   "position": [
+    4.9,
+    0,
+    2.6
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static",
+   "note": "the kitten's bush"
+  },
+  {
+   "glb": "assets/outdoor/bush_medium.glb",
+   "position": [
+    3.9,
+    0,
+    3.5
+   ],
+   "rotationY": 1.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/bush_medium.glb",
+   "position": [
+    5.7,
+    0,
+    1.2
+   ],
+   "rotationY": 2.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/bush_large.glb",
+   "position": [
+    -5.4,
+    0,
+    -4.6
+   ],
+   "rotationY": -5.4,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/bush_large.glb",
+   "position": [
+    5.6,
+    0,
+    -4.3
+   ],
+   "rotationY": 5.6,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/bush_large.glb",
+   "position": [
+    -5.6,
+    0,
+    0.4
+   ],
+   "rotationY": -5.6,
+   "scale": 0.9,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/bush_medium.glb",
+   "position": [
+    -0.2,
+    0,
+    -5.0
+   ],
+   "rotationY": -0.2,
+   "scale": 0.7,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/bush_medium.glb",
+   "position": [
+    2.0,
+    0,
+    -5.0
+   ],
+   "rotationY": 2.0,
+   "scale": 0.8,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/bush_medium.glb",
+   "position": [
+    -2.7,
+    0,
+    4.0
+   ],
+   "rotationY": -2.7,
+   "scale": 0.6,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/bush_small.glb",
+   "position": [
+    -0.6,
+    0,
+    -2.1
+   ],
+   "rotationY": 2.1,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/bush_small.glb",
+   "position": [
+    5.3,
+    0,
+    -0.2
+   ],
+   "rotationY": 0.2,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/bush_small.glb",
+   "position": [
+    -4.9,
+    0,
+    3.4
+   ],
+   "rotationY": -3.4,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/bush_small.glb",
+   "position": [
+    2.6,
+    0,
+    2.6
+   ],
+   "rotationY": -2.6,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/bush_small.glb",
+   "position": [
+    0.9,
+    0,
+    -3.9
+   ],
+   "rotationY": 3.9,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/tree_tall.glb",
+   "position": [
+    -5.8,
+    0,
+    -3.4
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/tree_round.glb",
+   "position": [
+    -5.6,
+    0,
+    3.3
+   ],
+   "rotationY": 0.8,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/tree_weeping.glb",
+   "position": [
+    5.4,
+    0,
+    -3.7
+   ],
+   "rotationY": 0.3,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static",
+   "note": "the willow over the pond's far side"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    -6.1,
+    0,
+    3.6
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    6.1,
+    0,
+    3.6
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    -6.1,
+    0,
+    1.6
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    6.1,
+    0,
+    1.6
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    -6.1,
+    0,
+    -0.4
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    6.1,
+    0,
+    -0.4
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    -6.1,
+    0,
+    -2.4
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    6.1,
+    0,
+    -2.4
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    -6.1,
+    0,
+    -4.4
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/wooden_fence_2m.glb",
+   "position": [
+    6.1,
+    0,
+    -4.4
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    -5.795,
+    0,
+    -2.03
+   ],
+   "rotationY": 2.9532,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    3.134,
+    0,
+    1.637
+   ],
+   "rotationY": 5.036,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    0.444,
+    0,
+    -2.211
+   ],
+   "rotationY": 1.2119,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    0.622,
+    0,
+    -3.368
+   ],
+   "rotationY": 1.6675,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    3.994,
+    0,
+    1.046
+   ],
+   "rotationY": 0.5849,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    -3.513,
+    0,
+    -1.768
+   ],
+   "rotationY": 1.8286,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    -3.47,
+    0,
+    -1.961
+   ],
+   "rotationY": 2.2632,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    5.02,
+    0,
+    -4.349
+   ],
+   "rotationY": 3.232,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    3.544,
+    0,
+    -4.978
+   ],
+   "rotationY": 0.1785,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    -1.608,
+    0,
+    -1.456
+   ],
+   "rotationY": 1.9112,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    1.034,
+    0,
+    3.357
+   ],
+   "rotationY": 5.5269,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    1.888,
+    0,
+    1.265
+   ],
+   "rotationY": 1.2323,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    -3.365,
+    0,
+    -3.936
+   ],
+   "rotationY": 4.3848,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    -5.655,
+    0,
+    -3.114
+   ],
+   "rotationY": 0.1071,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/grass_tuft.glb",
+   "position": [
+    -1.938,
+    0,
+    -4.302
+   ],
+   "rotationY": 3.8953,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/firefly.glb",
+   "position": [
+    -1.0,
+    1.0,
+    -1.4
+   ],
+   "rotationY": 0.0,
+   "scale": 0.6,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/firefly.glb",
+   "position": [
+    0.6,
+    1.3,
+    -2.8
+   ],
+   "rotationY": 0.0,
+   "scale": 0.6,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/firefly.glb",
+   "position": [
+    3.6,
+    0.8,
+    -2.4
+   ],
+   "rotationY": 0.0,
+   "scale": 0.6,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/firefly.glb",
+   "position": [
+    -2.2,
+    1.2,
+    0.6
+   ],
+   "rotationY": 0.0,
+   "scale": 0.6,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/firefly.glb",
+   "position": [
+    1.2,
+    0.9,
+    1.6
+   ],
+   "rotationY": 0.0,
+   "scale": 0.6,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/firefly.glb",
+   "position": [
+    4.4,
+    0.7,
+    1.8
+   ],
+   "rotationY": 0.0,
+   "scale": 0.6,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/firefly.glb",
+   "position": [
+    2.2,
+    1.1,
+    -3.6
+   ],
+   "rotationY": 0.0,
+   "scale": 0.6,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/firefly.glb",
+   "position": [
+    -4.6,
+    1.4,
+    -3.2
+   ],
+   "rotationY": 0.0,
+   "scale": 0.6,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/firefly.glb",
+   "position": [
+    4.9,
+    1.0,
+    -0.9
+   ],
+   "rotationY": 0.0,
+   "scale": 0.6,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/firefly.glb",
+   "position": [
+    -0.3,
+    1.5,
+    2.0
+   ],
+   "rotationY": 0.0,
+   "scale": 0.6,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/firefly.glb",
+   "position": [
+    3.4,
+    0.6,
+    0.3
+   ],
+   "rotationY": 0.0,
+   "scale": 0.6,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/firefly.glb",
+   "position": [
+    -2.0,
+    0.9,
+    -3.8
+   ],
+   "rotationY": 0.0,
+   "scale": 0.6,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/sets/skyline_backdrop.glb",
+   "position": [
+    -20,
+    -16,
+    -95
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sky/moon.glb",
+   "position": [
+    14.0,
+    22.0,
+    -70
+   ],
+   "rotationY": 0.0,
+   "scale": 2.2,
+   "collide": "none",
+   "role": "keep",
+   "note": "billboard; phase from the date"
+  }
+ ],
+ "cats": [
+  {
+   "glb": "assets/cats/cat_grey.glb",
+   "position": [
+    4.42,
+    0.0,
+    3.08
+   ],
+   "rotationY": 0.35,
+   "pose": {
+    "loaf": 1.0
+   },
+   "id": "greyKitten",
+   "note": "the follower: in the front of the big bush, only the face shows"
+  }
+ ],
+ "ghost": {
+  "position": [
+   0.05,
+   0.03,
+   2.2
+  ],
+  "rotationY": 2.7416
+ },
+ "things": [
+  {
+   "id": "frog",
+   "kind": "thing",
+   "area": "park",
+   "position": [
+    3.32,
+    0.0,
+    -0.82
+   ],
+   "radius": 0.6,
+   "piece": 55,
+   "node": "throat"
+  },
+  {
+   "id": "pond",
+   "kind": "thing",
+   "area": "park",
+   "position": [
+    1.7,
+    0.0,
+    0.3
+   ],
+   "radius": 1.2,
+   "piece": 47,
+   "note": "stand at the edge: the moon is in it"
+  },
+  {
+   "id": "tree",
+   "kind": "thing",
+   "area": "park",
+   "position": [
+    -2.65,
+    0.0,
+    -1.1
+   ],
+   "radius": 0.8,
+   "piece": 65,
+   "node": "canopy"
+  },
+  {
+   "id": "bench",
+   "kind": "thing",
+   "area": "park",
+   "position": [
+    -1.33,
+    0.47,
+    -1.1
+   ],
+   "radius": 0.8,
+   "piece": 66,
+   "sit": true
+  },
+  {
+   "id": "birdhouse",
+   "kind": "thing",
+   "area": "park",
+   "position": [
+    -2.8,
+    1.55,
+    -1.3
+   ],
+   "radius": 0.6,
+   "piece": 68,
+   "node": "bird",
+   "note": "best seen from the first branch pad"
+  },
+  {
+   "id": "swing",
+   "kind": "thing",
+   "area": "park",
+   "position": [
+    -3.5,
+    0.0,
+    2.55
+   ],
+   "radius": 0.9,
+   "piece": 72,
+   "node": "swing"
+  },
+  {
+   "id": "flowers",
+   "kind": "thing",
+   "area": "park",
+   "position": [
+    -0.9,
+    0.0,
+    -4.2
+   ],
+   "radius": 0.7,
+   "piece": 85,
+   "node": "flower_1",
+   "sit": true
+  },
+  {
+   "id": "flies",
+   "kind": "thing",
+   "area": "park",
+   "position": [
+    1.2,
+    0.0,
+    -1.5
+   ],
+   "radius": 1.6,
+   "note": "the fireflies drift around here (fx fireflies box)"
+  },
+  {
+   "id": "kitten",
+   "kind": "thing",
+   "area": "park",
+   "position": [
+    4.45,
+    0.0,
+    3.2
+   ],
+   "radius": 0.9,
+   "note": "two eyes in the bush; the follower secret",
+   "sit": true
+  },
+  {
+   "id": "follower",
+   "kind": "secret",
+   "area": "park",
+   "position": [
+    4.2,
+    0.0,
+    3.4
+   ],
+   "radius": 1.0,
+   "note": "sit near the bush with the eyes 4 s; the grey kitten then follows",
+   "sit": true
+  },
+  {
+   "id": "firefly",
+   "kind": "secret",
+   "area": "park",
+   "position": [
+    1.2,
+    0.0,
+    -1.5
+   ],
+   "radius": 1.6,
+   "note": "chase the fireflies 3 times"
+  },
+  {
+   "id": "frog",
+   "kind": "secret",
+   "area": "park",
+   "position": [
+    3.32,
+    0.0,
+    -0.1
+   ],
+   "radius": 0.8,
+   "note": "stare at the frog 3 times"
+  },
+  {
+   "id": "streetGate",
+   "kind": "door",
+   "area": "park",
+   "position": [
+    0.0,
+    0.0,
+    4.4
+   ],
+   "radius": 0.8,
+   "note": "back to the street"
+  }
+ ],
+ "lights": [
+  {
+   "id": "lanternsNear",
+   "type": "point",
+   "position": [
+    0.0,
+    1.65,
+    2.7
+   ],
+   "colour": "#ffaa66",
+   "intensity": 2.4,
+   "intensity_full": 2.4,
+   "distance": 5.5,
+   "decay": 2,
+   "priority": 1,
+   "source": "paper lanterns over the path (near)",
+   "halo": true,
+   "flicker": 0.03,
+   "pool": {
+    "y": 0.01,
+    "r": 1.34
+   }
+  },
+  {
+   "id": "lanternsFar",
+   "type": "point",
+   "position": [
+    0.0,
+    1.65,
+    0.3
+   ],
+   "colour": "#ffaa66",
+   "intensity": 2.4,
+   "intensity_full": 2.4,
+   "distance": 5.5,
+   "decay": 2,
+   "priority": 1,
+   "source": "paper lanterns over the path (far)",
+   "halo": true,
+   "flicker": 0.03,
+   "pool": {
+    "y": 0.01,
+    "r": 1.34
+   }
+  },
+  {
+   "id": "parkLamp",
+   "type": "point",
+   "position": [
+    1.8,
+    2.31,
+    3.8
+   ],
+   "colour": "#ffac5c",
+   "intensity": 5.0,
+   "intensity_full": 5.0,
+   "distance": 8.0,
+   "decay": 2,
+   "priority": 1,
+   "source": "park lamp by the gate",
+   "halo": true,
+   "flicker": 0.015,
+   "pool": {
+    "y": 0.01,
+    "r": 2.25
+   },
+   "castShadow": true
+  },
+  {
+   "id": "benchLamp",
+   "type": "point",
+   "position": [
+    -0.55,
+    2.31,
+    -2.35
+   ],
+   "colour": "#ffac5c",
+   "intensity": 6.5,
+   "intensity_full": 6.5,
+   "distance": 8.5,
+   "decay": 2,
+   "priority": 1,
+   "source": "park lamp by the bench and the tree",
+   "halo": true,
+   "flicker": 0.015,
+   "pool": {
+    "y": 0.01,
+    "r": 2.77
+   },
+   "castShadow": true
+  },
+  {
+   "id": "pondLamp",
+   "type": "point",
+   "position": [
+    1.15,
+    2.31,
+    -3.35
+   ],
+   "colour": "#ffac5c",
+   "intensity": 4.5,
+   "intensity_full": 4.5,
+   "distance": 7.5,
+   "decay": 2,
+   "priority": 1,
+   "source": "park lamp by the pond",
+   "halo": true,
+   "flicker": 0.015,
+   "pool": {
+    "y": 0.01,
+    "r": 2.08
+   }
+  },
+  {
+   "id": "treeLantern",
+   "type": "point",
+   "position": [
+    -1.9,
+    3.55,
+    -1.35
+   ],
+   "colour": "#ffa860",
+   "intensity": 2.6,
+   "intensity_full": 2.6,
+   "distance": 4.5,
+   "decay": 2,
+   "priority": 1,
+   "source": "a paper lantern hung under the tree: warm on the pads",
+   "halo": true,
+   "flicker": 0.03,
+   "pool": {
+    "y": 0.01,
+    "r": 1.41
+   }
+  },
+  {
+   "id": "fenceCandle",
+   "type": "point",
+   "position": [
+    6.0,
+    1.25,
+    2.62
+   ],
+   "colour": "#ffa860",
+   "intensity": 1.4,
+   "intensity_full": 1.4,
+   "distance": 3.5,
+   "decay": 2,
+   "priority": 1,
+   "source": "the candle on the fence by the kitten's bush",
+   "halo": true,
+   "flicker": 0.015,
+   "pool": {
+    "y": 0.01,
+    "r": 0.99
+   }
+  },
+  {
+   "id": "festoon",
+   "type": "point",
+   "position": [
+    0.0,
+    2.1,
+    -4.9
+   ],
+   "colour": "#ffd9a0",
+   "intensity": 0,
+   "intensity_full": 1.6,
+   "distance": 6.0,
+   "decay": 2,
+   "priority": 2,
+   "source": "string lights across the back",
+   "halo": true,
+   "flicker": 0.03,
+   "pool": {
+    "y": 0.01,
+    "r": 1.06
+   }
+  },
+  {
+   "id": "flowersGlow",
+   "type": "point",
+   "position": [
+    -0.9,
+    0.9,
+    -4.55
+   ],
+   "colour": "#d8e8ff",
+   "intensity": 0,
+   "intensity_full": 0.3,
+   "distance": 1.5,
+   "decay": 2,
+   "priority": 2,
+   "source": "moonflowers (when they open)",
+   "halo": true,
+   "flicker": 0.015
+  },
+  {
+   "id": "housesR",
+   "type": "point",
+   "position": [
+    3.0,
+    4.6,
+    -11.6
+   ],
+   "colour": "#ffcf8a",
+   "intensity": 0,
+   "intensity_full": 0.6,
+   "distance": 4.0,
+   "decay": 2,
+   "priority": 2,
+   "source": "lit windows beyond the trees",
+   "halo": true,
+   "flicker": 0.015
+  },
+  {
+   "id": "pondMoon",
+   "type": "point",
+   "position": [
+    2.9,
+    2.5,
+    -1.3
+   ],
+   "colour": "#a8b8ff",
+   "intensity": 0,
+   "intensity_full": 0.5,
+   "distance": 4.0,
+   "decay": 2,
+   "priority": 2,
+   "source": "cool moonlight on the pond (optional)",
+   "halo": true,
+   "flicker": 0.015
+  }
+ ],
+ "spots": [
+  {
+   "id": "flies",
+   "position": [
+    1.2,
+    0.0,
+    -1.5
+   ]
+  },
+  {
+   "id": "kitten",
+   "position": [
+    4.45,
+    0.0,
+    3.2
+   ]
+  },
+  {
+   "id": "follower",
+   "position": [
+    4.2,
+    0.0,
+    3.4
+   ]
+  },
+  {
+   "id": "firefly",
+   "position": [
+    1.2,
+    0.0,
+    -1.5
+   ]
+  },
+  {
+   "id": "streetGate",
+   "position": [
+    0.0,
+    0.0,
+    4.4
+   ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "fireflies",
+   "position": [
+    0.4,
+    1.0,
+    -1.0
+   ],
+   "size": [
+    10.0,
+    7.0,
+    1.4
+   ],
+   "count": 14,
+   "note": "drift; slow blink"
+  },
+  {
+   "kind": "fireflies",
+   "position": [
+    2.9,
+    0.5,
+    -1.3
+   ],
+   "size": [
+    4.0,
+    4.0,
+    0.8
+   ],
+   "count": 6,
+   "note": "low over the pond"
+  },
+  {
+   "kind": "mist",
+   "position": [
+    2.9,
+    0.05,
+    -1.3
+   ],
+   "size": [
+    4.4,
+    4.4,
+    0.3
+   ],
+   "note": "a little mist on the pond"
+  }
+ ],
+ "routes": [
+  {
+   "name": "bench to the tree",
+   "note": "bench seat, along the bench back to its left end, then the tree's three mossy pads spiralling up to the crook (a sitting spot over the pond, the birdhouse next to the first pad)",
+   "max_step_m": 0.85,
+   "max_gap_m": 2.0,
+   "waypoints": [
+    {
+     "position": [
+      -1.03,
+      0.0,
+      -0.49
+     ],
+     "top": 0.0,
+     "on": "grass"
+    },
+    {
+     "position": [
+      -1.03,
+      0.47,
+      -1.14
+     ],
+     "top": 0.47,
+     "on": "bench seat"
+    },
+    {
+     "position": [
+      -1.88,
+      0.91,
+      -1.44
+     ],
+     "top": 0.91,
+     "on": "bench back, left end"
+    },
+    {
+     "position": [
+      -2.52,
+      1.55,
+      -1.44
+     ],
+     "top": 1.55,
+     "on": "pad 1"
+    },
+    {
+     "position": [
+      -3.92,
+      2.25,
+      -1.6
+     ],
+     "top": 2.25,
+     "on": "pad 2"
+    },
+    {
+     "position": [
+      -3.2,
+      2.95,
+      -1.41
+     ],
+     "top": 2.95,
+     "on": "the crook"
+    }
+   ]
+  }
+ ],
+ "camera": {
+  "position": [
+   0.204,
+   0.863,
+   4.121
+  ],
+  "target": [
+   0.05,
+   0.33,
+   2.2
+  ],
+  "fov_deg": 55.0,
+  "distance_m": 2.0,
+  "pitch_rad": 0.27,
+  "lens_mm": 21.61,
+  "note": "game camera: behind Ghost, low and close (follow-camera distance and pitch); preview assets/preview/areas/park-game.png"
+ },
+ "camera_overview": {
+  "position": [
+   9.5,
+   10.5,
+   11.5
+  ],
+  "target": [
+   0.0,
+   0.4,
+   -0.8
+  ],
+  "lens_mm": 24,
+  "note": "overview of the whole area; preview assets/preview/areas/park-overview.png"
+ },
+ "doors": [
+  {
+   "to": "street",
+   "thing": "streetGate"
+  }
+ ]
+}

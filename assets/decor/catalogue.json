@@ -1,0 +1,170 @@
+[
+  {
+    "item": "fairy_lights",
+    "glb": "assets/props/fairy_lights.glb",
+    "card": "assets/decor/cards/fairy_lights.png",
+    "price": 14,
+    "where": "home",
+    "description": "tiny lights. tiny suns. very battable."
+  },
+  {
+    "item": "cat_bed",
+    "glb": "assets/props/cat_bed.glb",
+    "card": "assets/decor/cards/cat_bed.png",
+    "price": 16,
+    "where": "home",
+    "description": "round, soft, technically for a ghost."
+  },
+  {
+    "item": "paper_moon",
+    "glb": "assets/decor/paper_moon.glb",
+    "card": "assets/decor/cards/paper_moon.png",
+    "price": 10,
+    "where": "home",
+    "description": "a moon for indoors. no tides."
+  },
+  {
+    "item": "monstera",
+    "glb": "assets/props/monstera.glb",
+    "card": "assets/decor/cards/monstera.png",
+    "price": 14,
+    "where": "home",
+    "description": "big leaves. good for hiding behind. not very."
+  },
+  {
+    "item": "star_garland",
+    "glb": "assets/decor/star_garland.glb",
+    "card": "assets/decor/cards/star_garland.png",
+    "price": 12,
+    "where": "home",
+    "description": "paper stars, slightly uneven, like real ones."
+  },
+  {
+    "item": "portrait",
+    "glb": "assets/decor/portrait.glb",
+    "card": "assets/decor/cards/portrait.png",
+    "price": 24,
+    "where": "home",
+    "description": "very distinguished. a little blurry. would not sit still."
+  },
+  {
+    "item": "tiny_cactus",
+    "glb": "assets/props/cactus.glb",
+    "card": "assets/decor/cards/tiny_cactus.png",
+    "price": 6,
+    "where": "home",
+    "description": "small. pointy. minds its own business."
+  },
+  {
+    "item": "round_rug",
+    "glb": "assets/props/rug.glb",
+    "card": "assets/decor/cards/round_rug.png",
+    "price": 8,
+    "where": "home",
+    "description": "a soft landing for falling mugs."
+  },
+  {
+    "item": "candles",
+    "glb": "assets/decor/candles.glb",
+    "card": "assets/decor/cards/candles.png",
+    "price": 10,
+    "where": "home",
+    "description": "flickery but safe. the battery kind."
+  },
+  {
+    "item": "fishbowl",
+    "glb": "assets/props/fishbowl.glb",
+    "card": "assets/decor/cards/fishbowl.png",
+    "price": 22,
+    "where": "home",
+    "description": "one fish, named fish. for watching. only watching."
+  },
+  {
+    "item": "balcony_lights",
+    "glb": "assets/decor/balcony_lights.glb",
+    "card": "assets/decor/cards/balcony_lights.png",
+    "price": 18,
+    "where": "home",
+    "description": "for the neighbors to be jealous of."
+  },
+  {
+    "item": "wind_chime",
+    "glb": "assets/decor/wind_chime.glb",
+    "card": "assets/decor/cards/wind_chime.png",
+    "price": 12,
+    "where": "home",
+    "description": "rings in the wind. or when batted. mostly when batted."
+  },
+  {
+    "item": "floor_cushion",
+    "glb": "assets/decor/floor_cushion.glb",
+    "card": "assets/decor/cards/floor_cushion.png",
+    "price": 12,
+    "where": "home",
+    "description": "for sitting with the moon."
+  },
+  {
+    "item": "herb_box",
+    "glb": "assets/decor/herb_box.glb",
+    "card": "assets/decor/cards/herb_box.png",
+    "price": 14,
+    "where": "fire escape",
+    "description": "mint, mostly. for the fire escape."
+  },
+  {
+    "item": "bunting",
+    "glb": "assets/decor/bunting.glb",
+    "card": "assets/decor/cards/bunting.png",
+    "price": 16,
+    "where": "fire escape",
+    "description": "little flags. the pigeon pretends not to like them."
+  },
+  {
+    "item": "chalk_drawing",
+    "glb": "assets/decor/chalk_drawing.glb",
+    "card": "assets/decor/cards/chalk_drawing.png",
+    "price": 20,
+    "where": "street",
+    "description": "a portrait of {cat}, on the sidewalk, in chalk."
+  },
+  {
+    "item": "shopkeeper_cushion",
+    "glb": "assets/decor/shopkeeper_cushion.glb",
+    "card": "assets/decor/cards/shopkeeper_cushion.png",
+    "price": 26,
+    "where": "corner shop",
+    "description": "for the shopkeeper. it has earned it."
+  },
+  {
+    "item": "birdhouse",
+    "glb": "assets/decor/birdhouse.glb",
+    "card": "assets/decor/cards/birdhouse.png",
+    "price": 22,
+    "where": "park",
+    "description": "for the park tree. birds welcome. cats watching."
+  },
+  {
+    "item": "paper_lanterns",
+    "glb": "assets/decor/paper_lanterns.glb",
+    "card": "assets/decor/cards/paper_lanterns.png",
+    "price": 24,
+    "where": "rooftop",
+    "description": "for the rooftop. glowy and a little crooked."
+  },
+  {
+    "item": "telescope",
+    "glb": "assets/outdoor/telescope.glb",
+    "card": "assets/decor/cards/telescope.png",
+    "price": 40,
+    "where": "water tower",
+    "description": "for looking at the moon. closer."
+  },
+  {
+    "item": "moon_balloon",
+    "glb": "assets/decor/moon_balloon.glb",
+    "card": "assets/decor/cards/moon_balloon.png",
+    "price": 60,
+    "where": "water tower",
+    "description": "a second moon, on a string. for the water tower."
+  }
+]

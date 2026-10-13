@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>…</title>
+<!-- Add to Home Screen: the name and theme colour are filled in from src/config.js at startup (src/icon.js);
+     the icons are files (assets/icon-180.png for iOS, assets/icon-192/512.png in the manifest). No service worker. -->
+<meta name="theme-color" content="#1a1630">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="format-detection" content="telephone=no">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png">
+<link rel="manifest" href="assets/manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<style>
+  :root { --theme: #1a1630; --ink: #f6eadf; --bubble: rgba(36, 28, 58, 0.88); }
+  html, body {
+    margin: 0; height: 100%; overflow: hidden; background: var(--theme);
+    position: fixed; inset: 0; overscroll-behavior: none;
+    -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent; touch-action: none;
+    font-family: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, sans-serif;
+    -webkit-text-size-adjust: 100%;
+  }
+  canvas#c { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; display: block; touch-action: none; outline: none; }
+  #say {
+    position: fixed; left: 0; top: 0; max-width: min(70vw, 300px); padding: 9px 14px 10px;
+    background: var(--bubble); color: var(--ink); border-radius: 18px; font-size: 16px; line-height: 1.3;
+    text-align: center; pointer-events: none; opacity: 0; will-change: transform, opacity;
+    box-shadow: 0 6px 24px rgba(10, 6, 30, 0.35), inset 0 0 0 1px rgba(255, 230, 200, 0.12);
+    /* no backdrop-filter: blurring over a live WebGL canvas cost ~15 fps in testing */
+    transition: opacity 0.35s ease;
+  }
+  #say.show { opacity: 1; animation: pop 0.32s cubic-bezier(.2,1.6,.4,1); }
+  @keyframes pop { from { scale: 0.85; } to { scale: 1; } }
+  #hint {
+    position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); transform: translateX(-50%);
+    color: rgba(246, 234, 223, 0.75); font-size: 13px; letter-spacing: 0.02em; white-space: nowrap;
+    pointer-events: none; transition: opacity 1.2s ease 0.4s; text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+  }
+  #hint.gone { opacity: 0; }
+  @media (max-width: 520px) { #hint { white-space: normal; width: 80vw; text-align: center; } }
+  #perf-btn { z-index: 4;
+    position: fixed; top: calc(10px + env(safe-area-inset-top)); right: calc(10px + env(safe-area-inset-right));
+    min-width: 44px; height: 32px; border-radius: 16px; border: 0; padding: 0 12px;
+    background: rgba(36, 28, 58, 0.55); color: rgba(246, 234, 223, 0.8); font: inherit; font-size: 12px;
+    touch-action: manipulation;
+  }
+  #perf-btn[aria-pressed="true"] { background: rgba(255, 190, 120, 0.3); }
+  #perf { z-index: 4;
+    position: fixed; top: calc(48px + env(safe-area-inset-top)); right: calc(10px + env(safe-area-inset-right));
+    margin: 0; padding: 8px 10px; border-radius: 10px; background: rgba(14, 10, 30, 0.7); color: #e8ffe0;
+    font: 11px/1.45 ui-monospace, "SF Mono", Menlo, monospace; white-space: pre; pointer-events: none;
+  }
+  #splash {
+    position: fixed; inset: 0; display: grid; place-content: center; text-align: center; gap: 6px;
+    background: radial-gradient(circle at 50% 40%, #2a2150, var(--theme)); color: var(--ink);
+    transition: opacity 0.8s ease; z-index: 5;
+  }
+  #splash.gone { opacity: 0; pointer-events: none; }
+  #splash-title { font-size: 34px; letter-spacing: 0.04em; }
+  #splash-text { font-size: 14px; opacity: 0.7; }
+</style>
+<script>
+  // Show startup errors on the splash: there is no console on a phone.
+  window.__errors = [];
+  const __fail = (m) => { window.__errors.push(m); const s = document.getElementById('splash-text'); if (s) s.textContent = 'something went wrong: ' + m; };
+  addEventListener('error', (e) => __fail(String(e.message || e.error) + (e.filename ? ' @ ' + e.filename.split('/').pop() + ':' + e.lineno : '')));
+  addEventListener('unhandledrejection', (e) => __fail('promise: ' + e.reason));
+</script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three/build/three.module.min.js",
+    "three/addons/": "./vendor/three/addons/",
+    "three-mesh-bvh": "./vendor/three-mesh-bvh/index.module.js"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="say" role="status" aria-live="polite"></div>
+<div id="hint"></div>
+<button id="perf-btn" type="button" aria-pressed="false" hidden>fps</button>
+<script>if (/[?&](perf|dev)\b/.test(location.search)) document.getElementById('perf-btn').hidden = false; // the fps button is for testing</script>
+<pre id="perf" hidden></pre>
+<div id="splash"><div id="splash-title"></div><div id="splash-text"></div></div>
+<noscript><p style="color:#fff;padding:20px">This needs JavaScript.</p></noscript>
+<script type="module">
+  // Which build to run: the game (home, fire escape, roof, street, shop, park; default), the controller
+  // test course with ?course, the free-roam apartment with ?freeroam, or the phase 0 rooftop spike with ?rooftop.
+  const q = new URLSearchParams(location.search);
+  const entry = q.has('course') ? './src/platformer.js' : q.has('freeroam') ? './src/game.js' : q.has('rooftop') ? './src/main.js' : './src/home.js';
+  import(entry).catch((e) => __fail('could not start: ' + (e && e.message ? e.message : e)));
+</script>
+</body>
+</html>

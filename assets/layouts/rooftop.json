@@ -1,0 +1,1310 @@
+{
+ "area": "rooftop",
+ "description": "the roof above the apartment: the party echo (string lights and paper lanterns still on, the decks and cups, nobody there), the chimney, the skylight, the washing line, a deck chair facing the city, a little garden; the neighbours' roofs around, the skyline and the moon.",
+ "coords": "three.js/glTF metres: +Y up, piece fronts face +Z, position = piece origin (ASSETS.md), rotationY radians. All positions are relative to `place`, which src/layout.js adds back (home.js puts both areas at their own `place`).",
+ "place": {
+  "position": [
+   -2.2,
+   5.75,
+   0.0
+  ],
+  "rotationY": 0.0,
+  "note": "the middle of the roof above the apartment, on the roof surface (home.js)"
+ },
+ "ground": [
+  {
+   "name": "roof",
+   "top_y": 0.0,
+   "centre": [
+    0.0,
+    0.0,
+    -0.006
+   ],
+   "size_xz": [
+    15.12,
+    5.132
+   ],
+   "colour": "#4f4658",
+   "noise": 0.12,
+   "thickness": 0.2,
+   "collide": true,
+   "pattern": "tar"
+  }
+ ],
+ "pieces": [
+  {
+   "glb": "assets/outdoor/stair_hut.glb",
+   "position": [
+    5.2,
+    0.0,
+    1.0
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "keep",
+   "fade": true,
+   "id": "stairHut"
+  },
+  {
+   "glb": "assets/outdoor/roof_vent.glb",
+   "position": [
+    6.9,
+    0.0,
+    -1.9
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "roofVent"
+  },
+  {
+   "glb": "assets/sets/laundry_basket.glb",
+   "position": [
+    6.5,
+    0.0,
+    2.0
+   ],
+   "rotationY": 0.5,
+   "scale": 1.0,
+   "collide": "mesh"
+  },
+  {
+   "glb": "assets/outdoor/party/dj_table.glb",
+   "position": [
+    3.95,
+    0.0,
+    -2.0
+   ],
+   "rotationY": -0.05,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "djTable"
+  },
+  {
+   "glb": "assets/props/rug.glb",
+   "position": [
+    3.3,
+    0.004,
+    0.45
+   ],
+   "rotationY": 0.2,
+   "scale": 1.35,
+   "note": "a rug dragged up for the party"
+  },
+  {
+   "glb": "assets/props/coffee_table.glb",
+   "position": [
+    3.5,
+    0.0,
+    0.3
+   ],
+   "rotationY": 0.25,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "partyTable",
+   "note": "the party table: cups, one chip, a bottle cap"
+  },
+  {
+   "glb": "assets/outdoor/party/paper_cups.glb",
+   "position": [
+    3.2,
+    0.52,
+    0.22
+   ],
+   "rotationY": 0.3,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/party/paper_cups.glb",
+   "position": [
+    3.7,
+    0.52,
+    0.42
+   ],
+   "rotationY": 2.1,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/decor/candles.glb",
+   "position": [
+    3.75,
+    0.52,
+    0.15
+   ],
+   "rotationY": 0.0,
+   "scale": 0.8,
+   "id": "partyCandles"
+  },
+  {
+   "glb": "assets/outdoor/party/cooler.glb",
+   "position": [
+    4.55,
+    0.0,
+    -0.7
+   ],
+   "rotationY": 0.4,
+   "scale": 1.0,
+   "collide": "mesh"
+  },
+  {
+   "glb": "assets/outdoor/party/paper_cups.glb",
+   "position": [
+    4.52,
+    0.48,
+    -0.72
+   ],
+   "rotationY": 0.9,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/party/folding_chair.glb",
+   "position": [
+    2.6,
+    0.0,
+    0.85
+   ],
+   "rotationY": 2.7,
+   "scale": 1.0,
+   "collide": "mesh"
+  },
+  {
+   "glb": "assets/outdoor/party/folding_chair.glb",
+   "position": [
+    4.25,
+    0.0,
+    0.95
+   ],
+   "rotationY": -2.4,
+   "scale": 1.0,
+   "collide": "mesh"
+  },
+  {
+   "glb": "assets/outdoor/party/folding_chair.glb",
+   "position": [
+    1.65,
+    0.0,
+    -0.25
+   ],
+   "rotationY": 1.9,
+   "scale": 1.0,
+   "tilt": [
+    0.0,
+    1.45
+   ],
+   "note": "knocked over"
+  },
+  {
+   "glb": "assets/props/cozy/folded_blanket.glb",
+   "position": [
+    2.6,
+    0.46,
+    0.86
+   ],
+   "rotationY": 2.7,
+   "scale": 0.7,
+   "note": "a blanket left on a chair"
+  },
+  {
+   "glb": "assets/decor/floor_cushion.glb",
+   "position": [
+    1.9,
+    0.0,
+    1.55
+   ],
+   "rotationY": 0.4,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/decor/floor_cushion.glb",
+   "position": [
+    2.85,
+    0.0,
+    1.85
+   ],
+   "rotationY": 1.2,
+   "scale": 0.85
+  },
+  {
+   "glb": "assets/decor/moon_balloon.glb",
+   "position": [
+    4.6,
+    0.0,
+    1.6
+   ],
+   "rotationY": 0.6,
+   "scale": 1.0,
+   "id": "balloon",
+   "note": "a moon balloon tied to the chair, still floating"
+  },
+  {
+   "glb": "assets/outdoor/party/party_bulbs.glb",
+   "position": [
+    2.55,
+    1.78,
+    0.2
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "role": "keep",
+   "id": "stringLights"
+  },
+  {
+   "glb": "assets/outdoor/party/light_string.glb",
+   "position": [
+    -2.1,
+    1.85,
+    0.0
+   ],
+   "rotationY": 0.1,
+   "scale": 1.0,
+   "id": "lightString2"
+  },
+  {
+   "glb": "assets/outdoor/party/light_string.glb",
+   "position": [
+    0.75,
+    1.95,
+    1.22
+   ],
+   "rotationY": -0.88,
+   "scale": 1.0,
+   "id": "lightString3"
+  },
+  {
+   "glb": "assets/outdoor/party/light_string.glb",
+   "position": [
+    3.4,
+    2.0,
+    1.65
+   ],
+   "rotationY": 0.3,
+   "scale": 1.0,
+   "id": "lightString4"
+  },
+  {
+   "glb": "assets/outdoor/party/light_string.glb",
+   "position": [
+    -6.1,
+    1.9,
+    -0.2
+   ],
+   "rotationY": -0.1,
+   "scale": 1.0,
+   "id": "lightString5"
+  },
+  {
+   "glb": "assets/decor/bunting.glb",
+   "position": [
+    2.2,
+    1.15,
+    2.44
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "id": "bunting"
+  },
+  {
+   "glb": "assets/outdoor/chimney.glb",
+   "position": [
+    -3.4,
+    0.0,
+    -1.85
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "chimney"
+  },
+  {
+   "glb": "assets/outdoor/skylight.glb",
+   "position": [
+    -1.8,
+    0.0,
+    0.9
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "id": "skylight"
+  },
+  {
+   "glb": "assets/outdoor/puddle.glb",
+   "position": [
+    0.65,
+    0.004,
+    1.55
+   ],
+   "rotationY": 0.6,
+   "scale": 1.0,
+   "id": "puddle",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/deck_chair.glb",
+   "position": [
+    -0.65,
+    0.0,
+    -1.55
+   ],
+   "rotationY": 3.3916,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "chair"
+  },
+  {
+   "glb": "assets/props/cozy/folded_blanket.glb",
+   "position": [
+    -1.4,
+    0.0,
+    -1.95
+   ],
+   "rotationY": 0.4,
+   "scale": 0.75,
+   "note": "a folded blanket by the chair"
+  },
+  {
+   "glb": "assets/decor/paper_lanterns.glb",
+   "position": [
+    -0.75,
+    1.6,
+    -2.35
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "id": "lanterns"
+  },
+  {
+   "glb": "assets/outdoor/washing_line.glb",
+   "position": [
+    -5.7,
+    0.0,
+    0.95
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "id": "roofLine",
+   "role": "keep",
+   "note": "it moves in the wind"
+  },
+  {
+   "glb": "assets/outdoor/antenna.glb",
+   "position": [
+    -6.6,
+    0.0,
+    -1.7
+   ],
+   "rotationY": 0.5,
+   "scale": 1.0,
+   "id": "antenna"
+  },
+  {
+   "glb": "assets/outdoor/roof_vent.glb",
+   "position": [
+    -6.85,
+    0.0,
+    1.75
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh"
+  },
+  {
+   "glb": "assets/sets/planter_box.glb",
+   "position": [
+    -6.7,
+    0.0,
+    2.01
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh"
+  },
+  {
+   "glb": "assets/sets/planter_box.glb",
+   "position": [
+    -5.4,
+    0.0,
+    2.01
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh"
+  },
+  {
+   "glb": "assets/sets/tomato_cage.glb",
+   "position": [
+    -4.4,
+    0.0,
+    2.06
+   ],
+   "rotationY": 0.3,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/sets/watering_can.glb",
+   "position": [
+    -3.9,
+    0.0,
+    2.01
+   ],
+   "rotationY": 1.2,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/park_lamp.glb",
+   "position": [
+    -4.8,
+    0.0,
+    1.91
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "note": "an old garden lamp by the planters"
+  },
+  {
+   "glb": "assets/decor/floor_cushion.glb",
+   "position": [
+    -6.0,
+    0.0,
+    1.2
+   ],
+   "rotationY": 0.8,
+   "scale": 0.9,
+   "note": "a cushion in the garden corner"
+  },
+  {
+   "glb": "assets/outdoor/weather_vane.glb",
+   "position": [
+    -7.15,
+    0.6,
+    -2.15
+   ],
+   "rotationY": 0.6,
+   "scale": 1.0,
+   "role": "keep",
+   "id": "vane"
+  },
+  {
+   "glb": "assets/outdoor/water_tower.glb",
+   "position": [
+    -10.4,
+    -1.5,
+    -1.6
+   ],
+   "rotationY": 0.4,
+   "scale": 1.0,
+   "role": "keep",
+   "fade": true
+  },
+  {
+   "glb": "assets/outdoor/chimney.glb",
+   "position": [
+    -13.3,
+    -1.5,
+    1.2
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/skylight.glb",
+   "position": [
+    -15.3,
+    -1.5,
+    -1.0
+   ],
+   "rotationY": 0.3,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/alley/alley_lights.glb",
+   "position": [
+    -11.8,
+    -0.35,
+    2.9
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/antenna.glb",
+   "position": [
+    16.7,
+    3.0,
+    -2.5
+   ],
+   "rotationY": 1.2,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/outdoor/water_tower.glb",
+   "position": [
+    20.7,
+    3.0,
+    0.8
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/sets/skyline_backdrop.glb",
+   "position": [
+    -27.8,
+    -17.75,
+    -85.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/sets/skyline_backdrop.glb",
+   "position": [
+    34.2,
+    -19.75,
+    -92.0
+   ],
+   "rotationY": 0.08,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/sets/skyline_backdrop.glb",
+   "position": [
+    72.2,
+    -19.75,
+    -10.0
+   ],
+   "rotationY": -1.3708,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/sets/skyline_backdrop.glb",
+   "position": [
+    -69.8,
+    -19.75,
+    5.0
+   ],
+   "rotationY": 1.4708,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/sets/skyline_backdrop.glb",
+   "position": [
+    7.2,
+    -21.75,
+    80.0
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0
+  },
+  {
+   "glb": "assets/sky/cloud_a.glb",
+   "position": [
+    -23.8,
+    15.25,
+    -60.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.6
+  },
+  {
+   "glb": "assets/sky/cloud_b.glb",
+   "position": [
+    32.2,
+    18.25,
+    -64.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.5
+  }
+ ],
+ "cats": [],
+ "ghost": {
+  "position": [
+   1.2,
+   0.0,
+   -1.6
+  ],
+  "rotationY": 3.141592653589793
+ },
+ "lights": [
+  {
+   "type": "point",
+   "position": [
+    4.8,
+    2.35,
+    1.0
+   ],
+   "colour": "#ffc27a",
+   "intensity": 4.5,
+   "distance": 8.0,
+   "halo": 0.8,
+   "flicker": 0.02,
+   "pool": {
+    "y": 0.005,
+    "r": 1.8
+   }
+  },
+  {
+   "type": "point",
+   "position": [
+    2.8,
+    1.6,
+    0.2
+   ],
+   "colour": "#ffb89c",
+   "intensity": 5.5,
+   "distance": 9.0,
+   "halo": 1.1,
+   "flicker": 0.0,
+   "pool": {
+    "y": 0.005,
+    "r": 2.6
+   }
+  },
+  {
+   "type": "point",
+   "position": [
+    -0.7,
+    1.35,
+    -1.8
+   ],
+   "colour": "#ffd08a",
+   "intensity": 3.5,
+   "distance": 7.0,
+   "halo": 0.7,
+   "flicker": 0.02,
+   "pool": {
+    "y": 0.005,
+    "r": 1.7
+   }
+  },
+  {
+   "type": "point",
+   "position": [
+    -4.8,
+    2.45,
+    1.91
+   ],
+   "colour": "#ffbe78",
+   "intensity": 4.5,
+   "distance": 8.0,
+   "halo": 0.9,
+   "flicker": 0.02,
+   "pool": {
+    "y": 0.005,
+    "r": 2.2
+   }
+  }
+ ],
+ "camera": {
+  "position": [
+   3.0,
+   1.8,
+   3.6
+  ],
+  "target": [
+   1.4,
+   0.8,
+   -1.5
+  ],
+  "lens_mm": 24,
+  "note": "game camera on the roof"
+ },
+ "solids": [
+  {
+   "type": "brick",
+   "plane": "z",
+   "at": 2.56,
+   "u0": -7.56,
+   "u1": 7.56,
+   "y0": -3.0,
+   "y1": 0.0,
+   "facing": 1,
+   "colours": [
+    "#5c3a40",
+    "#7a4a48"
+   ],
+   "holes": [],
+   "hide_inside": true
+  },
+  {
+   "type": "windows",
+   "plane": "z",
+   "at": 2.57,
+   "u0": -7.16,
+   "u1": 7.16,
+   "y0": -2.3,
+   "y1": -0.5,
+   "facing": 1,
+   "cols": 9,
+   "rows": 1,
+   "lit": 0.5,
+   "seed": 5,
+   "size": [
+    0.7,
+    1.0
+   ],
+   "hide_inside": true
+  },
+  {
+   "type": "box",
+   "centre": [
+    0.0,
+    -2.985,
+    2.625
+   ],
+   "size": [
+    15.2,
+    0.13,
+    0.13
+   ],
+   "colour": "#d9c3a0",
+   "collide": false,
+   "hide_inside": true
+  },
+  {
+   "type": "box",
+   "centre": [
+    -3.67,
+    0.265,
+    -2.452
+   ],
+   "size": [
+    7.78,
+    0.53,
+    0.24
+   ],
+   "colour": [
+    "#5c3a40",
+    "#7a4a48"
+   ]
+  },
+  {
+   "type": "box",
+   "centre": [
+    -3.67,
+    0.565,
+    -2.452
+   ],
+   "size": [
+    7.84,
+    0.07,
+    0.3
+   ],
+   "colour": "#d9c3a0"
+  },
+  {
+   "type": "box",
+   "centre": [
+    4.92,
+    0.265,
+    -2.452
+   ],
+   "size": [
+    5.28,
+    0.53,
+    0.24
+   ],
+   "colour": [
+    "#5c3a40",
+    "#7a4a48"
+   ]
+  },
+  {
+   "type": "box",
+   "centre": [
+    4.92,
+    0.565,
+    -2.452
+   ],
+   "size": [
+    5.34,
+    0.07,
+    0.3
+   ],
+   "colour": "#d9c3a0"
+  },
+  {
+   "type": "box",
+   "centre": [
+    0.0,
+    0.265,
+    2.44
+   ],
+   "size": [
+    15.12,
+    0.53,
+    0.24
+   ],
+   "colour": [
+    "#5c3a40",
+    "#7a4a48"
+   ]
+  },
+  {
+   "type": "box",
+   "centre": [
+    0.0,
+    0.565,
+    2.44
+   ],
+   "size": [
+    15.18,
+    0.07,
+    0.3
+   ],
+   "colour": "#d9c3a0"
+  },
+  {
+   "type": "box",
+   "centre": [
+    -7.44,
+    0.265,
+    -0.006
+   ],
+   "size": [
+    0.24,
+    0.53,
+    4.652
+   ],
+   "colour": [
+    "#5c3a40",
+    "#7a4a48"
+   ]
+  },
+  {
+   "type": "box",
+   "centre": [
+    -7.44,
+    0.565,
+    -0.006
+   ],
+   "size": [
+    0.3,
+    0.07,
+    4.712
+   ],
+   "colour": "#d9c3a0"
+  },
+  {
+   "type": "box",
+   "centre": [
+    7.44,
+    0.265,
+    -0.006
+   ],
+   "size": [
+    0.24,
+    0.53,
+    4.652
+   ],
+   "colour": [
+    "#5c3a40",
+    "#7a4a48"
+   ]
+  },
+  {
+   "type": "box",
+   "centre": [
+    7.44,
+    0.565,
+    -0.006
+   ],
+   "size": [
+    0.3,
+    0.07,
+    4.712
+   ],
+   "colour": "#d9c3a0"
+  },
+  {
+   "type": "box",
+   "centre": [
+    -3.72,
+    1.3,
+    -2.622
+   ],
+   "size": [
+    7.88,
+    2.2,
+    0.1
+   ],
+   "visible": false,
+   "note": "behind the back parapet (west)"
+  },
+  {
+   "type": "box",
+   "centre": [
+    4.97,
+    1.3,
+    -2.622
+   ],
+   "size": [
+    5.38,
+    2.2,
+    0.1
+   ],
+   "visible": false,
+   "note": "behind the back parapet (east)"
+  },
+  {
+   "type": "box",
+   "centre": [
+    -6.48,
+    1.3,
+    2.61
+   ],
+   "size": [
+    2.36,
+    2.2,
+    0.1
+   ],
+   "visible": false,
+   "note": "outside the front parapet, over the row of shops (west)"
+  },
+  {
+   "type": "box",
+   "centre": [
+    6.48,
+    1.3,
+    2.61
+   ],
+   "size": [
+    2.36,
+    2.2,
+    0.1
+   ],
+   "visible": false,
+   "note": "outside the front parapet, over the row of shops (east)"
+  },
+  {
+   "type": "box",
+   "centre": [
+    -7.61,
+    1.3,
+    -0.006
+   ],
+   "size": [
+    0.1,
+    2.2,
+    5.132
+   ],
+   "visible": false,
+   "note": "outside the parapet"
+  },
+  {
+   "type": "box",
+   "centre": [
+    7.61,
+    1.3,
+    -0.006
+   ],
+   "size": [
+    0.1,
+    2.2,
+    5.132
+   ],
+   "visible": false,
+   "note": "outside the parapet"
+  },
+  {
+   "type": "pole",
+   "from": [
+    -0.1,
+    0.0,
+    0.2
+   ],
+   "to": [
+    -0.1,
+    2.25,
+    0.2
+   ],
+   "radius": 0.045,
+   "colour": "#5a4234"
+  },
+  {
+   "type": "pole",
+   "from": [
+    -0.1,
+    0.0,
+    0.2
+   ],
+   "to": [
+    0.2,
+    0.02,
+    0.45
+   ],
+   "radius": 0.02,
+   "colour": "#5a4234"
+  },
+  {
+   "type": "pole",
+   "from": [
+    -4.1,
+    0.0,
+    -0.2
+   ],
+   "to": [
+    -4.1,
+    2.15,
+    -0.2
+   ],
+   "radius": 0.04,
+   "colour": "#5a4234"
+  },
+  {
+   "type": "pole",
+   "from": [
+    1.6,
+    0.0,
+    2.25
+   ],
+   "to": [
+    1.6,
+    2.3,
+    2.25
+   ],
+   "radius": 0.045,
+   "colour": "#5a4234"
+  },
+  {
+   "type": "pole",
+   "from": [
+    -7.1,
+    0.0,
+    -0.3
+   ],
+   "to": [
+    -7.1,
+    2.1,
+    -0.3
+   ],
+   "radius": 0.04,
+   "colour": "#5a4234"
+  },
+  {
+   "type": "box",
+   "centre": [
+    -1.8,
+    0.3,
+    0.9
+   ],
+   "size": [
+    1.2,
+    0.6,
+    0.9
+   ],
+   "visible": false,
+   "note": "the skylight: flat warm glass to sit on (the glb's glass is too steep to stand on)"
+  },
+  {
+   "type": "pole",
+   "from": [
+    -2.05,
+    0.55,
+    -2.4
+   ],
+   "to": [
+    -2.05,
+    2.0,
+    -2.4
+   ],
+   "radius": 0.03,
+   "colour": "#5a4234"
+  },
+  {
+   "type": "pole",
+   "from": [
+    0.55,
+    0.55,
+    -2.4
+   ],
+   "to": [
+    0.55,
+    2.0,
+    -2.4
+   ],
+   "radius": 0.03,
+   "colour": "#5a4234"
+  },
+  {
+   "type": "block",
+   "min": [
+    -21.8,
+    -9.0,
+    -5.5
+   ],
+   "max": [
+    -7.8,
+    -1.5,
+    3.6
+   ],
+   "faces": [
+    "+x",
+    "+z",
+    "-z"
+   ],
+   "colours": [
+    "#4e3546",
+    "#6a4352"
+   ],
+   "roof": "#3b3550",
+   "parapet": 0.45,
+   "windows": {
+    "faces": [
+     "+x",
+     "-z"
+    ],
+    "cols": 4,
+    "rows": 2,
+    "lit": 0.5,
+    "y0": -2.45
+   },
+   "seed": 4
+  },
+  {
+   "type": "block",
+   "min": [
+    14.4,
+    -9.0,
+    -6.0
+   ],
+   "max": [
+    28.2,
+    3.0,
+    3.6
+   ],
+   "faces": [
+    "-x",
+    "+z",
+    "-z"
+   ],
+   "colours": [
+    "#5c3a40",
+    "#7a4a48"
+   ],
+   "roof": "#3b3550",
+   "parapet": 0.45,
+   "windows": {
+    "faces": [
+     "-x",
+     "-z"
+    ],
+    "cols": 4,
+    "rows": 3,
+    "lit": 0.55,
+    "y0": 0.9
+   },
+   "seed": 7
+  },
+  {
+   "type": "block",
+   "min": [
+    -37.8,
+    -9.0,
+    -24.0
+   ],
+   "max": [
+    -23.8,
+    6.75,
+    -12.0
+   ],
+   "faces": [
+    "+z",
+    "+x"
+   ],
+   "colours": [
+    "#4e3546",
+    "#6a4352"
+   ],
+   "roof": "#3b3550",
+   "parapet": 0.45,
+   "windows": {
+    "faces": [
+     "+z",
+     "+x"
+    ],
+    "cols": 6,
+    "rows": 5,
+    "lit": 0.35,
+    "y0": -1.25
+   },
+   "seed": 8
+  },
+  {
+   "type": "block",
+   "min": [
+    22.2,
+    -9.0,
+    -30.0
+   ],
+   "max": [
+    36.2,
+    8.25,
+    -16.0
+   ],
+   "faces": [
+    "+z",
+    "-x"
+   ],
+   "colours": [
+    "#5c3a40",
+    "#7a4a48"
+   ],
+   "roof": "#3b3550",
+   "parapet": 0.45,
+   "windows": {
+    "faces": [
+     "+z",
+     "-x"
+    ],
+    "cols": 6,
+    "rows": 6,
+    "lit": 0.35,
+    "y0": -1.25
+   },
+   "seed": 9
+  }
+ ],
+ "spots": [
+  {
+   "id": "partyLightsSpot",
+   "position": [
+    2.6,
+    0.0,
+    0.2
+   ],
+   "note": "under the bulbs"
+  },
+  {
+   "id": "roofEdge",
+   "position": [
+    -0.8,
+    0.6,
+    -2.452
+   ],
+   "note": "the back parapet, looking at the city"
+  }
+ ],
+ "zones": [
+  {
+   "min": [
+    -8.06,
+    -0.3,
+    -2.772
+   ],
+   "max": [
+    8.06,
+    6.0,
+    3.06
+   ],
+   "zoom": 1.12,
+   "pitch": 0.36,
+   "aim": 0.15,
+   "priority": 2,
+   "name": "the roof"
+  }
+ ],
+ "pits": []
+}

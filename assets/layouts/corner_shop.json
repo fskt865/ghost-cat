@@ -1,0 +1,980 @@
+{
+ "area": "corner_shop",
+ "description": "the corner shop, inside: the counter with the register, the radio and the lucky cat; the calico shopkeeper asleep on its cushion at its end; shelves of tins, a pyramid of tuna cans, the drinks fridge, the little mouse hole in the back wall, paper lanterns and two warm pendants",
+ "size_m": [
+  6,
+  5
+ ],
+ "coords": "three.js/glTF metres: +Y up, piece fronts face +Z, position = piece origin (ASSETS.md), rotationY radians",
+ "schema": {
+  "pieces": "id = the lines.js thing id (or a name the game uses); role: static (merged) | prop (batched, can wobble) | keep (its own mesh: it has nodes that move); collide: mesh (default) | none",
+  "things": "every touchable / secret spot: id (lines.js things[] / secrets[] / cats[]), kind thing|secret|cat|door, position (where to stand or the thing's centre), radius (touch range), piece (index into pieces), node (glb child node or anchor that moves or marks the spot)",
+  "lights": "three.js PointLight(colour, intensity, distance, decay 2) as src/layout.js reads it (halo, flicker, pool). priority 1 = a real light; priority 2 = halo + pool only (intensity 0, the value is in intensity_full)",
+  "spots": "touch points with no piece of their own (secrets, nodes on a bigger piece): {id, position}",
+  "fx": "particles the engine draws: steam (rising wisps), moths (circle a lamp), fireflies (drift in a box), drips",
+  "routes": "safe climbs: waypoints are surfaces Ghost stands on in order (top = surface height); every step up <= 0.85 m and every gap <= 2.0 m"
+ },
+ "ambient": {
+  "hemisphere": {
+   "sky": "#6a5a7a",
+   "ground": "#3a2638",
+   "intensity": 0.5
+  },
+  "fog": {
+   "colour": "#2a1f28",
+   "near": 4,
+   "far": 14
+  },
+  "haze": "warm, thin (dust motes in the pendants)"
+ },
+ "ground": [
+  {
+   "name": "floor",
+   "top_y": 0.0,
+   "centre": [
+    0,
+    0.0,
+    -2.75
+   ],
+   "size_xz": [
+    6.2,
+    5.2
+   ],
+   "colour": "#8a5f45",
+   "thickness": 0.2,
+   "noise": 0.12
+  },
+  {
+   "name": "back_wall",
+   "top_y": 3.0,
+   "centre": [
+    0,
+    3.0,
+    -5.3
+   ],
+   "size_xz": [
+    6.4,
+    0.2
+   ],
+   "colour": "#e2b98c",
+   "thickness": 3.0
+  },
+  {
+   "name": "side_wall_L",
+   "top_y": 3.0,
+   "centre": [
+    -3.2,
+    3.0,
+    -2.75
+   ],
+   "size_xz": [
+    0.2,
+    5.3
+   ],
+   "colour": "#d6a982",
+   "thickness": 3.0
+  },
+  {
+   "name": "side_wall_R",
+   "top_y": 3.0,
+   "centre": [
+    3.2,
+    3.0,
+    -2.75
+   ],
+   "size_xz": [
+    0.2,
+    5.3
+   ],
+   "colour": "#d6a982",
+   "thickness": 3.0
+  },
+  {
+   "name": "wainscot_back",
+   "top_y": 0.85,
+   "centre": [
+    0,
+    0.85,
+    -5.19
+   ],
+   "size_xz": [
+    6.0,
+    0.03
+   ],
+   "colour": "#7a5236",
+   "thickness": 0.85
+  },
+  {
+   "name": "wainscot_L",
+   "top_y": 0.85,
+   "centre": [
+    -3.09,
+    0.85,
+    -2.75
+   ],
+   "size_xz": [
+    0.03,
+    5.0
+   ],
+   "colour": "#7a5236",
+   "thickness": 0.85
+  },
+  {
+   "name": "wainscot_R",
+   "top_y": 0.85,
+   "centre": [
+    3.09,
+    0.85,
+    -2.75
+   ],
+   "size_xz": [
+    0.03,
+    5.0
+   ],
+   "colour": "#7a5236",
+   "thickness": 0.85
+  },
+  {
+   "name": "ceiling",
+   "top_y": 3.1,
+   "centre": [
+    0,
+    3.1,
+    -2.75
+   ],
+   "size_xz": [
+    6.4,
+    5.4
+   ],
+   "colour": "#5a3d2c",
+   "thickness": 0.2,
+   "ceiling": true
+  }
+ ],
+ "pieces": [
+  {
+   "glb": "assets/outdoor/wall_2m_door.glb",
+   "position": [
+    1.0,
+    0,
+    -0.25
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/door.glb",
+   "position": [
+    1.0,
+    0,
+    -0.25
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "keep",
+   "note": "the way out to the street",
+   "open_nodes": {
+    "door": -1.1
+   }
+  },
+  {
+   "glb": "assets/outdoor/wall_4m_window.glb",
+   "position": [
+    -2.0,
+    0,
+    -0.25
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    -3.0,
+    0.9,
+    -0.25
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static",
+   "note": "the street at night outside"
+  },
+  {
+   "glb": "assets/outdoor/window_dark.glb",
+   "position": [
+    -1.0,
+    0.9,
+    -0.25
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/door_bell.glb",
+   "position": [
+    1.0,
+    2.25,
+    -0.55
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "doorBell",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/sets/floor_mat.glb",
+   "position": [
+    1.0,
+    0,
+    -1.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/props/rug.glb",
+   "position": [
+    -0.4,
+    0,
+    -2.4
+   ],
+   "rotationY": 0.0,
+   "scale": 1.2,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/shelf_unit.glb",
+   "position": [
+    -2.35,
+    0,
+    -5.2
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/shelf_unit.glb",
+   "position": [
+    -1.0,
+    0,
+    -5.2
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/shelf_unit.glb",
+   "position": [
+    2.3,
+    0,
+    -5.2
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static",
+   "note": "behind the counter: climb route top (1.80)"
+  },
+  {
+   "glb": "assets/outdoor/town/mouse_hole.glb",
+   "position": [
+    0.55,
+    0.0,
+    -5.17
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "mouse",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/props/monstera.glb",
+   "position": [
+    1.35,
+    0,
+    -4.75
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/decor/star_garland.glb",
+   "position": [
+    0.0,
+    1.95,
+    -5.18
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/sets/fridge_cabinet.glb",
+   "position": [
+    -3.0,
+    0,
+    -1.45
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "keep",
+   "note": "drinks fridge (cool glow)"
+  },
+  {
+   "glb": "assets/props/cozy/sticky_note.glb",
+   "position": [
+    -2.6,
+    1.35,
+    -1.25
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "static"
+  },
+  {
+   "glb": "assets/sets/shelf_unit.glb",
+   "position": [
+    -3.0,
+    0,
+    -3.05
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static"
+  },
+  {
+   "glb": "assets/decor/paper_lanterns.glb",
+   "position": [
+    -2.9,
+    2.0,
+    -2.6
+   ],
+   "rotationY": 1.5708,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/shop_counter.glb",
+   "position": [
+    1.55,
+    0,
+    -3.05
+   ],
+   "rotationY": 0.12,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "counter",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/town/counter_end.glb",
+   "position": [
+    2.68,
+    0,
+    -2.75
+   ],
+   "rotationY": 1.6908,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "static",
+   "note": "the counter's L end: the calico's spot"
+  },
+  {
+   "glb": "assets/decor/shopkeeper_cushion.glb",
+   "position": [
+    2.68,
+    1.0,
+    -2.75
+   ],
+   "rotationY": 0.3,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/props/food_bowl.glb",
+   "position": [
+    2.4,
+    0,
+    -2.05
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop",
+   "note": "the calico's bowl"
+  },
+  {
+   "glb": "assets/outdoor/party/folding_chair.glb",
+   "position": [
+    2.0,
+    0,
+    -4.0
+   ],
+   "rotationY": 2.7416,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop",
+   "note": "behind the counter"
+  },
+  {
+   "glb": "assets/props/basil.glb",
+   "position": [
+    1.95,
+    1.8,
+    -5.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop",
+   "note": "on the shelf top"
+  },
+  {
+   "glb": "assets/props/cozy/folded_blanket.glb",
+   "position": [
+    2.45,
+    1.8,
+    -5.0
+   ],
+   "rotationY": 0.2,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop",
+   "note": "on the shelf top: a nap spot"
+  },
+  {
+   "glb": "assets/outdoor/town/can_stack.glb",
+   "position": [
+    -0.6,
+    0,
+    -3.6
+   ],
+   "rotationY": 0.2,
+   "scale": 1.0,
+   "collide": "mesh",
+   "id": "cans",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/props/cardboard_box.glb",
+   "position": [
+    0.95,
+    0,
+    -2.35
+   ],
+   "rotationY": 0.35,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop",
+   "note": "climb step 1 (top 0.39)"
+  },
+  {
+   "glb": "assets/outdoor/alley/box_pile.glb",
+   "position": [
+    -1.9,
+    0,
+    -4.35
+   ],
+   "rotationY": 0.1,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/alley/milk_crate.glb",
+   "position": [
+    -2.45,
+    0,
+    -0.9
+   ],
+   "rotationY": 0.4,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/newspaper_box.glb",
+   "position": [
+    -0.2,
+    0,
+    -0.75
+   ],
+   "rotationY": 0.2,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "prop"
+  },
+  {
+   "glb": "assets/outdoor/alley/back_door.glb",
+   "position": [
+    3.0,
+    0,
+    -4.4
+   ],
+   "rotationY": -1.5708,
+   "scale": 1.0,
+   "collide": "mesh",
+   "role": "keep",
+   "note": "the stock room (closed)"
+  },
+  {
+   "glb": "assets/outdoor/town/pendant_lamp.glb",
+   "position": [
+    1.5,
+    2.85,
+    -3.0
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "keep"
+  },
+  {
+   "glb": "assets/outdoor/town/pendant_lamp.glb",
+   "position": [
+    -1.0,
+    2.85,
+    -2.2
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "collide": "none",
+   "role": "keep"
+  }
+ ],
+ "cats": [
+  {
+   "glb": "assets/cats/cat_shopkeeper.glb",
+   "position": [
+    2.68,
+    1.12,
+    -2.75
+   ],
+   "rotationY": -0.7,
+   "pose": {
+    "sleep": 1.0
+   },
+   "id": "calico",
+   "note": "the shopkeeper, very asleep, on its cushion at the counter's end"
+  }
+ ],
+ "ghost": {
+  "position": [
+   0.1,
+   0.0,
+   -2.65
+  ],
+  "rotationY": 3.3916
+ },
+ "things": [
+  {
+   "id": "mouse",
+   "kind": "thing",
+   "area": "corner-shop",
+   "position": [
+    0.55,
+    0.0,
+    -4.95
+   ],
+   "radius": 0.45,
+   "piece": 11,
+   "node": "whiskers",
+   "sit": true
+  },
+  {
+   "id": "register",
+   "kind": "thing",
+   "area": "corner-shop",
+   "position": [
+    1.12,
+    1.0,
+    -2.857
+   ],
+   "radius": 0.35,
+   "piece": 18,
+   "node": "register_drawer"
+  },
+  {
+   "id": "radio",
+   "kind": "thing",
+   "area": "corner-shop",
+   "position": [
+    1.565,
+    1.0,
+    -3.092
+   ],
+   "radius": 0.35,
+   "piece": 18,
+   "node": "radio"
+  },
+  {
+   "id": "lucky",
+   "kind": "thing",
+   "area": "corner-shop",
+   "position": [
+    2.064,
+    1.0,
+    -3.132
+   ],
+   "radius": 0.3,
+   "piece": 18,
+   "node": "lucky_paw"
+  },
+  {
+   "id": "cans",
+   "kind": "thing",
+   "area": "corner-shop",
+   "position": [
+    -0.6,
+    0.0,
+    -3.25
+   ],
+   "radius": 0.5,
+   "piece": 25,
+   "node": "top_can"
+  },
+  {
+   "id": "shopkeeper",
+   "kind": "secret",
+   "area": "corner-shop",
+   "position": [
+    2.3,
+    1.0,
+    -2.3
+   ],
+   "radius": 0.7,
+   "note": "sit near the calico (on the counter or the box) for 4 s",
+   "sit": true
+  },
+  {
+   "id": "keeper",
+   "kind": "thing",
+   "area": "corner-shop",
+   "position": [
+    2.68,
+    1.0,
+    -2.75
+   ],
+   "radius": 0.6,
+   "note": "the calico, asleep on the cushion"
+  },
+  {
+   "id": "streetDoor",
+   "kind": "door",
+   "area": "corner-shop",
+   "position": [
+    1.0,
+    0.0,
+    -0.7
+   ],
+   "radius": 0.6,
+   "note": "back out to the street"
+  }
+ ],
+ "lights": [
+  {
+   "id": "pendantCounter",
+   "type": "point",
+   "position": [
+    1.5,
+    2.03,
+    -3.0
+   ],
+   "colour": "#ffc27a",
+   "intensity": 2.6,
+   "intensity_full": 2.6,
+   "distance": 6.0,
+   "decay": 2,
+   "priority": 1,
+   "source": "pendant over the counter",
+   "halo": true,
+   "flicker": 0.015,
+   "pool": {
+    "y": 0.01,
+    "r": 1.41
+   },
+   "castShadow": true
+  },
+  {
+   "id": "pendantAisle",
+   "type": "point",
+   "position": [
+    -1.0,
+    2.03,
+    -2.2
+   ],
+   "colour": "#ffc88a",
+   "intensity": 2.0,
+   "intensity_full": 2.0,
+   "distance": 5.5,
+   "decay": 2,
+   "priority": 1,
+   "source": "pendant over the aisle",
+   "halo": true,
+   "flicker": 0.015,
+   "pool": {
+    "y": 0.01,
+    "r": 1.2
+   }
+  },
+  {
+   "id": "lanterns",
+   "type": "point",
+   "position": [
+    -2.75,
+    1.75,
+    -2.6
+   ],
+   "colour": "#ffb8a0",
+   "intensity": 0,
+   "intensity_full": 0.8,
+   "distance": 3.0,
+   "decay": 2,
+   "priority": 2,
+   "source": "paper lanterns on the left wall",
+   "halo": true,
+   "flicker": 0.03
+  },
+  {
+   "id": "fridge",
+   "type": "point",
+   "position": [
+    -2.3,
+    1.0,
+    -1.45
+   ],
+   "colour": "#cfe3ff",
+   "intensity": 0,
+   "intensity_full": 0.8,
+   "distance": 3.0,
+   "decay": 2,
+   "priority": 2,
+   "source": "drinks fridge glow (cool)",
+   "halo": true,
+   "flicker": 0.015
+  },
+  {
+   "id": "radio",
+   "type": "point",
+   "position": [
+    1.582,
+    1.25,
+    -2.953
+   ],
+   "colour": "#ffd08a",
+   "intensity": 0,
+   "intensity_full": 0.25,
+   "distance": 1.5,
+   "decay": 2,
+   "priority": 2,
+   "source": "radio dial",
+   "halo": true,
+   "flicker": 0.015
+  },
+  {
+   "id": "street",
+   "type": "point",
+   "position": [
+    -2.0,
+    1.6,
+    0.5
+   ],
+   "colour": "#8fa2e8",
+   "intensity": 0,
+   "intensity_full": 0.6,
+   "distance": 4.0,
+   "decay": 2,
+   "priority": 2,
+   "source": "blue street light through the window",
+   "halo": true,
+   "flicker": 0.015
+  }
+ ],
+ "spots": [
+  {
+   "id": "register",
+   "position": [
+    1.12,
+    1.0,
+    -2.857
+   ]
+  },
+  {
+   "id": "radio",
+   "position": [
+    1.565,
+    1.0,
+    -3.092
+   ]
+  },
+  {
+   "id": "lucky",
+   "position": [
+    2.064,
+    1.0,
+    -3.132
+   ]
+  },
+  {
+   "id": "shopkeeper",
+   "position": [
+    2.3,
+    1.0,
+    -2.3
+   ]
+  },
+  {
+   "id": "keeper",
+   "position": [
+    2.68,
+    1.0,
+    -2.75
+   ]
+  },
+  {
+   "id": "streetDoor",
+   "position": [
+    1.0,
+    0.0,
+    -0.7
+   ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "dust",
+   "position": [
+    1.5,
+    1.6,
+    -3.0
+   ],
+   "size": [
+    1.2,
+    1.0,
+    1.2
+   ],
+   "note": "dust motes in the pendant light"
+  },
+  {
+   "kind": "dust",
+   "position": [
+    -1.0,
+    1.6,
+    -2.2
+   ],
+   "size": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  }
+ ],
+ "routes": [
+  {
+   "name": "onto the shelf behind the counter",
+   "note": "cardboard box, the counter top (between the register and the radio), then the tall shelf behind it: a folded blanket and a pot of basil up there, a view of the whole shop",
+   "max_step_m": 0.85,
+   "max_gap_m": 2.0,
+   "waypoints": [
+    {
+     "position": [
+      0.95,
+      0.0,
+      -1.75
+     ],
+     "top": 0.0,
+     "on": "floor"
+    },
+    {
+     "position": [
+      0.95,
+      0.39,
+      -2.35
+     ],
+     "top": 0.39,
+     "on": "cardboard box"
+    },
+    {
+     "position": [
+      1.35,
+      1.0,
+      -2.95
+     ],
+     "top": 1.0,
+     "on": "counter top"
+    },
+    {
+     "position": [
+      2.3,
+      1.8,
+      -5.0
+     ],
+     "top": 1.8,
+     "on": "shelf top"
+    }
+   ]
+  }
+ ],
+ "camera": {
+  "position": [
+   -0.696,
+   0.807,
+   -1.001
+  ],
+  "target": [
+   0.1,
+   0.3,
+   -2.65
+  ],
+  "fov_deg": 55.0,
+  "distance_m": 1.9,
+  "pitch_rad": 0.27,
+  "lens_mm": 21.61,
+  "note": "game camera: behind Ghost, low and close (follow-camera distance and pitch); preview assets/preview/areas/corner_shop-game.png"
+ },
+ "camera_overview": {
+  "position": [
+   5.6,
+   6.6,
+   3.2
+  ],
+  "target": [
+   0.0,
+   0.4,
+   -2.8
+  ],
+  "lens_mm": 22,
+  "note": "overview of the whole area; preview assets/preview/areas/corner_shop-overview.png"
+ },
+ "doors": [
+  {
+   "to": "street",
+   "thing": "streetDoor"
+  }
+ ]
+}
