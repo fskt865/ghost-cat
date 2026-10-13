@@ -375,6 +375,139 @@
    "batch": "fire_escape"
   },
   {
+   "glb": "assets/outdoor/alley/ac_unit.glb",
+   "position": [
+    8.3,
+    1.55,
+    10.0
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "collide": "mesh",
+   "note": "alley climb: AC over the dumpster (top 2.0)",
+   "batch": "alley"
+  },
+  {
+   "glb": "assets/outdoor/alley/drainpipe.glb",
+   "position": [
+    9.5,
+    0.35,
+    10.0
+   ],
+   "rotationY": 3.1416,
+   "scale": 1.0,
+   "collide": "mesh",
+   "note": "alley climb: the drainpipe's ledge (2.75)",
+   "batch": "alley"
+  },
+  {
+   "glb": "assets/props/cozy/jar_candle.glb",
+   "position": [
+    5.85,
+    4.7,
+    8.2
+   ],
+   "rotationY": 0.0,
+   "scale": 1.0,
+   "batch": "alley"
+  },
+  {
+   "glb": "assets/decor/herb_box.glb",
+   "position": [
+    9.1,
+    3.4,
+    8.02
+   ],
+   "rotationY": 0.0,
+   "scale": 0.8,
+   "batch": "alley"
+  },
+  {
+   "glb": "assets/decor/balcony_lights.glb",
+   "position": [
+    6.85,
+    10.3,
+    0.1
+   ],
+   "rotationY": 0.0,
+   "scale": 0.36,
+   "role": "static",
+   "note": "bulbs over the roof stair's top",
+   "batch": "rowRoof"
+  },
+  {
+   "glb": "assets/outdoor/deck_chair.glb",
+   "position": [
+    8.8,
+    6.0,
+    3.04
+   ],
+   "rotationY": -0.9,
+   "scale": 1.0,
+   "collide": "mesh",
+   "note": "a deck chair on the coffee shop's roof",
+   "batch": "rowRoof"
+  },
+  {
+   "glb": "assets/props/cozy/folded_blanket.glb",
+   "position": [
+    8.75,
+    6.3,
+    3.06
+   ],
+   "rotationY": -0.9,
+   "scale": 0.7,
+   "role": "static",
+   "batch": "rowRoof"
+  },
+  {
+   "glb": "assets/outdoor/town/pot_cluster.glb",
+   "position": [
+    7.7,
+    6.0,
+    5.02
+   ],
+   "rotationY": 0.4,
+   "scale": 0.9,
+   "collide": "mesh",
+   "batch": "rowRoof"
+  },
+  {
+   "glb": "assets/outdoor/town/pot_cluster.glb",
+   "position": [
+    10.8,
+    6.0,
+    7.04
+   ],
+   "rotationY": 2.2,
+   "scale": 0.9,
+   "collide": "mesh",
+   "batch": "rowRoof"
+  },
+  {
+   "glb": "assets/outdoor/town/lantern_post.glb",
+   "position": [
+    9.6,
+    6.0,
+    4.34
+   ],
+   "rotationY": -0.9,
+   "scale": 1.0,
+   "batch": "rowRoof"
+  },
+  {
+   "glb": "assets/decor/paper_lanterns.glb",
+   "position": [
+    9.6,
+    8.35,
+    4.34
+   ],
+   "rotationY": 0.6708,
+   "scale": 0.45,
+   "role": "static",
+   "batch": "rowRoof"
+  },
+  {
    "glb": "assets/outdoor/window_lit.glb",
    "position": [
     5.5,
@@ -420,7 +553,7 @@
    "rotationY": 2.8,
    "scale": 0.9,
    "collide": "mesh",
-   "batch": "corner"
+   "batch": "cornerSmall"
   },
   {
    "glb": "assets/outdoor/town/festoon_10m.glb",
@@ -468,8 +601,8 @@
    "rotationY": 1.5708,
    "scale": 1.0,
    "collide": "mesh",
-   "note": "a bench at the corner, under the lit window",
-   "batch": "corner"
+   "batch": "cornerSmall",
+   "note": "a bench at the corner, under the lit window"
   },
   {
    "glb": "assets/outdoor/town/bench_blanket.glb",
@@ -481,7 +614,7 @@
    "rotationY": 1.5708,
    "scale": 1.0,
    "role": "static",
-   "batch": "corner"
+   "batch": "cornerSmall"
   },
   {
    "glb": "assets/outdoor/window_lit.glb",
@@ -592,6 +725,61 @@
    "pool": {
     "y": 9.005,
     "r": 1.3
+   },
+   "priority": 1,
+   "moths": true
+  },
+  {
+   "type": "point",
+   "position": [
+    5.95,
+    5.05,
+    8.5
+   ],
+   "colour": "#ffb46a",
+   "intensity": 1.6,
+   "distance": 4.0,
+   "halo": 0.6,
+   "flicker": 0.06,
+   "pool": {
+    "y": 4.705,
+    "r": 0.8
+   },
+   "priority": 1
+  },
+  {
+   "type": "point",
+   "position": [
+    6.85,
+    10.1,
+    0.62
+   ],
+   "colour": "#ffb870",
+   "intensity": 1.8,
+   "distance": 4.5,
+   "halo": 0.8,
+   "flicker": 0.02,
+   "pool": {
+    "y": 9.005,
+    "r": 0.9
+   },
+   "priority": 1
+  },
+  {
+   "type": "point",
+   "position": [
+    9.6,
+    8.0,
+    4.34
+   ],
+   "colour": "#ffaa66",
+   "intensity": 2.6,
+   "distance": 6.0,
+   "halo": 0.8,
+   "flicker": 0.02,
+   "pool": {
+    "y": 6.005,
+    "r": 1.8
    },
    "priority": 1,
    "moths": true
@@ -1922,7 +2110,7 @@
     "#5c3a40",
     "#7a4a48"
    ],
-   "roof": "#3b3550",
+   "roof": "#4a3c40",
    "parapet": 0.45,
    "windows": {},
    "seed": 5
@@ -1960,7 +2148,7 @@
     "#5c3a40",
     "#7a4a48"
    ],
-   "roof": "#3b3550",
+   "roof": "#4a3c40",
    "parapet": 0.45,
    "windows": {},
    "seed": 5
@@ -1998,7 +2186,7 @@
     "#5c3a40",
     "#7a4a48"
    ],
-   "roof": "#3b3550",
+   "roof": "#4a3c40",
    "parapet": 0.45,
    "windows": {},
    "seed": 5
@@ -2036,7 +2224,7 @@
     "#5c3a40",
     "#7a4a48"
    ],
-   "roof": "#3b3550",
+   "roof": "#4a3c40",
    "parapet": 0.45,
    "windows": {},
    "seed": 5
@@ -2131,6 +2319,504 @@
     "#7a4a48"
    ],
    "holes": []
+  },
+  {
+   "type": "box",
+   "centre": [
+    8.3,
+    1.4,
+    9.715
+   ],
+   "size": [
+    0.75,
+    0.4,
+    0.57
+   ],
+   "visible": false,
+   "note": "under the AC: its brackets (no squeezing under it)"
+  },
+  {
+   "type": "box",
+   "centre": [
+    9.075,
+    3.36,
+    8.52
+   ],
+   "size": [
+    0.95,
+    0.08,
+    1.04
+   ],
+   "colour": "#4a3a3a",
+   "note": "alley landing"
+  },
+  {
+   "type": "box",
+   "centre": [
+    9.075,
+    4.195,
+    9.045
+   ],
+   "size": [
+    0.95,
+    0.03,
+    0.03
+   ],
+   "colour": "#2c2b3d",
+   "collide": false
+  },
+  {
+   "type": "pole",
+   "from": [
+    9.52,
+    3.4,
+    9.045
+   ],
+   "to": [
+    9.52,
+    4.2,
+    9.045
+   ],
+   "radius": 0.018,
+   "colour": "#2c2b3d"
+  },
+  {
+   "type": "pole",
+   "from": [
+    8.63,
+    3.4,
+    9.045
+   ],
+   "to": [
+    8.63,
+    4.2,
+    9.045
+   ],
+   "radius": 0.018,
+   "colour": "#2c2b3d"
+  },
+  {
+   "type": "box",
+   "centre": [
+    6.05,
+    4.66,
+    8.52
+   ],
+   "size": [
+    0.9,
+    0.08,
+    1.04
+   ],
+   "colour": "#4a3a3a",
+   "note": "alley landing"
+  },
+  {
+   "type": "box",
+   "centre": [
+    6.05,
+    5.495,
+    9.045
+   ],
+   "size": [
+    0.9,
+    0.03,
+    0.03
+   ],
+   "colour": "#2c2b3d",
+   "collide": false
+  },
+  {
+   "type": "pole",
+   "from": [
+    6.47,
+    4.7,
+    9.045
+   ],
+   "to": [
+    6.47,
+    5.5,
+    9.045
+   ],
+   "radius": 0.018,
+   "colour": "#2c2b3d"
+  },
+  {
+   "type": "pole",
+   "from": [
+    5.63,
+    4.7,
+    9.045
+   ],
+   "to": [
+    5.63,
+    5.5,
+    9.045
+   ],
+   "radius": 0.018,
+   "colour": "#2c2b3d"
+  },
+  {
+   "type": "box",
+   "centre": [
+    9.075,
+    5.96,
+    8.52
+   ],
+   "size": [
+    0.95,
+    0.08,
+    1.04
+   ],
+   "colour": "#4a3a3a",
+   "note": "alley landing"
+  },
+  {
+   "type": "box",
+   "centre": [
+    9.075,
+    6.795,
+    9.045
+   ],
+   "size": [
+    0.95,
+    0.03,
+    0.03
+   ],
+   "colour": "#2c2b3d",
+   "collide": false
+  },
+  {
+   "type": "pole",
+   "from": [
+    9.52,
+    6.0,
+    9.045
+   ],
+   "to": [
+    9.52,
+    6.8,
+    9.045
+   ],
+   "radius": 0.018,
+   "colour": "#2c2b3d"
+  },
+  {
+   "type": "pole",
+   "from": [
+    8.63,
+    6.0,
+    9.045
+   ],
+   "to": [
+    8.63,
+    6.8,
+    9.045
+   ],
+   "radius": 0.018,
+   "colour": "#2c2b3d"
+  },
+  {
+   "type": "stair",
+   "from": [
+    8.6,
+    3.4,
+    8.78
+   ],
+   "to": [
+    6.5,
+    4.7,
+    8.78
+   ],
+   "width": 0.5,
+   "colour": "#2c2b3d",
+   "rails": [
+    true,
+    true
+   ],
+   "fade": true,
+   "rail_trim": 0.35
+  },
+  {
+   "type": "stair",
+   "from": [
+    6.5,
+    4.7,
+    8.25
+   ],
+   "to": [
+    8.6,
+    6.0,
+    8.25
+   ],
+   "width": 0.5,
+   "colour": "#2c2b3d",
+   "rails": [
+    true,
+    true
+   ],
+   "fade": true,
+   "rail_trim": 0.35
+  },
+  {
+   "type": "box",
+   "centre": [
+    8.55,
+    4.35,
+    8.26
+   ],
+   "size": [
+    0.1,
+    1.9,
+    0.52
+   ],
+   "visible": false,
+   "note": "alley landing 1: the inner half past it"
+  },
+  {
+   "type": "box",
+   "centre": [
+    5.55,
+    5.7,
+    8.52
+   ],
+   "size": [
+    0.1,
+    2.0,
+    1.04
+   ],
+   "visible": false,
+   "note": "alley landing 2: the street side"
+  },
+  {
+   "type": "box",
+   "centre": [
+    6.0,
+    5.7,
+    9.09
+   ],
+   "size": [
+    1.0,
+    2.0,
+    0.1
+   ],
+   "visible": false,
+   "note": "alley landing 2: the outer edge"
+  },
+  {
+   "type": "box",
+   "centre": [
+    8.55,
+    7.0,
+    8.78
+   ],
+   "size": [
+    0.1,
+    2.0,
+    0.52
+   ],
+   "visible": false,
+   "note": "alley landing 3: the outer half past it"
+  },
+  {
+   "type": "box",
+   "centre": [
+    9.05,
+    7.0,
+    9.09
+   ],
+   "size": [
+    1.1,
+    2.0,
+    0.1
+   ],
+   "visible": false,
+   "note": "alley landing 3: the outer edge"
+  },
+  {
+   "type": "box",
+   "centre": [
+    7.55,
+    4.45,
+    7.85
+   ],
+   "size": [
+    4.1,
+    3.1,
+    0.3
+   ],
+   "visible": false,
+   "note": "the alley's upper wall (+z)"
+  },
+  {
+   "type": "box",
+   "centre": [
+    7.55,
+    4.45,
+    10.15
+   ],
+   "size": [
+    4.1,
+    3.1,
+    0.3
+   ],
+   "visible": false,
+   "note": "the alley's upper wall (-z)"
+  },
+  {
+   "type": "box",
+   "centre": [
+    9.75,
+    4.45,
+    9.0
+   ],
+   "size": [
+    0.3,
+    3.1,
+    2.0
+   ],
+   "visible": false,
+   "note": "the alley's far wall, upper"
+  },
+  {
+   "type": "box",
+   "centre": [
+    7.75,
+    6.225,
+    7.89
+   ],
+   "size": [
+    4.0,
+    0.45,
+    0.22
+   ],
+   "visible": false,
+   "note": "the row's parapet by the alley"
+  },
+  {
+   "type": "box",
+   "centre": [
+    6.825,
+    8.96,
+    0.31
+   ],
+   "size": [
+    1.05,
+    0.08,
+    0.62
+   ],
+   "colour": "#2c2b3d",
+   "note": "roof stair: top landing"
+  },
+  {
+   "type": "stair",
+   "from": [
+    6.85,
+    6.0,
+    4.72
+   ],
+   "to": [
+    6.85,
+    9.0,
+    0.62
+   ],
+   "width": 0.6,
+   "colour": "#2c2b3d",
+   "rails": [
+    true,
+    true
+   ],
+   "fade": true,
+   "rail_trim": 0.3
+  },
+  {
+   "type": "box",
+   "centre": [
+    6.25,
+    10.0,
+    0.31
+   ],
+   "size": [
+    0.1,
+    2.0,
+    0.62
+   ],
+   "visible": false,
+   "note": "roof stair landing: west"
+  },
+  {
+   "type": "box",
+   "centre": [
+    7.4,
+    10.0,
+    0.31
+   ],
+   "size": [
+    0.1,
+    2.0,
+    0.62
+   ],
+   "visible": false,
+   "note": "roof stair landing: east"
+  },
+  {
+   "type": "box",
+   "centre": [
+    6.425,
+    10.0,
+    0.67
+   ],
+   "size": [
+    0.25,
+    2.0,
+    0.1
+   ],
+   "visible": false,
+   "note": "roof stair landing: front"
+  },
+  {
+   "type": "box",
+   "centre": [
+    7.25,
+    10.0,
+    0.67
+   ],
+   "size": [
+    0.2,
+    2.0,
+    0.1
+   ],
+   "visible": false,
+   "note": "roof stair landing: front"
+  },
+  {
+   "type": "pole",
+   "from": [
+    6.33,
+    9.0,
+    0.59
+   ],
+   "to": [
+    6.33,
+    9.85,
+    0.59
+   ],
+   "radius": 0.018,
+   "colour": "#2c2b3d"
+  },
+  {
+   "type": "pole",
+   "from": [
+    7.32,
+    9.0,
+    0.59
+   ],
+   "to": [
+    7.32,
+    9.85,
+    0.59
+   ],
+   "radius": 0.018,
+   "colour": "#2c2b3d"
   },
   {
    "type": "brick",
@@ -2294,6 +2980,41 @@
  ],
  "spots": [],
  "zones": [
+  {
+   "min": [
+    5.45,
+    1.0,
+    8.0
+   ],
+   "max": [
+    9.6,
+    7.5,
+    10.0
+   ],
+   "zoom": 0.95,
+   "pitch": 0.95,
+   "aim": 0.2,
+   "axis": "x",
+   "priority": 3,
+   "name": "up the alley"
+  },
+  {
+   "min": [
+    5.75,
+    5.7,
+    0.0
+   ],
+   "max": [
+    11.5,
+    10.0,
+    8.0
+   ],
+   "zoom": 1.05,
+   "pitch": 0.42,
+   "aim": 0.3,
+   "priority": 3,
+   "name": "the coffee shop's roof"
+  },
   {
    "min": [
     -5.7,

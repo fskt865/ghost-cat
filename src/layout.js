@@ -35,15 +35,15 @@
 //   (other keys, e.g. things, routes, ambient, camera, are data for the game and ignored here)
 import * as THREE from 'three';
 import { Baker, rng, mix, toonMaterial, glowTexture, radialTexture } from './util.js';
-import { getProp, preload } from './props.js';
-import { batchStatic } from './batch.js';
+import { getProp, preload, fetchJSON } from './props.js';
+import { batchStatic, batchLive } from './batch.js';
 import { createPropBatch } from './prop-batch.js';
 
 const PI = Math.PI;
 const UP = new THREE.Vector3(0, 1, 0);
 
 export async function loadLayout(scene, src, { world = null, place = null, castShadow = false, realLights = true, fx = null } = {}) {
-  const data = typeof src === 'string' ? await (await fetch(src)).json() : src;
+  const data = typeof src === 'string' ? await fetchJSON(src) : src;
   const P = place || data.place || { position: [0, 0, 0], rotationY: 0 };
   const root = new THREE.Group();
   root.name = 'area-' + data.area;
@@ -325,10 +325,24 @@ export async function loadLayout(scene, src, { world = null, place = null, castS
   const groups = new Map();
   for (const o of statics) { const g = o.userData.layout?.batch || ''; if (!groups.has(g)) groups.set(g, []); groups.get(g).push(o); }
   const staticMeshes = [];
-  for (const [g, list] of groups) for (const m of batchStatic(scene, list, { toon, skip: (o) => o.userData.noBatch })) { m.userData.batch = g; staticMeshes.push(m); }
+  for (const [g, list] of groups) {
+    const merged = batchStatic(scene, list, { toon, skip: (o) => o.userData.noBatch });
+    for (const m of merged) { m.userData.batch = g; staticMeshes.push(m); }
+    // what the merge leaves of a static piece (see-through glass, water, candle jars) hangs under the merged mesh, so it
+    // shows and hides with it (callers hide far parts of an area by its merged meshes; these used to draw from anywhere)
+    if (merged[0]) for (const o of list) {
+      const left = [];
+      o.traverse((m) => { if (m.isMesh && !m.userData.batched && m.material.visible !== false) { for (let q = m; q && q !== o.parent; q = q.parent) if (q.userData.noBatch) return; left.push(m); } });
+      for (const m of left) merged[0].attach(m);
+    }
+  }
   const liveNodes = []; // keep_nodes meshes left out of the static merge (they still draw, and can move)
   for (const o of statics) o.traverse((m) => { if (m.isMesh && m.userData.noBatch) liveNodes.push(m); });
   const propBatch = createPropBatch(scene, props);
+  // pieces that stay their own meshes (role 'keep': they animate, twinkle or hide on their own) and the live nodes of
+  // static pieces: drawn by a live batch that follows them (src/batch.js); fading ones are left alone
+  const fadeSet = new Set(); for (const o of fadeables) o.traverse((m) => fadeSet.add(m));
+  const liveBatches = batchLive(scene, [...keeps, ...liveNodes], { name: data.area + '-live', skip: (m) => fadeSet.has(m) });
 
   // ------------------------------------------------------------------ zones, pits, start (to world)
   const box3 = (z) => new THREE.Box3().setFromPoints([W(z.min), W(z.max), W([z.min[0], z.min[1], z.max[2]]), W([z.max[0], z.max[1], z.min[2]])]);
@@ -356,7 +370,7 @@ export async function loadLayout(scene, src, { world = null, place = null, castS
     if (camera) for (const c of ceilings) c.mesh.visible = camera.position.y < c.y;
   };
   return {
-    data, root, placed, cats, lights, halos, poolMesh, meshes, staticMeshes, propBatch, keeps, fadeables, zones, pits, ghost, update, ceilings, liveNodes, props,
+    data, root, placed, cats, lights, halos, poolMesh, meshes, staticMeshes, propBatch, keeps, fadeables, zones, pits, ghost, update, ceilings, liveNodes, props, liveBatches,
     sync: (o) => propBatch.syncObject(o), toWorld: W,
     insideMeshes: [meshes.inside, meshes.insideGlow].filter(Boolean),
   };

@@ -9,15 +9,36 @@ const loader = new GLTFLoader();
 const cache = new Map();
 export const loadReport = {}; // name -> 'glb' | 'placeholder'
 
+// Every file the world loads at start (assets/preload.json, written by tools/preload-list.mjs) is requested at once as
+// soon as this module runs, instead of area by area as the build reaches it: the downloads overlap each other and the
+// build. A file missing from the list just loads when asked; a stale entry costs one unused download.
+const bytes = new Map(); // url -> Promise<ArrayBuffer | null>
+export function fetchBytes(url) {
+  if (!bytes.has(url)) bytes.set(url, fetch(url).then((r) => (r.ok ? r.arrayBuffer() : null)).catch(() => null));
+  return bytes.get(url);
+}
+// the bytes of a JSON file as an object (a layout); taken out of the map once read
+export async function fetchJSON(url) {
+  const b = await fetchBytes(url); bytes.delete(url);
+  if (!b) throw new Error('missing ' + url);
+  return JSON.parse(new TextDecoder().decode(b));
+}
+fetch('assets/preload.json').then((r) => (r.ok ? r.json() : [])).then((list) => { for (const u of list) fetchBytes(u); }).catch(() => {});
+
 function load(name) {
   const url = name.startsWith('assets/') || name.startsWith('./') ? name : `assets/props/${name}.glb`;
   if (!cache.has(name)) {
     cache.set(name, new Promise((resolve) => {
-      loader.load(url, (g) => {
-        toonifyGltf(g.scene, { cast: true });
-        loadReport[name] = 'glb';
-        resolve(g.scene);
-      }, undefined, () => { loadReport[name] = 'placeholder'; resolve(null); });
+      const fail = () => { loadReport[name] = 'placeholder'; resolve(null); };
+      fetchBytes(url).then((buf) => {
+        bytes.delete(url); // parsed once, cloned from the cache after that
+        if (!buf) return fail();
+        loader.parse(buf, url.slice(0, url.lastIndexOf('/') + 1), (g) => {
+          toonifyGltf(g.scene, { cast: true });
+          loadReport[name] = 'glb';
+          resolve(g.scene);
+        }, fail);
+      });
     }));
   }
   return cache.get(name);

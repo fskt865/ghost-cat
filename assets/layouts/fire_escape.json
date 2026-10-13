@@ -435,6 +435,29 @@
    "note": "more geraniums"
   },
   {
+   "glb": "assets/decor/balcony_lights.glb",
+   "position": [
+    -0.2,
+    7.13,
+    -0.1
+   ],
+   "rotationY": 3.1416,
+   "scale": 0.66,
+   "role": "static",
+   "note": "bulbs over the top landing"
+  },
+  {
+   "glb": "assets/props/mug.glb",
+   "position": [
+    0.63,
+    5.75,
+    -0.86
+   ],
+   "rotationY": 0.6,
+   "scale": 1.0,
+   "note": "a mug on the top landing"
+  },
+  {
    "glb": "assets/outdoor/alley/dumpster.glb",
    "position": [
     -5.45,
@@ -644,6 +667,23 @@
   {
    "type": "point",
    "position": [
+    -0.2,
+    6.9,
+    -0.55
+   ],
+   "colour": "#ffb870",
+   "intensity": 2.0,
+   "distance": 5.0,
+   "halo": 0.9,
+   "flicker": 0.02,
+   "pool": {
+    "y": 5.755,
+    "r": 1.2
+   }
+  },
+  {
+   "type": "point",
+   "position": [
     -2.65,
     -0.95,
     -0.6
@@ -829,6 +869,237 @@
    "collide": true,
    "visible": false,
    "note": "ground floor: wall"
+  },
+  {
+   "type": "box",
+   "centre": [
+    -5.52,
+    4.61,
+    -0.053
+   ],
+   "size": [
+    0.91,
+    0.54,
+    0.015
+   ],
+   "colour": "#9a5a30",
+   "collide": false,
+   "glow": true
+  },
+  {
+   "type": "box",
+   "centre": [
+    -5.52,
+    4.322,
+    -0.065
+   ],
+   "size": [
+    0.91,
+    0.035,
+    0.03
+   ],
+   "colour": "#7a4a2a",
+   "collide": false
+  },
+  {
+   "type": "box",
+   "centre": [
+    -5.52,
+    4.01,
+    -0.053
+   ],
+   "size": [
+    0.91,
+    0.66,
+    0.015
+   ],
+   "colour": "#c98348",
+   "collide": false,
+   "glow": true
+  },
+  {
+   "type": "box",
+   "centre": [
+    -5.89,
+    4.285,
+    -0.08
+   ],
+   "size": [
+    0.17,
+    1.25,
+    0.03
+   ],
+   "colour": "#2f5a5a",
+   "collide": false
+  },
+  {
+   "type": "box",
+   "centre": [
+    -5.15,
+    4.285,
+    -0.08
+   ],
+   "size": [
+    0.17,
+    1.25,
+    0.03
+   ],
+   "colour": "#2f5a5a",
+   "collide": false
+  },
+  {
+   "type": "box",
+   "centre": [
+    1.95,
+    4.54,
+    -0.053
+   ],
+   "size": [
+    0.91,
+    0.72,
+    0.015
+   ],
+   "colour": "#9a5a30",
+   "collide": false,
+   "glow": true
+  },
+  {
+   "type": "box",
+   "centre": [
+    1.95,
+    4.162,
+    -0.065
+   ],
+   "size": [
+    0.91,
+    0.035,
+    0.03
+   ],
+   "colour": "#7a4a2a",
+   "collide": false
+  },
+  {
+   "type": "box",
+   "centre": [
+    1.95,
+    3.94,
+    -0.053
+   ],
+   "size": [
+    0.91,
+    0.48,
+    0.015
+   ],
+   "colour": "#c98348",
+   "collide": false,
+   "glow": true
+  },
+  {
+   "type": "box",
+   "centre": [
+    1.58,
+    4.305,
+    -0.08
+   ],
+   "size": [
+    0.17,
+    1.25,
+    0.03
+   ],
+   "colour": "#7a3446",
+   "collide": false
+  },
+  {
+   "type": "box",
+   "centre": [
+    2.32,
+    4.305,
+    -0.08
+   ],
+   "size": [
+    0.17,
+    1.25,
+    0.03
+   ],
+   "colour": "#7a3446",
+   "collide": false
+  },
+  {
+   "type": "box",
+   "centre": [
+    2.65,
+    -1.18,
+    -0.053
+   ],
+   "size": [
+    0.91,
+    0.36,
+    0.015
+   ],
+   "colour": "#9a5a30",
+   "collide": false,
+   "glow": true
+  },
+  {
+   "type": "box",
+   "centre": [
+    2.65,
+    -1.377,
+    -0.065
+   ],
+   "size": [
+    0.91,
+    0.035,
+    0.03
+   ],
+   "colour": "#7a4a2a",
+   "collide": false
+  },
+  {
+   "type": "box",
+   "centre": [
+    2.65,
+    -1.78,
+    -0.053
+   ],
+   "size": [
+    0.91,
+    0.84,
+    0.015
+   ],
+   "colour": "#c98348",
+   "collide": false,
+   "glow": true
+  },
+  {
+   "type": "box",
+   "centre": [
+    2.28,
+    -1.595,
+    -0.08
+   ],
+   "size": [
+    0.17,
+    1.25,
+    0.03
+   ],
+   "colour": "#3f5a3a",
+   "collide": false
+  },
+  {
+   "type": "box",
+   "centre": [
+    3.02,
+    -1.595,
+    -0.08
+   ],
+   "size": [
+    0.17,
+    1.25,
+    0.03
+   ],
+   "colour": "#3f5a3a",
+   "collide": false
   },
   {
    "type": "box",
@@ -1107,6 +1378,36 @@
    ],
    "visible": false,
    "note": "L2 west, inner half"
+  },
+  {
+   "type": "pole",
+   "from": [
+    -1.17,
+    5.75,
+    -0.08
+   ],
+   "to": [
+    -1.17,
+    7.5,
+    -0.08
+   ],
+   "radius": 0.025,
+   "colour": "#2c2b3d"
+  },
+  {
+   "type": "pole",
+   "from": [
+    0.77,
+    5.75,
+    -0.08
+   ],
+   "to": [
+    0.77,
+    7.5,
+    -0.08
+   ],
+   "radius": 0.025,
+   "colour": "#2c2b3d"
   },
   {
    "type": "block",

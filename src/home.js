@@ -15,7 +15,7 @@ import { createControls } from './controls.js';
 import { createFollowCamera } from './follow-camera.js';
 import { createFx } from './fx.js';
 import { createUI } from './ui.js';
-import { createPerf } from './perf.js';
+import { createPerf, fitRatio } from './perf.js';
 import { createSettings } from './settings.js';
 import { createHud } from './hud.js';
 import { createStore, freshNight } from './save.js';
@@ -42,6 +42,7 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPrefere
 renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap; renderer.shadowMap.autoUpdate = false;
 const DPR_CAP = 2, deviceRatio = Math.min(window.devicePixelRatio || 1, DPR_CAP);
 let ratio = params.has('dpr') ? Math.min(parseFloat(params.get('dpr')) || 1, DPR_CAP) : deviceRatio;
+let wantRatio = ratio; // ratio = this, held to a render budget by screen area (src/perf.js fitRatio; ?dpr= is taken as is)
 renderer.setPixelRatio(ratio);
 for (const t of ['gesturestart', 'gesturechange', 'gestureend']) document.addEventListener(t, (e) => e.preventDefault());
 document.addEventListener('dblclick', (e) => e.preventDefault(), { passive: false });
@@ -56,7 +57,7 @@ const hud = createHud(); hud.bind(store, { entries: ENTRIES, rooms: ROOMS });
 const audio = createAudio({ musicLean: CONFIG.musicLean, startArea: 'apartment' });
 for (const ev of ['pointerdown', 'keydown', 'touchstart']) addEventListener(ev, () => audio.unlock(), { capture: true, passive: true });
 const ui = createUI();
-const perf = createPerf({ getRatio: () => ratio, setRatio: (r) => { ratio = r; resize(); }, floor: Math.min(1, deviceRatio) });
+const perf = createPerf({ getRatio: () => ratio, setRatio: (r) => { wantRatio = r; resize(); }, floor: Math.min(1, deviceRatio) });
 
 const apt = await buildApartment(scene, { platform: true, deferCollision: true });
 const fx = createFx(scene, { moteCentre: new THREE.Vector3(-7.5, 0, -1), moteSpread: [4.5, 3.2] });
@@ -90,16 +91,16 @@ cam.setZones([
 cam.snap(BED, 0);
 apt.applyNight(S().tonight);
 renderer.shadowMap.needsUpdate = true;
-// every material now, so walking out of the window or down to the street never hitches on a shader: once with the
-// living lamp's shadow (indoors) and once without (outdoors, where it is switched off), with the town drawn
-renderer.compile(scene, camera);
+// every material, so walking out of the window or down to the street never hitches on a shader: once with the
+// living lamp's shadow (indoors) and once without (outdoors, where it is switched off), town included. Started just
+// after the first frame, behind the title screen, in parallel where the browser can: up front it held the title ~0.8 s
 const livingShadow = apt.lamps.livingLamp.light;
-livingShadow.castShadow = false; renderer.compile(scene, camera); livingShadow.castShadow = true;
+const compileAll = () => { const on = livingShadow.castShadow; livingShadow.castShadow = true; renderer.compileAsync(scene, camera); livingShadow.castShadow = false; renderer.compileAsync(scene, camera); livingShadow.castShadow = on; };
 town.setView('home');
 
 let W = innerWidth, H = innerHeight;
 function resize() {
-  W = innerWidth; H = innerHeight;
+  W = innerWidth; H = innerHeight; ratio = params.has('dpr') ? wantRatio : fitRatio(wantRatio, W, H);
   renderer.setPixelRatio(ratio); renderer.setSize(W, H);
   cam.resize(W / H); fx.resize(H * ratio, camera.fov);
   apt.setStarScale(ratio); look.setViewport(W * ratio, H * ratio, ratio);
@@ -553,7 +554,7 @@ title.innerHTML = `<style>
   #title.gone { opacity: 0; pointer-events: none; }
   #title h1, #title p { text-shadow: 0 2px 14px rgba(18,14,36,0.95); } /* the lanterns sit behind the words on short screens */
   @media (max-height: 500px) { #title .fade { background: linear-gradient(to bottom, rgba(18,14,36,0) 15%, rgba(18,14,36,0.8) 50%, rgba(18,14,36,0.95)); } #title .words { padding-bottom: calc(22px + env(safe-area-inset-bottom)); } #title h1 { font-size: 34px; } }
-</style><img alt="" src="assets/brand/hero.png"><div class="fade"></div><div class="words"><h1></h1><p></p><button></button><div class="how"></div></div>`;
+</style><img alt="" src="assets/brand/hero.webp"><div class="fade"></div><div class="words"><h1></h1><p></p><button></button><div class="how"></div></div>`;
 title.querySelector('h1').textContent = fmt(CONFIG.gameTitle);
 const titleLines = LINES.title.lines;
 title.querySelector('p').textContent = fmt(titleLines[(S().night - 1) % titleLines.length].text);
@@ -787,7 +788,7 @@ function loop(now) {
   renderer.render(scene, camera);
   ui.update(dt, camera, W, H);
   if (sampler) sampler.push(dt, renderer.info.render);
-  if (firstFrameMs === null) { firstFrameMs = Math.round(performance.now()); requestAnimationFrame(() => splash.classList.add('gone')); }
+  if (firstFrameMs === null) { firstFrameMs = Math.round(performance.now()); requestAnimationFrame(() => { splash.classList.add('gone'); setTimeout(compileAll, 30); }); }
   if (now - lastHud > 500) { lastHud = now; ui.showPerf(stats()); }
 }
 

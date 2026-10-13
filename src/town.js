@@ -36,6 +36,8 @@ const warmLights = (d) => {
 // The sidewalk tiles: a darker, warmer stone that the lamps pool onto (the staged one read as a pale slab), and a hair
 // wider so neighbouring tiles meet with no seam between them.
 const SIDEWALK_TINT = [0.6, 0.5, 0.44];
+// the road read cold blue in the middle of the block (dark asphalt under the blue night fill): a little warmer
+const ROAD_TINT = [1.0, 0.88, 0.78];
 
 function patchStreet(src) {
   const d = structuredClone(src);
@@ -54,6 +56,7 @@ function patchStreet(src) {
     else if (at(p, 'window_dark.glb', 5.5, 0.9, -10)) p.glb = 'assets/outdoor/window_lit.glb';    // the corner by the gate was the dimmest place: lit, with a bench under it (front.json)
     p.batch = p.position[2] > 2.5 ? 'near' : p.position[2] > -5 ? 'middle' : 'end';   // three merged chunks: the ones behind the camera are culled
     if (p.glb.endsWith('sidewalk_4m.glb')) { p.tint = SIDEWALK_TINT; p.scale = 1.008; }
+    if (/street_4m|crosswalk_4m/.test(p.glb)) p.tint = ROAD_TINT;
     // the tiles' curbs are bevelled at the steepest walkable slope, where the capsule can perch and stall: the road,
     // the sidewalks and the crossing walk on plain boxes instead (a 0.15 m curb is an ordinary step up)
     if (/sidewalk_4m|street_4m|crosswalk_4m/.test(p.glb)) p.collide = 'none';
@@ -282,6 +285,17 @@ export async function buildTown(scene, apt, outside, { world, fx, camWorld }) {
     mid: a.staticMeshes.filter((m) => m.userData.batch === 'mid'),
     small: [...a.propBatch.batches, ...a.keeps, ...a.liveNodes, ...a.cats.map((c) => c.obj), ...a.staticMeshes.filter((m) => m.userData.batch === 'far')].filter(Boolean),
   });
+  // the front's own small far things are drawn by distance, not by area: the corner's bench and pots only from the far
+  // half of the street or the park, the alley climb's dressing (its AC, the drainpipe) only in the alley or up off the
+  // street, the coffee row's roof only up off the street (triangles: from the stoop none of them can be made out)
+  const ownGroup = (b) => front.staticMeshes.filter((m) => m.userData.batch === b);
+  // (and the corner's string lights and window not from down at our own door: the stoop is the busiest view there is,
+  // and the lamps' halos still mark the far end from there)
+  const FG = { cornerSmall: { list: ownGroup('cornerSmall'), on: null }, alley: { list: ownGroup('alley'), on: null }, rowRoof: { list: ownGroup('rowRoof'), on: null }, corner: { list: ownGroup('corner'), on: null } };
+  const own = new Set(Object.values(FG).flatMap((g) => g.list));
+  front.staticMeshes = front.staticMeshes.filter((m) => !own.has(m));
+  const showGroup = (g, on) => { if (g.on === on) return; g.on = on; for (const m of g.list) m.visible = on; };
+  const highY = SW(0, 1.6, 0).y, doorZ = SW(0, 0, 5.0).z, groundY = SW(0, 0.6, 0).y;
   const P = { front: parts(front), street: parts(street), park: parts(park), shop: parts(shop) };
   const VIEW = {
     home: {},
@@ -465,6 +479,10 @@ export async function buildTown(scene, apt, outside, { world, fx, camWorld }) {
     const edge = area === 'rooftop' && edgeBox.containsPoint(body.pos);
     const v = town ? area : edge ? 'roofEdge' : area === 'rooftop' ? 'roof' : 'home';
     setView(v, (v === 'street' || v === 'alley') && body.pos.distanceTo(shopDoor) < 1.8, body.pos.z > midZ);
+    showGroup(FG.cornerSmall, v === 'park' || ((v === 'street' || v === 'alley') && body.pos.z > midZ));
+    showGroup(FG.alley, v === 'alley' || (town && body.pos.y > highY));
+    showGroup(FG.rowRoof, town && body.pos.y > highY);
+    showGroup(FG.corner, (town || v === 'roofEdge') && !(body.pos.z < doorZ && body.pos.y < groundY));
     const vis = VIEW[v] || {};
     const live = (k) => vis[k] === 'all' || vis[k] === 'big';
     if (live('street')) street.update(t, dt, camera, area === 'street' || area === 'alley' || area === 'park');

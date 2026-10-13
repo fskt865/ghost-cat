@@ -10,6 +10,7 @@ import { buildSky } from './sky.js';
 import { THINGS } from './things.js';
 import { CONFIG } from './config.js';
 import { CollisionWorld } from './physics.js';
+import { batchLive } from './batch.js';
 
 const PI = Math.PI;
 const WALL_H = 2.7, LOW_H = 1.0, CUT_Z = -0.2, T = 0.16; // wall height, cut-away height, where it steps down, thickness
@@ -94,6 +95,7 @@ export async function buildApartment(scene, { platform = false, homeStyle = CONF
   const updaters = [];
   const placed = {};
   let livingBack = null, outsideBack = null;
+  const liveRoots = []; // besides `placed`: things drawn by the live batch (see the end)
 
   // ------------------------------------------------------------------ floors
   {
@@ -220,7 +222,7 @@ export async function buildApartment(scene, { platform = false, homeStyle = CONF
 
   // ------------------------------------------------------------------ balcony door, sconce, neighbour cat
   {
-    const door = balconyDoor(DOORS[2].z1 - DOORS[2].z0); door.position.set(5.2, 0, (DOORS[2].z0 + DOORS[2].z1) / 2); scene.add(door);
+    const door = balconyDoor(DOORS[2].z1 - DOORS[2].z0); door.position.set(5.2, 0, (DOORS[2].z0 + DOORS[2].z1) / 2); scene.add(door); liveRoots.push(door);
     const sc = wallSconce(); sc.position.set(1.75, 1.9, BACK); scene.add(sc); placed.sconce = sc;
   }
   // the cat next door (the artist's ginger cat, or a primitive stand-in), with a heart for the slow blink
@@ -642,12 +644,18 @@ export async function buildApartment(scene, { platform = false, homeStyle = CONF
   };
   updaters.push((t, dt) => { for (const c of curtains) if (c.userData.goal !== undefined) c.scale.x += (c.userData.goal - c.scale.x) * (1 - Math.exp(-dt * 6)); });
 
+  // ------------------------------------------------------------------ live batching
+  // What the static merge above leaves (props the game wobbles, moves, hides or dims: the music corner, the owner's things,
+  // the curtains, the books, the piano keys, the lamp shades...) was one draw call per mesh, ~60 of them in the living
+  // room on a wide screen. They are drawn by three BatchedMeshes that follow their sources every frame (src/batch.js).
+  const liveBatches = platform ? batchLive(scene, [...Object.values(placed), ...liveRoots]) : [];
+
   const update = (t, dt, ctx) => { for (const u of updaters) u(t, dt, ctx); };
   const cameraFor = (roomId) => ({ ...ROOM_RECTS[roomId], id: roomId });
   const setWink = (on) => { windowMoon.material.map = on ? winkTex : plainTex; windowMoon.material.needsUpdate = true; };
 
   return {
-    placed, lamps, lending, colliders: COLLIDERS, walk, rooms: ROOM_RECTS, roomOrder: ROOM_ORDER, decor, livingBack, outsideBack,
+    placed, lamps, lending, liveBatches, colliders: COLLIDERS, walk, rooms: ROOM_RECTS, roomOrder: ROOM_ORDER, decor, livingBack, outsideBack,
     // deferCollision: the caller adds the outside areas to collisionWorld, then builds it itself
     collisionWorld: coll, collision: coll && !deferCollision ? coll.build() : null,
     roomAt, clampPoint, path, cameraFor, update, applyNight, setWink, mothState, sky, beam, windowMoon,
