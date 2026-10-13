@@ -1,7 +1,10 @@
-// Ghost's home on the platformer controller (Revision 3 step 2, Revision 4 "small and cozy"):
-// the apartment as a climbable little world. Touching things reacts on its own; staying still sits,
-// then loafs on warm spots; sitting still on the bed ends the night. Title screen first.
-// Debug API on window.__ghost (state(), teleport, drive, thing positions...).
+// Ghost's home (Revision 4 "small and cozy", Revision 5 "Ghost wanders, you tap"): the apartment, the fire escape,
+// the roof, the street, the shop, the alley and the park as one little world. Touching things reacts on its own;
+// staying still sits, then loafs on warm spots; the bed ends the night. Title screen first.
+// Two input sources drive the same physics body: the wanderer (src/stroll.js, the default: Ghost walks the waypoint
+// graphs alone, the player taps things, the ground or Ghost) and, at ?platformer, Revision 4's stick and hop
+// button (src/controls.js). Everything else (the world, reactions, secrets, camera zones) is shared.
+// Debug API on window.__ghost (state(), teleport, drive, thing positions, stroll, pickAt...).
 import * as THREE from 'three';
 import { CONFIG, fmt } from './config.js';
 import { TUNING as T } from './tuning.js';
@@ -23,10 +26,14 @@ import { NIGHT_LINES, MORNING_LINES, ENTRY_GLIMMERS } from './things.js';
 import { HOME_THINGS, HOME_ENTRIES, HOME_ROOMS, SECRET_RULES, LINE_THINGS } from './home-things.js';
 import { LINES } from './lines.js';
 import { createAudio } from './audio/audio.js';
+import { createStroll, loadPaths } from './stroll.js';
 const THINGS = HOME_THINGS, ENTRIES = HOME_ENTRIES, ROOMS = HOME_ROOMS;
 import { glowTexture } from './util.js';
 
 const params = new URLSearchParams(location.search);
+// the input source: Ghost wanders and the player taps (the game), or Revision 4's stick and hop button (?platformer)
+const PLATFORMER = params.has('platformer');
+const pathsReady = PLATFORMER ? null : loadPaths(); // the waypoint graphs, fetched while the world builds
 applyConfigToPage();
 const splashText = document.getElementById('splash-text');
 document.getElementById('splash-title').textContent = fmt(CONFIG.gameTitle);
@@ -55,7 +62,8 @@ if (params.has('fresh')) store.reset();
 const S = () => store.data;
 const hud = createHud(); hud.bind(store, { entries: ENTRIES, rooms: ROOMS });
 const audio = createAudio({ musicLean: CONFIG.musicLean, startArea: 'apartment' });
-for (const ev of ['pointerdown', 'keydown', 'touchstart']) addEventListener(ev, () => audio.unlock(), { capture: true, passive: true });
+// on the window, capturing: runs before any control sees the touch (and before anything could preventDefault it)
+for (const ev of ['touchstart', 'pointerdown', 'keydown', 'touchend', 'pointerup', 'click']) addEventListener(ev, () => audio.unlock(), { capture: true, passive: true });
 const ui = createUI();
 const perf = createPerf({ getRatio: () => ratio, setRatio: (r) => { wantRatio = r; resize(); }, floor: Math.min(1, deviceRatio) });
 
@@ -75,11 +83,14 @@ const BED = new THREE.Vector3(-7.85, 0.56, -1.25);
 const body = createBody(apt.collision, BED.clone());
 const look = createGhostLook(scene, apt.collision);
 const lookReady = look.loadModel();
-const controls = createControls();
+const controls = PLATFORMER ? createControls() : null;
 const settings = createSettings({ audio, store, onRestart: () => restartNight() });
 const cam = createFollowCamera(camera, camWorld);
 const R = (id) => apt.rooms[id];
-const zone = (x0, x1, z0, z1, o) => ({ min: new THREE.Vector3(x0, -1, z0), max: new THREE.Vector3(x1, 3.2, z1), priority: 1, ...o });
+const zone = (x0, x1, z0, z1, o) => ({ min: new THREE.Vector3(x0, -1, z0), max: new THREE.Vector3(x1, 3.2, z1), priority: 1, ...o,
+  // the wanderer's camera sits further back: indoors it looks straight into the dollhouse (a wide swing would put the
+  // room dividers between it and Ghost)
+  ...(PLATFORMER || !o.yawRange ? {} : { yawRange: o.yawRange.map((v) => v * T.strollIndoorYaw) }) });
 cam.setZones([
   zone(R('bedroom').x0, R('bedroom').x1, -3, 3, { zoom: 0.95, pitch: 0.36, aim: 0.15, yawRange: [-0.55, 0.55] }),
   zone(R('living').x0, R('living').x1, -2.5, 3, { zoom: 0.95, pitch: 0.36, aim: 0.15, yawRange: [-0.55, 0.55] }),
@@ -99,11 +110,18 @@ const compileAll = () => { const on = livingShadow.castShadow; livingShadow.cast
 town.setView('home');
 
 let W = innerWidth, H = innerHeight;
+// the size to draw at: the visual viewport where there is one (iOS toolbars, rotation), else the window
+function viewSize() {
+  const vv = window.visualViewport;
+  if (vv && vv.width > 0 && vv.height > 0 && Math.abs((vv.scale || 1) - 1) < 0.01) return [Math.round(vv.width), Math.round(vv.height)];
+  return [innerWidth, innerHeight];
+}
 function resize() {
-  W = innerWidth; H = innerHeight; ratio = params.has('dpr') ? wantRatio : fitRatio(wantRatio, W, H);
+  [W, H] = viewSize(); ratio = params.has('dpr') ? wantRatio : fitRatio(wantRatio, W, H);
   renderer.setPixelRatio(ratio); renderer.setSize(W, H);
   cam.resize(W / H); fx.resize(H * ratio, camera.fov);
   apt.setStarScale(ratio); look.setViewport(W * ratio, H * ratio, ratio);
+  perf.reset(); // a rotation or a toolbar costs a frame or two; that is not a slow GPU (no pixel-ratio step-down for it)
 }
 resize();
 addEventListener('resize', resize);
@@ -147,7 +165,7 @@ const SOFT = new Set(THINGS.filter((d) => d.reaction === 'soft').map((d) => d.id
 
 const night = () => S().tonight;
 const changed = () => { store.changed(); hud.refresh(); };
-const late = () => nightT > T.nightMinutes * 60 * (2 / 3);
+const late = () => (PLATFORMER ? nightT > T.nightMinutes * 60 * (2 / 3) : nightT > T.strollLateAfter || night().found.length >= T.strollLateFinds);
 const requiresMet = (req) => {
   if (!req) return true;
   if (req.toggle) return night()[req.toggle[0]] === req.toggle[1];
@@ -200,11 +218,28 @@ const anims = [];
 const animate = (dur, fn, done) => anims.push({ t: 0, dur, fn, done });
 function updateAnims(dt) { for (let i = anims.length - 1; i >= 0; i--) { const a = anims[i]; a.t += dt; const k = Math.min(1, a.t / a.dur); a.fn(k); if (k >= 1) { anims.splice(i, 1); a.done?.(); } } }
 
-const speakAt = (text, x, y, z) => ui.speak(fmt(text), new THREE.Vector3(x, y, z));
+// lines go through a short queue: each stays up at least T.lineMin seconds, the same words never twice in a row or twice
+// in the queue, and at most three wait (when Ghost touches several things at once the latest few are said, in order)
+const sayQ = []; let sayUntil = 0, sayLast = '', sayLastT = -99;
+function speakAt(text, x, y, z) {
+  const s = fmt(text);
+  if (sayQ.some((q) => q.text === s) || (s === sayLast && t - sayLastT < 6)) return;
+  sayQ.push({ text: s, at: new THREE.Vector3(x, y, z) });
+  while (sayQ.length > 3) sayQ.shift();
+  pumpSay();
+}
+function pumpSay() {
+  if (!sayQ.length || t < sayUntil) return;
+  const q = sayQ.shift();
+  ui.speak(q.text, q.at); sayLast = q.text; sayLastT = t; sayUntil = t + T.lineMin;
+}
+// each thing speaks at most once every T.lineThingGap seconds, and never the same line twice in a row in a night
+const thingSaid = new Map(), nowT = () => t;
 // the first touch ever gets the 'first' line; after that the lines rotate (count things: by count)
 function nextLine(t, taps) {
   const L = LINE_THINGS[t.def.id] || {}, id = t.def.id;
   if (L.first && !S().firsts[id]) { S().firsts[id] = true; return L.first; }
+  if (L.done && t.def.secret && S().found[t.def.secret.entry]) return L.done; // its secret found: the after line
   const lines = L.lines || ['...'];
   if (L.order === 'count') return lines[Math.min(taps, lines.length) - 1];
   const n = night().lines[id] || 0;
@@ -237,7 +272,8 @@ function poke(t) {
   if (line === null) line = special.line ?? nextLine(t, taps);
   audio.play(d.act === 'bat' ? 'tap' : 'poke');
   customOnPoke(t, taps);
-  if (line) speakAt(line, t.pos.x, Math.max(t.top, body.pos.y + T.height) + 0.3, t.pos.z);
+  const said = thingSaid.get(d.id);
+  if (line && !(said && (said.line === line || nowT() - said.t < T.lineThingGap))) { thingSaid.set(d.id, { line, t: nowT() }); speakAt(line, t.pos.x, Math.max(t.top, body.pos.y + T.height) + 0.3, t.pos.z); }
   const sec = d.secret;
   if (sec && (sec.once || (sec.taps && taps >= sec.taps))) discover(sec.entry, anchor.clone().setY(t.top + 0.2));
   changed();
@@ -347,11 +383,14 @@ function updateTownSits(dt, p, still) {
       s.t += dt;
       if (Math.floor(s.t / 0.7) !== Math.floor((s.t - dt) / 0.7)) fx.burst(p.clone().setY(p.y + T.height + 0.05), '#ffb3cf', 2, 0.12, { kind: 'hearts', scale: 0.6 });
       if (s.hiss) {
-        // the little table: sitting long enough makes the machine hiss soon; the hiss while sitting is the moment
-        town.espresso.soon = s.t >= s.sit;
-        if (s.t >= s.sit && performance.now() / 1000 - town.espresso.hissT < 1.0) discover(s.entry, p.clone().setY(p.y + T.height + 0.1));
+        // the little table: sat there long enough, the machine hisses (the sit sets it off, not the 20 s clock); the
+        // hiss while sitting is the moment
+        if (s.t >= s.sit) {
+          if (performance.now() / 1000 - town.espresso.hissT > 1.5) town.hiss(audio);
+          discover(s.entry, p.clone().setY(p.y + T.height + 0.1));
+        }
       } else if (s.t >= s.sit) discover(s.entry, p.clone().setY(p.y + T.height + 0.1));
-    } else { s.t = 0; if (s.hiss) town.espresso.soon = false; }
+    } else s.t = 0;
   }
 }
 
@@ -505,9 +544,9 @@ async function askSleep() {
     found: ns.found.map((id) => entryText(entryById[id]).title), pokes: Object.keys(ns.poked).length, glimmers: d.glimmers,
     total: ENTRIES.length, count: Object.keys(d.found).length,
   });
-  d.night++; d.stats.nights++; d.tonight = freshNight(); store.flush();
+  d.night++; d.stats.nights++; d.tonight = freshNight(); store.flush(); dropResumeNote();
   restoreNightVisuals(); if (pic) pic.rotation.z = CROOKED; apt.placed.dustBunny.visible = false; outside.resetNight(); town.resetNight();
-  body.teleport(BED.clone()); hud.dawnOn(false); sleeping = false;
+  body.teleport(BED.clone()); hud.dawnOn(false); sleeping = false; stroll?.reset();
   startNight();
 }
 // settings: "start the night again": tonight starts over on the bed, the journal and the glimmers stay
@@ -515,12 +554,12 @@ function restartNight() {
   if (!started || sleeping) return;
   S().tonight = freshNight(); store.flush(); returning = null;
   restoreNightVisuals(); if (pic) pic.rotation.z = CROOKED; apt.placed.dustBunny.visible = false; outside.resetNight(); town.resetNight();
-  body.teleport(BED.clone()); cam.snap(BED, 0);
+  body.teleport(BED.clone()); cam.snap(BED, 0); stroll?.reset(); dropResumeNote(); sleepOfferAt = T.strollSleepAfter;
   startNight();
 }
 const HOME_AREAS = new Set(['bedroom', 'living', 'kitchen', 'balcony', 'fire-escape', 'rooftop', 'street', 'corner-shop', 'park', 'alley']);
 function startNight() {
-  nightT = 0; bedAsked = false; bedStillT = 0;
+  nightT = 0; bedAsked = false; bedStillT = 0; thingSaid.clear();
   look.stretch();
   const d = S();
   // one line to start the night, about somewhere with things still to find
@@ -559,13 +598,34 @@ title.querySelector('h1').textContent = fmt(CONFIG.gameTitle);
 const titleLines = LINES.title.lines;
 title.querySelector('p').textContent = fmt(titleLines[(S().night - 1) % titleLines.length].text);
 title.querySelector('button').textContent = fmt(LINES.title.button?.text || LINES.title.button || CONFIG.text.begin);
-title.querySelector('.how').textContent = fmt(matchMedia('(pointer: coarse)').matches ? CONFIG.text.hintPlatform : CONFIG.text.hintPlatformKeys);
+const coarse = matchMedia('(pointer: coarse)').matches;
+title.querySelector('.how').textContent = fmt(PLATFORMER ? (coarse ? CONFIG.text.hintPlatform : CONFIG.text.hintPlatformKeys) : (coarse ? LINES.title.how : LINES.title.howMouse).text);
 document.body.appendChild(title);
 const stopTitle = (e) => e.stopPropagation();
 title.addEventListener('pointerdown', stopTitle);
 const begin = () => { if (started) return; started = true; title.classList.add('gone'); setTimeout(() => title.remove(), 1000); startNight(); };
 title.querySelector('button').addEventListener('click', begin);
 if (params.has('play')) begin(); // tests skip the title
+// the position note: written on every put-away (and before the reload after a lost GL context, reloadSameNight below);
+// any start within 30 minutes of it skips the title and puts Ghost back where the night was left (Revision 5: closing
+// the app mid-night loses nothing). Nothing accrues while closed: the night clock carries on from where it stopped.
+const RESUME_KEY = 'ghostcat3d.resume', RESUME_MS = 30 * 60e3;
+const resumeBlob = (() => {
+  let r = null;
+  // (even naming the storage can throw when the browser blocks it: every touch is inside the try)
+  for (const which of ['localStorage', 'sessionStorage']) { try { const st = window[which]; r = r || JSON.parse(st.getItem(RESUME_KEY) || 'null'); st.removeItem(RESUME_KEY); } catch (e) { /* storage blocked: no note */ } }
+  return params.has('fresh') ? null : r;
+})();
+let resumedNight = false;
+if (resumeBlob && Date.now() - resumeBlob.at < RESUME_MS && Date.now() >= resumeBlob.at && resumeBlob.night === S().night && Array.isArray(resumeBlob.pos) && resumeBlob.pos.length === 3 && resumeBlob.pos.every(Number.isFinite)) {
+  begin(); nightT = Math.max(0, +resumeBlob.nightT || 0); resumedNight = true;
+  body.teleport(new THREE.Vector3(...resumeBlob.pos)); cam.snap(body.pos, Number.isFinite(resumeBlob.yaw) ? resumeBlob.yaw : 0);
+}
+function writeResumeNote() {
+  if (!started || sleeping) return;
+  try { localStorage.setItem(RESUME_KEY, JSON.stringify({ pos: body.pos.toArray(), yaw: cam.yaw, nightT, night: S().night, at: Date.now() })); } catch (e) { /* the save alone still keeps the night */ }
+}
+const dropResumeNote = () => { try { localStorage.removeItem(RESUME_KEY); } catch (e) { /* nothing to drop */ } };
 
 // ---------- out on the fire escape and the roof ----------
 const inBox = (p, z) => p.x >= z.min.x && p.x <= z.max.x && p.y >= z.min.y && p.y <= z.max.y && p.z >= z.min.z && p.z <= z.max.z;
@@ -656,6 +716,212 @@ function surfaceAt(r, p) {
   return 'wood';
 }
 
+// ---------- Revision 5: Ghost wanders alone; the player taps (src/stroll.js) ----------
+const BED_NODE = 'ap-bed';
+// the sit secrets, as the wanderer needs them: how long to sit where (only while they can still be found)
+const SIT_BY_THING = Object.fromEntries(Object.entries(SECRET_RULES).filter(([, r]) => r.thing && r.sit).map(([entry, r]) => [r.thing, { entry, sit: r.sit, late: !!r.late, unless: r.unless || null }]));
+const SIT_SPOT = Object.fromEntries(Object.entries(SECRET_RULES).filter(([, r]) => r.spot).map(([entry, r]) => [entry, { entry, sit: r.sit, hiss: !!r.hiss }]));
+const sitRule = (id) => {
+  if (SIT_BY_THING[id]) return SIT_BY_THING[id];
+  if (SIT_SPOT[id]) return SIT_SPOT[id];
+  if (id === 'skylight') return { entry: 'skylight', sit: 3 };
+  if (id === 'shooting-star') return { entry: 'shooting-star', sit: 8 }; // sitting out under the sky: the star comes sooner
+  if (id === 'blanket' && nightT > 30) return { entry: 'camouflage', sit: 5 }; // still on the bed, no question on screen
+  return null;
+};
+let camBudget = 1, stroll = null, sleepOfferAt = T.strollSleepAfter, purrN = 0, starTried = false, ringTried = false;
+if (!PLATFORMER) {
+  const graphs = await pathsReady;
+  const STROLL_MOVING = new Set(['moth', 'leaf']);
+  stroll = createStroll(graphs, {
+    body, returning: () => !!returning, night, found: (e) => !!S().found[e], late, sleepy: () => nightT > T.strollSleepAfter,
+    roomOf: (p) => outside.areaAt(p) || town.areaAt(p) || apt.roomAt(p),
+    targets: things.map((th) => ({ id: th.def.id, pos: th.pos, top: th.top, room: th.def.room, act: th.def.act, kind: 'thing', moving: STROLL_MOVING.has(th.def.id),
+      live: STROLL_MOVING.has(th.def.id) ? () => (th.def.id === 'leaf' && !apt.placed.leaf.visible ? null : th.pos) : null })),
+    sitRule, bedNode: BED_NODE, bedThing: 'bed',
+    avoid: (id) => Object.entries(SECRET_RULES).some(([entry, r]) => r.unless === id && !S().found[entry]),
+    walkFor: (id) => (id === 'midiKeys' ? ['ap-lv-desk-w', 'ap-lv-desk-e'] : null), // the composition: the keys, end to end
+    poke: (id) => { const th = thingById[id]; if (!th || !started || sleeping) return; th.lastT = t; poke(th); },
+    purr: () => {
+      look.happy(2.2); look.kick(-0.05); audio.play('purr');
+      fx.burst(body.pos.clone().setY(body.pos.y + T.height + 0.05), '#ffb3cf', 6, 0.18, { kind: 'hearts', scale: 0.7 });
+      const L = LINES.stroll; speakAt(L[purrN++ % L.length].text, body.pos.x, body.pos.y + T.height + 0.35, body.pos.z);
+    },
+    sleep: () => { if (!sleeping && !hud.cardOpen && started) { sleepOfferAt = Math.max(sleepOfferAt, nightT + T.strollSleepAgain); askSleep(); } },
+    ring: () => ({ active: outside.react.ring.active, t: outside.react.ring.t, pos: outside.react.ringPos() }),
+    crouch: () => look.kick(-0.07),
+  });
+  cam.setStyle({ zoom: T.strollCamZoom, pitch: T.strollCamPitch, zoomPortrait: T.strollCamZoomPortrait, pitchPortrait: T.strollCamPitchPortrait, maxZoom: T.strollCamMaxZoom, autoYaw: T.strollCamYaw, frame: T.strollCamFrame });
+  if (resumedNight) stroll.reset();
+}
+
+// ---- taps: one pointer, anywhere. What is under it: Ghost, a thing, a secret's spot, something in the air, the ground
+const tapRay = new THREE.Raycaster(), tapNdc = new THREE.Vector2(), tapBox = new THREE.Box3(), tapV = new THREE.Vector3();
+// how far along a ray the view is really blocked: upright collision (the invisible front of the dollhouse, rails) does
+// not block the eye, a floor, a tabletop or a roof does
+function sightDistance(origin, dir, far) {
+  const from = origin.clone(); let gone = 0;
+  for (let k = 0; k < 8; k++) {
+    const h = apt.collision.raycast(from, dir, far - gone); if (!h) return Infinity;
+    gone += h.distance; if (Math.abs(h.normal.y) > 0.5) return gone;
+    from.copy(h.point).addScaledVector(dir, 0.02); gone += 0.02;
+  }
+  return Infinity;
+}
+const toScreen = (p) => { tapV.copy(p).project(camera); return { x: (tapV.x + 1) / 2 * W, y: (1 - tapV.y) / 2 * H, front: tapV.z < 1 && tapV.z > -1 }; };
+// the secrets' own spots (the warm sill, the little table, the top crate): tappable too
+const spotTargets = () => (stroll ? [...stroll.targets.values()].filter((x) => x.kind === 'spot' && x.id !== 'smoke-ring') : []);
+function pickAt(x, y) {
+  if (!started || sleeping || hud.cardOpen || hud.journalOpen || settings.open) return { kind: 'blocked' };
+  tapNdc.set((x / W) * 2 - 1, -(y / H) * 2 + 1); tapRay.setFromCamera(tapNdc, camera);
+  const R = tapRay.ray;
+  // the first walkable surface along the ray: upright surfaces are passed through (the dollhouse's open front and the
+  // rails are invisible collision walls; the camera itself keeps out of the real ones)
+  let wHit = null, from = R.origin.clone(), gone = 0;
+  for (let k = 0; k < 8; k++) {
+    const h = apt.collision.raycast(from, R.direction, 80 - gone); if (!h) break;
+    gone += h.distance;
+    if (h.normal.y > 0.5) { wHit = { point: h.point.clone(), normal: h.normal.clone(), distance: gone }; break; }
+    from.copy(h.point).addScaledVector(R.direction, 0.02); gone += 0.02;
+  }
+  const wd = wHit ? wHit.distance : Infinity;
+  // in the air: the shooting star (screen distance) and the chimney's smoke ring
+  if (star.active && room === 'balcony') { const sp = toScreen(star.head); if (sp.front && Math.hypot(sp.x - x, sp.y - y) < 90) return { kind: 'star' }; }
+  const rg = outside.react.ring;
+  if (rg.active && rg.t > 0.8) { const sp = toScreen(outside.react.ringPos()); if (sp.front && Math.hypot(sp.x - x, sp.y - y) < 60) return { kind: 'ring' }; }
+  // things: their touch boxes (a little fattened), not behind a wall; among near-equal hits the smaller one wins
+  const hits = [];
+  const test = (id, cx, cz, r, y0, y1) => {
+    const rr = Math.max(r, 0.16) + 0.06;
+    tapBox.min.set(cx - rr, y0, cz - rr); tapBox.max.set(cx + rr, y1, cz + rr);
+    const hp = R.intersectBox(tapBox, tapV); if (!hp) return;
+    const d = hp.distanceTo(R.origin); if (d > wd + 0.6) return;
+    hits.push({ id, d, r, at: hp.clone(), c: new THREE.Vector3(cx, (y0 + y1) / 2, cz), h: y1 - y0 });
+  };
+  for (const th of things) {
+    if (th.def.id === 'leaf' && !apt.placed.leaf.visible) continue;
+    if (stroll && !stroll.targets.get(th.def.id)?.nodes.length && !stroll.targets.get(th.def.id)?.moving) continue;
+    test(th.def.id, th.pos.x, th.pos.z, th.r, th.y0, th.y1);
+  }
+  for (const sp of spotTargets()) test(sp.id, sp.pos.x, sp.pos.z, 0.28, sp.pos.y - 0.45, sp.pos.y + 0.45); // (the crate, the sill under the spot)
+  // first, as a player sees it: a thing whose drawn middle is within its own size on screen of the finger, and in sight
+  // (the nearer of two things on one wall seen at a slant would otherwise shadow the other with its box)
+  let best = null, bestS = Infinity;
+  const seen = (id, c, r, h) => {
+    const sp = toScreen(c); if (!sp.front) return;
+    const edge = toScreen(c.clone().setY(c.y + Math.max(r * 0.9, h * 0.5)));
+    const rad = Math.max(20, Math.abs(edge.y - sp.y) * 1.15), dd = Math.hypot(sp.x - x, sp.y - y);
+    if (dd > rad) return;
+    const dir = c.clone().sub(camera.position), len = dir.length();
+    if (sightDistance(camera.position, dir.normalize(), len) < len - 0.35) return;
+    const sc = dd / rad + r * 0.4;
+    if (sc < bestS) { bestS = sc; best = { id, d: len, r, at: c.clone() }; }
+  };
+  for (const th of things) {
+    if (th.def.id === 'leaf' && !apt.placed.leaf.visible) continue;
+    if (stroll && !stroll.targets.get(th.def.id)?.nodes.length && !stroll.targets.get(th.def.id)?.moving) continue;
+    if (th.r >= 0.5) continue; // the big ones (the bed, the fridge, the dumpster): by their boxes below
+    seen(th.def.id, new THREE.Vector3(th.pos.x, (th.y0 + th.y1) / 2, th.pos.z), th.r, th.y1 - th.y0);
+  }
+  for (const sp of spotTargets()) seen(sp.id, sp.pos.clone().setY(sp.pos.y + 0.1), 0.28, 0.5);
+  if (!best && hits.length) {
+    hits.sort((a, b) => a.d - b.d);
+    // (a big box, the bed or the fridge, gives way to a small thing just past its edge: the hair tie by the bed)
+    const big = hits[0].r >= 0.5;
+    // among the near ones: the thing drawn closest to the finger, measured in its own size on screen (two things on one
+    // wall seen at a slant: the box of the nearer sticks out over the other)
+    const near = hits.filter((h) => h.d < hits[0].d + 0.35 || (h.r < 0.3 && h.d < hits[0].d + (big ? 1.2 : 0.9)));
+    for (const h of near) {
+      const sc = toScreen(h.c), top = toScreen(h.c.clone().setY(h.c.y + Math.max(h.h, h.r * 2) / 2));
+      h.sd = Math.hypot(sc.x - x, sc.y - y) / Math.max(16, Math.abs(top.y - sc.y) + 8) + h.r * 0.8;
+    }
+    best = near.sort((a, b) => a.sd - b.sd)[0];
+    // the bed: the pillow end means the bed (sleep), the rest is the blanket
+    if (best.id === 'blanket' && best.at.z < apt.placed.bed.position.z - 0.15 && hits.some((h) => h.id === 'bed')) best = hits.find((h) => h.id === 'bed');
+  }
+  // Ghost: within a thumb of Ghost's middle on screen
+  const gc = body.pos.clone().setY(body.pos.y + T.height * 0.5), gs = toScreen(gc), gd = camera.position.distanceTo(gc);
+  const gTop = toScreen(gc.clone().setY(gc.y + T.height * 0.6)), gPx = Math.max(34, Math.abs(gTop.y - gs.y) * 1.3);
+  // (inside Ghost's own disc on screen Ghost wins, whatever Ghost sits on or in; only a wall in between hides Ghost)
+  if (gs.front && Math.hypot(gs.x - x, gs.y - y) < gPx && wd > gd - 0.45) return { kind: 'ghost' };
+  if (best) return { kind: 'thing', id: best.id, d: +best.d.toFixed(2) };
+  // a near miss on a small thing: the closest thing centre within a thumb on screen, if nothing is in the way
+  let near = null, nd = 30;
+  for (const th of things) {
+    if (stroll && !stroll.targets.get(th.def.id)?.nodes.length) continue;
+    const c = tapV.set(th.pos.x, (th.y0 + th.y1) / 2, th.pos.z).clone(), sp = toScreen(c), dd = Math.hypot(sp.x - x, sp.y - y);
+    if (!sp.front || dd >= nd) continue;
+    const dir = c.clone().sub(camera.position), len = dir.length();
+    if (sightDistance(camera.position, dir.normalize(), len) < len - 0.35) continue;
+    nd = dd; near = th.def.id;
+  }
+  if (near) return { kind: 'thing', id: near, near: true };
+  if (wHit) return { kind: 'point', p: wHit.point.clone(), up: wHit.normal.y > 0.5 };
+  return { kind: 'nothing' };
+}
+const tapCounts = {};
+function onTap(x, y) {
+  const r = pickAt(x, y);
+  tapCounts[r.kind] = (tapCounts[r.kind] || 0) + 1;
+  if (!stroll || r.kind === 'blocked' || r.kind === 'nothing') return r;
+  if (r.kind === 'thing') {
+    const th = thingById[r.id], at = th ? new THREE.Vector3(th.pos.x, th.top, th.pos.z) : stroll.targets.get(r.id)?.pos.clone().setY(stroll.targets.get(r.id).pos.y + 0.3);
+    if (at) fx.burst(at, '#fff0c8', 4, 0.2, { scale: 0.5 });
+    r.result = stroll.tapThing(r.id);
+  } else if (r.kind === 'point') { fx.ripple(r.p); r.result = stroll.tapPoint(r.p); }
+  else if (r.kind === 'ghost') r.result = stroll.tapGhost();
+  else if (r.kind === 'ring') r.result = stroll.tapRing();
+  else if (r.kind === 'star') r.result = stroll.hopNow();
+  return r;
+}
+if (!PLATFORMER) {
+  // a tap is a press and a release close together (a drag or a long hold is nothing); Mac: a click is a tap
+  let down = null;
+  canvas.addEventListener('pointerdown', (e) => { if (!e.isPrimary && down) return; down = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now() }; });
+  canvas.addEventListener('pointerup', (e) => {
+    if (!down || e.pointerId !== down.id) return;
+    const d = down; down = null;
+    if (Math.hypot(e.clientX - d.x, e.clientY - d.y) > 18 || performance.now() - d.t > 900) return;
+    onTap(e.clientX, e.clientY);
+  });
+  canvas.addEventListener('pointercancel', () => { down = null; });
+  canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+}
+
+// ---- glints: the thing Ghost is heading for (warm, pulsing, visible before Ghost gets there), and a fainter one on
+// each untouched thing in view (a few at most)
+let glintT = 0, faintGlints = [];
+const glintPos = (x, y, z) => new THREE.Vector3(x, y, z);
+function updateGlints(dt) {
+  if (!stroll) return;
+  const list = [];
+  const h = started && !sleeping ? stroll.heading() : null;
+  if (h && (h.kind === 'thing' || h.kind === 'spot' || h.id === 'smoke-ring')) {
+    const th = h.id && thingById[h.id];
+    const pos = h.id === 'smoke-ring' ? h.pos.clone().setY(h.pos.y + 0.32) : th && !th.def.town && th.top - th.pos.y > 1.2 ? glintPos(th.pos.x, Math.min(th.top, body.pos.y + 1.3) + 0.12, th.pos.z) : glintPos(h.pos.x, (h.top ?? h.pos.y) + 0.14, h.pos.z);
+    list.push({ key: 'go:' + h.id, pos, main: true });
+  }
+  glintT -= dt;
+  if (glintT <= 0) {
+    glintT = 0.3; faintGlints = [];
+    if (started && !sleeping) {
+      const ns = night(), cands = [];
+      for (const th of things) {
+        const id = th.def.id;
+        if (ns.poked[id] || (h && h.id === id) || !stroll.targets.get(id)?.nodes.length || id === 'bed') continue;
+        const c = glintPos(th.pos.x, Math.min(th.top, th.pos.y + 1.2) + 0.12, th.pos.z), dist = c.distanceTo(body.pos);
+        if (dist > T.strollGlintRange) continue;
+        const sp = toScreen(c); if (!sp.front || sp.x < 12 || sp.x > W - 12 || sp.y < 60 || sp.y > H - 40) continue;
+        const dir = c.clone().sub(camera.position), len = dir.length();
+        if (sightDistance(camera.position, dir.normalize(), len) < len - 0.3) continue;
+        cands.push({ key: 'faint:' + id, pos: c, dist });
+      }
+      faintGlints = cands.sort((a, b) => a.dist - b.dist).slice(0, T.strollGlints);
+    }
+  }
+  fx.setGlints(list.concat(faintGlints));
+}
+
 // ---------- loop ----------
 const STEP = 1 / 120;
 let acc = 0, last = performance.now(), t = 0, firstFrameMs = null, lastHud = 0, sampler = null, override = null, purrT = 0, room = null;
@@ -670,20 +936,27 @@ let lastInput = { x: 0, y: 0, jumpHeld: false, source: 'none' };
 
 function stats() { const r = renderer.info.render; return { fps: perf.fps, ms: perf.ms, calls: r.calls, tris: r.triangles, points: r.points, lines: r.lines, pr: ratio, w: W, h: H, gl: 'WebGL 2', stepDowns: perf.stepDowns }; }
 
+let resumed = true;
 function loop(now) {
-  const dt = Math.min((now - last) / 1000, 1 / 20); last = now; t += dt;
-  perf.frame(now);
+  let dt = (now - last) / 1000; last = now;
+  // the first frame after a start (back from the background, a restored context) or after the page sat frozen without
+  // a word (iOS): nothing moves and no timer runs on, so Ghost is exactly where the night was left
+  if (resumed || dt > 1 || dt < 0) { resumed = false; dt = 0; perf.reset(); } else { dt = Math.min(dt, 1 / 20); perf.frame(now); }
+  t += dt;
   const blocked = !started || sleeping || hud.cardOpen || hud.journalOpen || settings.open;
-  let input = override ? { nudgeX: 0, nudgeY: 0, ...override } : controls.poll();
-  if (override) override.jumpPressed = false;
-  if (blocked) input = { x: 0, y: 0, jumpHeld: false, jumpPressed: false, nudgeX: 0, nudgeY: 0, source: input.source };
+  let input, worldMove = null;
+  if (override) { input = { nudgeX: 0, nudgeY: 0, ...override }; override.jumpPressed = false; stroll?.poll(dt, true); }
+  else if (stroll) { const s = stroll.poll(dt, blocked); worldMove = s.move; input = { x: 0, y: s.mag, jumpHeld: s.jumpHeld, jumpPressed: s.jumpPressed, nudgeX: 0, nudgeY: 0, source: 'stroll' }; }
+  else input = controls.poll();
+  if (blocked) { input = { x: 0, y: 0, jumpHeld: false, jumpPressed: false, nudgeX: 0, nudgeY: 0, source: input.source }; worldMove = null; }
   lastInput = input;
   if (hintShown && started && (Math.hypot(input.x, input.y) > 0.2 || input.jumpPressed)) { hintShown = false; hint.classList.add('gone'); }
 
   let events;
   if (returning) events = stepReturn(dt);
   else {
-    cam.stickToWorld(input.x, input.y, move); if (move.lengthSq() > 1) move.normalize();
+    if (worldMove) move.copy(worldMove); else cam.stickToWorld(input.x, input.y, move);
+    if (move.lengthSq() > 1) move.normalize();
     acc += dt; let first = true;
     while (acc >= STEP) { body.step(STEP, { move, jumpHeld: input.jumpHeld, jumpPressed: first && input.jumpPressed }); first = false; acc -= STEP; }
     if (first && input.jumpPressed) body.S.jumpBufferT = body.S.now;
@@ -714,7 +987,9 @@ function loop(now) {
   for (const th of things) {
     const d = Math.hypot(p.x - th.pos.x, p.z - th.pos.z);
     const inside = d < th.r + T.radius * 0.6 && p.y < th.y1 && p.y + T.height > th.y0 && (th.def.id !== 'leaf' || apt.placed.leaf.visible);
-    if (inside && !th.inside && t - th.lastT > 0.6 && started && !sleeping && nightT > 1.5) { th.lastT = t; poke(th); }
+    // (with the wanderer a switch, the lamps, the curtain, the tap, only flips when it is the thing Ghost meant to poke)
+    const brushed = stroll && th.def.reaction === 'toggle' && stroll.heading()?.id !== th.def.id;
+    if (inside && !th.inside && t - th.lastT > 0.6 && started && !sleeping && nightT > 1.5 && !brushed) { th.lastT = t; poke(th); }
     th.inside = inside;
   }
   // sitting still: sit secrets, purring on soft things, warm spots, the bed
@@ -740,6 +1015,18 @@ function loop(now) {
   look.warm = warm;
   if (look.pose === 'loaf' && soft) { purrT -= dt; if (purrT <= 0) { purrT = 1.3; fx.burst(p.clone().setY(p.y + T.height + 0.05), '#ffb3cf', 2, 0.1, { kind: 'hearts', scale: 0.55 }); look.kick(-0.04); audio.play('purr'); } }
   nightT += dt;
+  if (stroll && started && !sleeping && !hud.cardOpen && !hud.journalOpen && !settings.open && nightT > sleepOfferAt && body.S.grounded) {
+    sleepOfferAt = nightT + T.strollSleepAgain; askSleep();
+  }
+  if (stroll && started && !blocked) {
+    // a shooting star over the balcony: now and then Ghost hops at it without being asked
+    if (star.active && room === 'balcony' && star.t > 0.25 && star.t < 0.6 && !starTried) { starTried = true; if (Math.random() < 0.5) stroll.hopNow(); }
+    if (!star.active) starTried = false;
+    // the smoke ring: cats chase things that float
+    const rg = outside.react.ring;
+    if (rg.active && rg.t > 1.0 && room === 'rooftop' && !S().found['smoke-ring'] && !ringTried) { ringTried = true; if (Math.random() < 0.6) stroll.chaseRing(); }
+    if (!rg.active) ringTried = false;
+  }
   if (onPillows() && still && nightT > 12 && !bedAsked && !sleeping && started) { bedStillT += dt; if (bedStillT > T.bedAskAfter) askSleep(); } else if (!onPillows()) { bedStillT = 0; if (!onBed()) bedAsked = false; }
   // camouflage: black cat, black-and-white bed. still on the bed for 5 s, with no question on screen
   if (onBed() && still && !hud.cardOpen && nightT > 30 && started) { camoT += dt; if (camoT > 5) discover('camouflage', p.clone().setY(p.y + 0.5)); } else camoT = 0;
@@ -775,38 +1062,90 @@ function loop(now) {
   }
 
   if (pic && pic.userData.straightT !== undefined) { pic.userData.straightT -= dt; const goal = pic.userData.straightT > 0 ? 0 : CROOKED; pic.rotation.z += (goal - pic.rotation.z) * (1 - Math.exp(-dt * (goal ? 0.8 : 8))); }
-  look.update(dt, t, body, events, Math.hypot(input.x, input.y), cam.yaw + cam.s.nudgeYaw);
+  // where Ghost faces while standing: three-quarters to the camera (the platformer), or (the wanderer) the way the
+  // little cat brain is looking: at the next idea, round about, or straight at the camera after a tap on Ghost
+  let faceYaw = cam.yaw + cam.s.nudgeYaw;
+  if (stroll) {
+    if (stroll.faceCamera) { faceYaw = cam.yaw + 0.55; if (body.S.grounded && Math.hypot(body.vel.x, body.vel.z) < 0.15) look.s.idleT = Math.max(look.s.idleT, T.idleFaceCamera + 0.01); }
+    else if (stroll.gaze !== null) faceYaw = stroll.gaze + 0.55;
+  }
+  look.update(dt, t, body, events, Math.hypot(input.x, input.y), faceYaw);
   apt.update(t, dt, { catPos: body.pos });
-  updateWobbles(dt); updateAnims(dt); ambient(t, dt);
+  updateWobbles(dt); updateAnims(dt); ambient(t, dt); pumpSay();
   updateStar(dt, r === 'balcony', look.pose === 'sit' || look.pose === 'loaf');
   audio.update(dt, Math.hypot(body.vel.x, body.vel.z), body.S.grounded, -body.vel.y, surfaceAt(r, p), body.S.floating);
-  cam.update(dt, body, input);
+  const heading = stroll && started ? stroll.heading() : null;
+  cam.update(dt, body, input, heading ? heading.pos : null);
+  updateGlints(dt);
   outside.update(t, dt, { area: r, camera, bodyPos: body.pos, look, overStreet: r === 'rooftop' && town.atEdge(p) });
   town.update(t, dt, { area: r, camera, body });
   updateFades(dt);
   fx.update(dt, t);
   renderer.render(scene, camera);
+  // the wanderer's wider camera sees more of the world in some directions (the street from the park, the neighbours from
+  // the upper fire escape): over the draw budget it eases in a little, and back out when there is room
+  if (stroll) {
+    const ri = renderer.info.render, over = ri.calls > T.strollBudgetCalls || ri.triangles > T.strollBudgetTris;
+    const room = ri.calls < T.strollBudgetCalls - 8 && ri.triangles < T.strollBudgetTris - 18000;
+    camBudget = over ? Math.max(T.strollBudgetMin, camBudget - dt * 0.5) : room ? Math.min(1, camBudget + dt * 0.08) : camBudget;
+    cam.setStyle({ budget: camBudget });
+  }
   ui.update(dt, camera, W, H);
   if (sampler) sampler.push(dt, renderer.info.render);
-  if (firstFrameMs === null) { firstFrameMs = Math.round(performance.now()); requestAnimationFrame(() => { splash.classList.add('gone'); setTimeout(compileAll, 30); }); }
   if (now - lastHud > 500) { lastHud = now; ui.showPerf(stats()); }
 }
 
-let running = false;
-function start() { if (running) return; running = true; last = performance.now(); acc = 0; perf.reset(); renderer.setAnimationLoop(loop); }
+// ---------- lifecycle: errors in a frame, size changes, put away and back, a lost GL context (iOS Safari) ----------
+// three.js asks for the next frame only after the loop returns, so one throw would freeze the page for good: each frame
+// is caught, each distinct error logged once (console and window.__errors), and the scene still drawn
+const frameErrors = new Set();
+function frame(now) {
+  if (glLost) return;
+  try {
+    const [w, h] = viewSize(); if (w !== W || h !== H) resize(); // rotation, toolbars: never a frame at the old size
+    loop(now);
+  } catch (e) {
+    const msg = String((e && e.message) || e);
+    if (!frameErrors.has(msg) && frameErrors.size < 20) {
+      frameErrors.add(msg); console.error('[home] a frame threw; carrying on:', e);
+      (window.__errors || (window.__errors = [])).push('frame: ' + msg + ((e && e.stack) ? ' @ ' + String(e.stack).split('\n')[1]?.trim() : ''));
+    }
+    try { renderer.render(scene, camera); } catch (e2) { /* the next frame tries again */ }
+  }
+  if (firstFrameMs === null) { firstFrameMs = Math.round(performance.now()); requestAnimationFrame(() => { splash.classList.add('gone'); setTimeout(compileAll, 30); }); }
+}
+
+let running = false, glLost = false, glTimer = 0;
+const GL_WAIT_MS = 4000; // seen this long without the context coming back: reload into the same night
+function start() { if (running || glLost) return; running = true; last = performance.now(); acc = 0; resumed = true; perf.reset(); renderer.setAnimationLoop(frame); }
 function stop() { running = false; renderer.setAnimationLoop(null); store.flush(); }
-document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
-addEventListener('pagehide', stop);
+document.addEventListener('visibilitychange', () => { if (document.hidden) { writeResumeNote(); stop(); clearTimeout(glTimer); } else { dropResumeNote(); if (glLost) armGlWait(); else start(); } });
+addEventListener('pagehide', () => { writeResumeNote(); stop(); });
 addEventListener('pageshow', () => { if (!document.hidden) start(); });
-canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); stop(); });
-canvas.addEventListener('webglcontextrestored', () => { renderer.shadowMap.needsUpdate = true; start(); });
+// three.js rebuilds its GL state on restore and re-uploads every geometry, texture (canvas ones too), batch and the fx
+// points from the copies it keeps; the lamp shadows are baked on demand, so they are asked for again
+function armGlWait() { clearTimeout(glTimer); if (glLost && !document.hidden) glTimer = setTimeout(reloadSameNight, GL_WAIT_MS); }
+function reloadSameNight() {
+  if (!glLost || document.hidden) return;
+  hud.showSystem('sys-wake');
+  writeResumeNote();
+  store.flush();
+  const u = new URL(location.href); u.searchParams.delete('fresh'); // a test's ?fresh must not wipe the night it reloads into
+  setTimeout(() => location.replace(u.href), 700);
+}
+canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); glLost = true; stop(); hud.showSystem('sys-lost', 500); armGlWait(); });
+canvas.addEventListener('webglcontextrestored', () => {
+  glLost = false; clearTimeout(glTimer); hud.hideSystem();
+  renderer.shadowMap.needsUpdate = true;
+  if (!document.hidden) start();
+});
 lookReady.then(() => { renderer.shadowMap.needsUpdate = true; });
 if (!document.hidden) start();
 
 // ---------- debug API ----------
 window.__ghost = {
   get ready() { return firstFrameMs !== null; },
-  info: () => ({ ...stats(), firstFrameMs, glb: look.modelLoaded, running }),
+  info: () => ({ ...stats(), firstFrameMs, glb: look.modelLoaded, running, glLost, nightT: +nightT.toFixed(3), t: +t.toFixed(3) }),
   state: () => {
     const d = S();
     return {
@@ -826,7 +1165,14 @@ window.__ghost = {
   setNightT: (v) => { nightT = v; }, star: () => ({ active: star.active, t: star.t }), nightClock: () => ({ t: +nightT.toFixed(1), late: late() }), audio,
   begin, drive: (o) => { override = o ? { x: 0, y: 0, jumpHeld: false, jumpPressed: false, source: 'test', ...o } : null; },
   stickFor: (wx, wz) => { const f = new THREE.Vector3(-Math.sin(cam.s.inputYaw), 0, -Math.cos(cam.s.inputYaw)), r = new THREE.Vector3(-f.z, 0, f.x); return [wx * r.x + wz * r.z, wx * f.x + wz * f.z]; },
-  teleport: (x, y, z) => { body.teleport(new THREE.Vector3(x, y, z)); },
+  teleport: (x, y, z) => { body.teleport(new THREE.Vector3(x, y, z)); stroll?.relocate(); },
+  // Revision 5: the wanderer, and taps as a test would make them (pickAt: what a tap there would do, without doing it)
+  stroll, mode: PLATFORMER ? 'platformer' : 'stroll', pickAt: (x, y) => { const r = pickAt(x, y); if (r.p) r.p = r.p.toArray().map((v) => +v.toFixed(3)); return r; },
+  tap: (x, y) => { const r = onTap(x, y); if (r.p) r.p = r.p.toArray().map((v) => +v.toFixed(3)); return r; }, tapCounts: () => ({ ...tapCounts }),
+  screenOf: (id) => { const th = thingById[id], sp = th ? null : stroll?.targets.get(id); const c = th ? new THREE.Vector3(th.pos.x, (th.y0 + th.y1) / 2, th.pos.z) : sp ? sp.pos.clone().setY(sp.pos.y + 0.15) : null; if (!c) return null; const s = toScreen(c); return { x: +s.x.toFixed(1), y: +s.y.toFixed(1), on: s.front && s.x > 0 && s.x < W && s.y > 0 && s.y < H }; },
+  screenOfPoint: (x, y, z) => { const s = toScreen(new THREE.Vector3(x, y, z)); return { x: +s.x.toFixed(1), y: +s.y.toFixed(1), on: s.front && s.x > 0 && s.x < W && s.y > 0 && s.y < H }; },
+  glints: () => fx.glintsShown, heading: () => { const h = stroll?.heading(); return h ? { id: h.id, kind: h.kind, pos: h.pos.toArray().map((v) => +v.toFixed(2)) } : null; },
+  sleepOfferAt: () => sleepOfferAt, starScreen: () => { if (!star.active) return null; const s = toScreen(star.head); return { x: +s.x.toFixed(1), y: +s.y.toFixed(1), on: s.front && s.x > 0 && s.x < W && s.y > 0 && s.y < H }; },
   pokeNow: (id) => { const th = thingById[id]; if (!th) return false; poke(th); return true; },
   sample: (seconds = 10) => new Promise((resolve) => {
     const dts = [], calls = [], tris = [], t0 = performance.now();

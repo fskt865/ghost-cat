@@ -2,6 +2,8 @@
 // travel (never flipping when Ghost runs toward it), looking a little ahead, easing up and down softly,
 // pulling back in open places and closer in tight ones (camera zones), and moving in front of walls
 // that would hide Ghost. A right-half swipe nudges it; it drifts back on its own.
+// Revision 5 (Ghost wanders): setStyle() makes it a little further back, higher and calmer, and update() can be given
+// the point Ghost is heading for: the view leans toward it so the target is on screen before Ghost gets there.
 import * as THREE from 'three';
 import { TUNING as T } from './tuning.js';
 import { CONFIG } from './config.js';
@@ -13,6 +15,9 @@ export function createFollowCamera(camera, world) {
   // Ghost's height as it actually appears from behind and a little above (measured on screen: ~0.88 of heightM)
   const catH = (CONFIG.cat.heightM || 0.5) * 0.88;
   let zones = [];
+  const style = { zoom: 1, pitch: 0, autoYaw: 1, frame: 0, zoomPortrait: null, pitchPortrait: null, maxZoom: Infinity, budget: 1 };
+  const frameOff = new THREE.Vector3(), frameWant = new THREE.Vector3();
+  const setStyle = (o) => Object.assign(style, o);
 
   const setZones = (z) => { zones = z; };
   const resize = (aspect) => {
@@ -53,12 +58,15 @@ export function createFollowCamera(camera, world) {
   }
 
   // body: { pos, vel, S }, input: { x, y, nudgeX, nudgeY }
-  function update(dt, body, input) {
+  function update(dt, body, input, framePoint = null) {
     const p = body.pos, v = body.vel;
     // zones (open rooftops pull back, tight spots come closer)
     const z = zoneAt(p);
-    s.zoom += ((z ? clamp(z.zoom, 0.7, T.camMaxZoom) : 1) - s.zoom) * damp(1.5, dt);
-    s.zonePitch += ((z ? z.pitch : T.camPitch) - s.zonePitch) * damp(1.5, dt);
+    // (the zones that already look steeply down, the roof's edge over the street, the alley, the awning, keep their own framing)
+    const steep = z && z.pitch > 0.6;
+    const sz = steep ? 1 : s.portrait && style.zoomPortrait !== null ? style.zoomPortrait : style.zoom, sp = steep ? 0 : s.portrait && style.pitchPortrait !== null ? style.pitchPortrait : style.pitch;
+    s.zoom += (Math.min((z ? clamp(z.zoom, 0.7, T.camMaxZoom) : 1) * sz, style.maxZoom) * style.budget - s.zoom) * damp(1.5, dt);
+    s.zonePitch += ((z ? z.pitch : T.camPitch) + sp - s.zonePitch) * damp(1.5, dt);
     s.aim += ((z && z.aim ? z.aim : 0) - s.aim) * damp(1.5, dt); // look higher where the way goes up
     // a long narrow place: look along it, from the end that is behind Ghost (or the one we are nearest)
     let zoneYaw = null;
@@ -83,7 +91,16 @@ export function createFollowCamera(camera, world) {
     // when Ghost is grounded follow height properly; in the air only follow big drops
     const vK = body.S.grounded ? T.camFollowV : (ty < target.y - 1.2 ? T.camFollowV * 1.5 : T.camFollowV * 0.35);
     target.y += (ty - target.y) * damp(vK, dt);
-    look.copy(target).add(lead); look.y += s.aim;
+    // lean toward where Ghost is heading (the glinting thing), a share of the way and never far: Ghost stays in frame
+    if (framePoint && style.frame > 0) {
+      frameWant.set((framePoint.x - p.x) * style.frame, clamp((framePoint.y - p.y) * style.frame * 0.6, -0.5, 0.6), (framePoint.z - p.z) * style.frame);
+      // only sideways or away from the camera: leaning toward a target behind the camera would drop Ghost off the bottom
+      const fx = -Math.sin(s.yaw), fz = -Math.cos(s.yaw), along = frameWant.x * fx + frameWant.z * fz;
+      if (along < 0) { frameWant.x -= fx * along; frameWant.z -= fz * along; }
+      const cap = s.portrait ? 0.8 : 1.4, hl = Math.hypot(frameWant.x, frameWant.z); if (hl > cap) { frameWant.x *= cap / hl; frameWant.z *= cap / hl; }
+    } else frameWant.set(0, 0, 0);
+    frameOff.lerp(frameWant, damp(1.2, dt));
+    look.copy(target).add(lead).add(frameOff); look.y += s.aim;
 
     // auto yaw: swing behind Ghost's travel direction, scaled by speed, but never flip around
     if (zoneYaw !== null) s.yaw = dampAngle(s.yaw, zoneYaw, damp(2.5, dt)); // narrow places: along their length
@@ -91,11 +108,26 @@ export function createFollowCamera(camera, world) {
       const moveYaw = Math.atan2(-v.x, -v.z); // the yaw that would put the camera straight behind
       let diff = Math.atan2(Math.sin(moveYaw - s.yaw), Math.cos(moveYaw - s.yaw));
       if (Math.abs(diff) < T.camAutoYawMaxAngle) {
-        const rate = T.camAutoYaw * Math.min(1, hs / T.runSpeed) * Math.min(1, Math.abs(diff) * 1.5);
+        const rate = T.camAutoYaw * style.autoYaw * Math.min(1, hs / T.runSpeed) * Math.min(1, Math.abs(diff) * 1.5);
         s.yaw += Math.sign(diff) * Math.min(Math.abs(diff), rate * dt);
       }
     }
 
+    // the wanderer: nobody steers, so the view turns (calmly) to look past Ghost toward where Ghost is going, rather than
+    // back along the way Ghost came
+    if (zoneYaw === null && framePoint && style.frame > 0 && !(z && z.fixedYaw !== undefined)) {
+      const dx = framePoint.x - p.x, dz = framePoint.z - p.z, dl = Math.hypot(dx, dz);
+      // (only while Ghost is on the move, and never round into a wall: a yaw whose line from Ghost is blocked is not taken)
+      if (dl > 1.5 && hs > 0.3) {
+        const want = Math.atan2(-dx, -dz), diff = Math.atan2(Math.sin(want - s.yaw), Math.cos(want - s.yaw));
+        if (Math.abs(diff) > 0.35) {
+          const ny = s.yaw + Math.sign(diff) * Math.min(Math.abs(diff) - 0.35, T.strollCamTurn * dt), pc = clamp(s.pitch, 0.05, 1.25);
+          tmp.set(Math.sin(ny) * Math.cos(pc), Math.sin(pc), Math.cos(ny) * Math.cos(pc));
+          const h = world.raycast(target, tmp, s.dist);
+          if (!h || h.distance > s.dist * 0.75) s.yaw = ny;
+        }
+      }
+    }
     // rooms seen like a dollhouse: the camera stays on the open side, swinging a little to follow
     if (z && z.yawRange) {
       const [a, b] = z.yawRange, mid = (a + b) / 2;
@@ -137,5 +169,5 @@ export function createFollowCamera(camera, world) {
     return out.set(f.x * y + r.x * x, 0, f.z * y + r.z * x);
   };
 
-  return { update, snap, resize, setZones, stickToWorld, s, get yaw() { return s.yaw; }, get distance() { return Math.min(s.dist, s.wallDist); } };
+  return { update, snap, resize, setZones, setStyle, stickToWorld, s, get yaw() { return s.yaw; }, get distance() { return Math.min(s.dist, s.wallDist); } };
 }

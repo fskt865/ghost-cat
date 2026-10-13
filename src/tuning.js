@@ -119,4 +119,47 @@ export const TUNING = {
   frogHop: 0.95,          // how high the frog jumps over Ghost (m)
   moonflowerSit: 3,       // seconds sitting by the closed moonflowers before they open
   mouseSit: 3,            // seconds waiting by the mouse hole before the whiskers come out
+
+  // --- Revision 5: Ghost wanders alone, the player taps (src/stroll.js) ---------------------
+  strollPace: 0.5,        // wandering: this much of the stick (about 1.9 m/s at the top of the curve), a cat's stroll
+  strollTapPace: 0.85,    // going somewhere tapped: brisker
+  strollCrouch: 0.22,     // the short crouch before a hop (seconds standing at the take-off node)
+  strollLook: [0.9, 2.6], // a pause after an ordinary poke: a sniff, a look round
+  strollPerch: [2.2, 4.8],// up on something: sits a while
+  strollWarm: [4.5, 9.0], // a warm spot: loafs
+  strollTapRest: [2.0, 3.5], // after drifting to a tapped spot, before wandering again
+  strollPurr: [4.5, 6.5], // tapped: sits, purrs, looks at the camera
+  strollSitMargin: 1.3,   // at a sit secret's spot, Ghost sits its time plus this
+  strollDecide: 1.2,      // the next idea is chosen this long before a pause ends (Ghost looks at it; the glint shows)
+  strollBusy: 5,          // after this many pokes without a rest, a warm spot wins the next idea
+  strollBatAgain: 0.28,   // chance Ghost bats a 'bat' thing two or three times unprompted
+  strollBatEvery: 0.75,   // seconds between pokes when a thing was tapped more than once
+  strollPointReach: 1.6,  // a ground tap this close to a node (and level with it) is walked to exactly
+  strollPointStraight: 4, // a ground tap on Ghost's own level this close: straight there, whatever node is nearest
+  strollWalkOver: 0.42,   // walking across the keyboard: slow, so every key sounds
+  strollHintTime: 30,     // after a ground tap, Ghost's own next ideas lean toward that spot for this long
+  strollStuck: 9,         // travelling without moving 0.25 m for this long: back onto the graph
+  // a room is "done enough" after this many different things poked in it: Ghost heads for the way out
+  strollDone: { bedroom: 3, living: 4, kitchen: 3, balcony: 2, 'fire-escape': 3, rooftop: 4, street: 5, 'corner-shop': 3, alley: 3, park: 4 },
+  // 'late' (the coffee, the party roof) in a 2-4 minute night: past this minute of play, or after this many finds tonight
+  strollLateAfter: 120,
+  strollLateFinds: 6,
+  strollSleepAfter: 240,  // seconds of play before the sleep card offers itself (anywhere) ...
+  strollSleepAgain: 150,  // ... and again this long after a "not yet"
+  lineMin: 1.6,           // a speech line stays up at least this long before the next one replaces it
+  lineThingGap: 4,        // one thing says something at most this often
+  strollGlints: 4,        // at most this many faint glints on untouched things in view
+  strollGlintRange: 7,    // metres: further things get no glint
+  strollCamZoom: 1.2,     // the camera is this much further back than Revision 4's ...
+  strollCamPitch: 0.09,   // ... and this much higher (radians)
+  strollCamZoomPortrait: 1.9,  // a phone held upright sees a narrow slice: further back and higher still, so the room
+  strollCamPitchPortrait: 0.2, // around Ghost (and what there is to tap) is on screen
+  strollCamMaxZoom: 1.8,  // ... but never more than this in all (zones that pull back already: the budgets hold, Ghost stays readable)
+  strollCamYaw: 0.55,     // and swings behind Ghost's travel this much slower (a calmer view; nobody steers)
+  strollIndoorYaw: 0.3,   // indoors the camera's sideways swing is this share of Revision 4's (straight into the rooms)
+  strollBudgetCalls: 52,  // over this many draw calls (or triangles) in a frame the wanderer's camera eases in ...
+  strollBudgetTris: 135000,
+  strollBudgetMin: 0.6,   // ... down to this share of its distance at most
+  strollCamTurn: 0.9,     // rad/s: how fast the view turns to face where Ghost is heading (outdoors; indoors the dollhouse holds)
+  strollCamFrame: 0.32,   // how far toward Ghost's target the camera looks (share of the way, at most 1.4 m)
 };

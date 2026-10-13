@@ -36,7 +36,7 @@ const CSS = `
   background: radial-gradient(circle at 40% 35%, #fff8ee, #f3dcc0); box-shadow: 0 2px 8px rgba(10,6,30,0.5); }
 #settings .vol:focus-visible .knob { box-shadow: 0 0 0 3px rgba(255,207,122,0.6); }
 #settings .off .vol { opacity: 0.35; }
-#settings .sw { flex: 0 0 auto; position: relative; width: 48px; height: 28px; border-radius: 14px; border: 0; padding: 0;
+#settings .sw { flex: 0 0 auto; position: relative; width: 48px; height: 28px; border-radius: 22px; padding: 0; box-sizing: content-box; border: 8px solid transparent; background-clip: padding-box; margin: -8px; /* a 64x44 touch target round the 48x28 switch */
   background: rgba(255,255,255,0.14); transition: background 0.2s ease; touch-action: manipulation; }
 #settings .sw::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%;
   background: #f6eadf; transition: transform 0.2s ease; box-shadow: 0 1px 4px rgba(10,6,30,0.4); }
@@ -48,7 +48,7 @@ const CSS = `
 #settings .ask { width: 100%; padding: 8px 0; }
 #settings .ask p { margin: 0 0 10px; font-size: 15px; line-height: 1.35; }
 #settings .ask .btns { display: flex; gap: 10px; }
-#settings .ask button { flex: 1; height: 40px; border: 0; border-radius: 16px; font: inherit; font-size: 15px; background: rgba(255,255,255,0.1); color: inherit; touch-action: manipulation; }
+#settings .ask button { flex: 1; height: 44px; border: 0; border-radius: 16px; font: inherit; font-size: 15px; background: rgba(255,255,255,0.1); color: inherit; touch-action: manipulation; }
 #settings .ask button.gone { background: #e98f8f; color: #2a1d3a; }
 #settings .close { margin-top: 10px; width: 100%; height: 44px; border: 0; border-radius: 18px; background: #ffcf7a; color: #2a1d3a; font: inherit; font-size: 16px; touch-action: manipulation; }
 #settings .credit { margin-top: 14px; text-align: center; font-size: 10px; letter-spacing: 0.04em; opacity: 0.32; }
@@ -59,8 +59,8 @@ const CSS = `
   #settings .row { min-height: 40px; padding: 0; }
   #settings .vol { height: 36px; } #settings .vol .track { top: 15px; } #settings .vol .knob { top: 7px; }
   #settings .act { padding: 5px 0; } #settings .act small { margin-top: 0; }
-  #settings .ask { padding: 5px 0; } #settings .ask p { margin-bottom: 6px; } #settings .ask button { height: 36px; }
-  #settings .close { height: 38px; margin-top: 6px; } #settings .credit { margin-top: 8px; }
+  #settings .ask { padding: 5px 0; } #settings .ask p { margin-bottom: 6px; } #settings .ask button { height: 44px; }
+  #settings .close { height: 44px; margin-top: 6px; } #settings .credit { margin-top: 8px; }
 }
 @keyframes fadein { from { opacity: 0; } }
 `;

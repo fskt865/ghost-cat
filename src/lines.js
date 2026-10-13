@@ -32,7 +32,19 @@ export const LINES = {
       { id: 't-shelves', text: 'things are on shelves. not for long.' },
     ],
     button: { id: 't-button', text: 'go poke around' },
+    // the one line under the button: how it plays (Revision 5: Ghost wanders, a tap points). touch / mouse
+    how: { id: 't-how', text: 'tap things. {name} does the rest.' },
+    howMouse: { id: 't-how-mouse', text: 'click things. {name} does the rest.' },
   },
+
+  // ------------------------------------------------------------------ Ghost was tapped: sits, purrs, looks up (src/stroll.js)
+  stroll: [
+    { id: 's-purr', text: 'prrrrr.' },
+    { id: 's-engine', text: '{name} purrs. it sounds like a tiny engine.' },
+    { id: 's-blink', text: 'a slow blink. high praise.' },
+    { id: 's-tucked', text: 'paws tucked. purring. this is the law now.' },
+    { id: 's-louder', text: 'the purr gets louder. nobody asked. it happens.' },
+  ],
 
   // ------------------------------------------------------------------ one soft nudge at the start of a night
   nightStart: [
@@ -236,7 +248,8 @@ export const LINES = {
     { id: 'hydrant', area: 'street', first: 'a hydrant. smells like every dog in town.',
       lines: ['no comment.', 'still no comment.', 'sniffed it. regretted it. sniffed it again.'] },
     { id: 'slamp', area: 'street', first: 'a streetlamp. the moths got here first.',
-      lines: ['the lamp buzzed.', 'the moths are paying attention.', 'something is about to happen...'] },
+      lines: ['the lamp buzzed.', 'the moths are paying attention.', 'something is about to happen...'],
+      done: 'the lamp hums alone now. the moths are stars. obviously.' }, // once moths-into-stars is found
     { id: 'drain', area: 'street', first: 'the drain hummed one note. maybe sit and listen.',
       lines: ['listening...', 'the drain is a tenor. {name} is a soprano.', 'one more note. the drain is warming up.'] },
     { id: 'mail', area: 'street', first: 'a mailbox. knock knock.',
@@ -521,6 +534,14 @@ export const LINES = {
     { id: 'stat-glimmers', text: '✦{n} glimmers' },
     { id: 'stat-journal', text: 'journal {count} / {total}' },
     { id: 'next-night', text: 'next night' },
+  ],
+
+  // ------------------------------------------------------------------ the page itself had a hiccup (src/hud.js showSystem)
+  // sys-lost: the phone took the picture away for a moment (WebGL context lost); sys-wake: it did not come back, so
+  // the page reloads into the same night
+  system: [
+    { id: 'sys-lost', text: 'the lights blinked. {name} holds very still until they settle.' },
+    { id: 'sys-wake', text: 'one big stretch. the room wakes back up.' },
   ],
 
   // ------------------------------------------------------------------ settings panel

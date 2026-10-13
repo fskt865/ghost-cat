@@ -1,0 +1,52 @@
+{
+  "area": "fire_escape",
+  "nodes": [
+    {"id":"fe-sill","pos":[-0.7,0.86,-2.3],"kind":"door"},
+    {"id":"fe-l0-w","pos":[-0.75,0.72,-2.95],"kind":"floor"},
+    {"id":"fe-l0","pos":[-0.4,0.72,-3.3],"kind":"floor","look":[0,1,-6]},
+    {"id":"fe-herbs","pos":[0,0.72,-2.95],"kind":"floor","thing":"herbs"},
+    {"id":"fe-pinwheel","pos":[0.1,0.72,-3.35],"kind":"floor","thing":"pinwheel"},
+    {"id":"fe-planter","pos":[-1.25,1.17,-2.9],"kind":"perch"},
+    {"id":"fe-crates","pos":[-2.15,1.85,-2.9],"kind":"perch"},
+    {"id":"fe-ac","pos":[-3.25,2.415,-2.9],"kind":"perch"},
+    {"id":"fe-ledge","pos":[-4.3,3.02,-2.85],"kind":"perch"},
+    {"id":"fe-pigeon","pos":[-5.7,3.47,-3.05],"kind":"floor","thing":"pigeon"},
+    {"id":"fe-goldfish","pos":[-6.2,3.47,-3.05],"kind":"floor","thing":"goldfish","look":[-6.27,3.8,-2.81]},
+    {"id":"fe-geranium","pos":[-7,3.47,-2.9],"kind":"floor","thing":"geranium"},
+    {"id":"fe-l1-mid","pos":[-6.7,3.47,-3.4],"kind":"floor"},
+    {"id":"fe-l1-w","pos":[-8,3.47,-3.3],"kind":"floor"},
+    {"id":"fe-socks","pos":[-8.9,3.47,-2.95],"kind":"floor","thing":"socks","poke":"hop"},
+    {"id":"fe-stair-foot","pos":[-5.45,3.47,-3.4],"kind":"floor"},
+    {"id":"fe-stair-mid","pos":[-3.6,4.617,-3.4],"kind":"floor"},
+    {"id":"fe-l2","pos":[-1.2,5.75,-3.3],"kind":"floor","look":[-1,6,-8]},
+    {"id":"fe-l2-n","pos":[-0.9,5.75,-2.8],"kind":"floor"},
+    {"id":"fe-roof","pos":[-0.9,5.75,-2.1],"kind":"door"}
+  ],
+  "edges": [
+    {"a":"fe-sill","b":"fe-l0-w","move":"walk","oneway":false,"hold":0,"back":"hop"},
+    {"a":"fe-l0-w","b":"fe-l0","move":"walk","oneway":false,"hold":0},
+    {"a":"fe-l0","b":"fe-herbs","move":"walk","oneway":false,"hold":0},
+    {"a":"fe-l0","b":"fe-pinwheel","move":"walk","oneway":false,"hold":0},
+    {"a":"fe-herbs","b":"fe-pinwheel","move":"walk","oneway":false,"hold":0},
+    {"a":"fe-l0-w","b":"fe-planter","move":"hop","oneway":false,"hold":0},
+    {"a":"fe-planter","b":"fe-crates","move":"hop","oneway":false,"hold":0},
+    {"a":"fe-crates","b":"fe-ac","move":"hop","oneway":false,"hold":0},
+    {"a":"fe-ac","b":"fe-ledge","move":"hop","oneway":false,"hold":0},
+    {"a":"fe-ledge","b":"fe-pigeon","move":"hop","oneway":false,"hold":0},
+    {"a":"fe-pigeon","b":"fe-goldfish","move":"walk","oneway":false,"hold":0},
+    {"a":"fe-goldfish","b":"fe-l1-mid","move":"walk","oneway":false,"hold":0},
+    {"a":"fe-l1-mid","b":"fe-geranium","move":"walk","oneway":false,"hold":0},
+    {"a":"fe-pigeon","b":"fe-l1-mid","move":"walk","oneway":false,"hold":0},
+    {"a":"fe-geranium","b":"fe-l1-w","move":"walk","oneway":false,"hold":0},
+    {"a":"fe-l1-w","b":"fe-socks","move":"walk","oneway":false,"hold":0},
+    {"a":"fe-pigeon","b":"fe-stair-foot","move":"walk","oneway":false,"hold":0},
+    {"a":"fe-stair-foot","b":"fe-stair-mid","move":"stair","oneway":false,"hold":0},
+    {"a":"fe-stair-mid","b":"fe-l2","move":"stair","oneway":false,"hold":0},
+    {"a":"fe-l2","b":"fe-l2-n","move":"walk","oneway":false,"hold":0},
+    {"a":"fe-l2-n","b":"fe-roof","move":"walk","oneway":false,"hold":0}
+  ],
+  "exits": [
+    {"node":"fe-sill","to":"apartment:ap-sill"},
+    {"node":"fe-roof","to":"rooftop:rf-back"}
+  ]
+}

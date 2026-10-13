@@ -66,7 +66,7 @@ const CSS = `
 .card .stats { font-size: 13px; opacity: 0.7; margin-bottom: 16px; }
 .card .stats span { white-space: nowrap; } /* each stat stays whole when the line wraps */
 .card .btns { display: flex; gap: 10px; justify-content: center; }
-.card button { border: 0; font: inherit; font-size: 16px; border-radius: 18px; height: 42px; padding: 0 18px; background: rgba(255,255,255,0.1); color: inherit; }
+.card button { border: 0; font: inherit; font-size: 16px; border-radius: 18px; height: 44px; min-width: 44px; padding: 0 18px; background: rgba(255,255,255,0.1); color: inherit; }
 .card button.primary { background: #ffcf7a; color: #2a1d3a; }
 @media (max-height: 500px) { .card { padding: 14px 20px 12px; } .card p { margin: 4px 0 8px; } .card ul { margin: 0 0 8px; } .card .stats { margin-bottom: 10px; } }
 #dawn { position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: 0; transition: opacity 2.2s ease;
@@ -204,6 +204,8 @@ export function createHud({ onJournalOpen } = {}) {
     }
     cardSheet.classList.add('open');
   });
+  // Escape answers a card with its first button (the sleep question: "not yet"; the morning: "next night")
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && cardSheet.classList.contains('open')) cardSheet.querySelector('.btns button')?.click(); });
   const esc = (s) => s.replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
 
   const askSleep = (foundTonight) => card(
@@ -217,5 +219,27 @@ export function createHud({ onJournalOpen } = {}) {
     `<div class="stats"><span>${esc(W(pokes === 1 ? 'stat-pokes-one' : 'stat-pokes', { n: pokes }))}</span> · <span>${esc(W('stat-glimmers', { n: glimmers }))}</span> · <span>${esc(W('stat-journal', { count, total }))}</span></div>`,
     [[W('next-night'), true, true]]);
 
-  return { word: W, bind, refresh, bumpGlimmers, showPlace, showNudge, showToast, askSleep, morning, dawnOn, openJournal, closeJournal, get journalOpen() { return journal.classList.contains('open'); }, get cardOpen() { return cardSheet.classList.contains('open'); } };
+  // the system note: one soft line in the middle of the screen while the page itself is not right (a lost GL context);
+  // made the first time it is needed, so the page is unchanged when nothing goes wrong
+  let sys = null, sysT = null;
+  const showSystem = (id, delay = 0) => {
+    clearTimeout(sysT);
+    sysT = setTimeout(() => {
+      if (!sys) {
+        const st = document.createElement('style');
+        st.textContent = `#hud-system { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); width: max-content; max-width: min(80vw, 340px);
+          text-align: center; color: #f6eadf; font-size: 16px; line-height: 1.4; padding: 12px 18px; border-radius: 18px; background: rgba(30, 22, 52, 0.82);
+          box-shadow: 0 8px 30px rgba(10, 6, 30, 0.45); pointer-events: none; opacity: 0; transition: opacity 0.6s ease; z-index: 7; }
+          #hud-system.show { opacity: 1; }`;
+        document.head.appendChild(st);
+        sys = el('<div id="hud-system" role="status"></div>'); document.body.appendChild(sys);
+        void sys.offsetWidth;
+      }
+      sys.textContent = fmt((LINES.system.find((e) => e.id === id) || { text: '...' }).text);
+      sys.classList.add('show');
+    }, delay);
+  };
+  const hideSystem = () => { clearTimeout(sysT); if (sys) sys.classList.remove('show'); };
+
+  return { word: W, bind, showSystem, hideSystem, get systemShown() { return !!sys && sys.classList.contains('show'); }, refresh, bumpGlimmers, showPlace, showNudge, showToast, askSleep, morning, dawnOn, openJournal, closeJournal, get journalOpen() { return journal.classList.contains('open'); }, get cardOpen() { return cardSheet.classList.contains('open'); } };
 }

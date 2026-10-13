@@ -1,0 +1,40 @@
+{
+  "area": "corner_shop",
+  "nodes": [
+    {"id":"cs-door","pos":[3.4,-2.98,19.9],"kind":"door"},
+    {"id":"cs-in","pos":[4.9,-3.1,19.9],"kind":"floor"},
+    {"id":"cs-box","pos":[5.67,-3.09,19.84],"kind":"warm"},
+    {"id":"cs-counter-floor","pos":[5.6,-3.1,20.55],"kind":"floor"},
+    {"id":"cs-register","pos":[6.3,-1.94,20],"kind":"perch","thing":"register"},
+    {"id":"cs-radio","pos":[6.3,-2.1,20.5],"kind":"perch","thing":"radio"},
+    {"id":"cs-lucky","pos":[6.3,-2.1,20.95],"kind":"perch","thing":"lucky"},
+    {"id":"cs-keeper","pos":[6.3,-2.1,21.25],"kind":"warm","thing":"keeper","look":[6.1,-2.5,21.6]},
+    {"id":"cs-shelf","pos":[8.35,-1.06,21],"kind":"warm","look":[5,-2.5,19.5]},
+    {"id":"cs-n","pos":[4.9,-3.1,17.2],"kind":"floor"},
+    {"id":"cs-cans","pos":[6.1,-3.1,18.3],"kind":"floor","thing":"cans"},
+    {"id":"cs-back","pos":[7.4,-3.1,17.2],"kind":"floor"},
+    {"id":"cs-mouse","pos":[7.85,-3.1,19.46],"kind":"floor","thing":"mouse"},
+    {"id":"cs-s","pos":[4.9,-3.1,21.5],"kind":"floor"}
+  ],
+  "edges": [
+    {"a":"cs-door","b":"cs-in","move":"walk","oneway":false,"hold":0},
+    {"a":"cs-register","b":"cs-box","move":"hop","oneway":true,"hold":0},
+    {"a":"cs-box","b":"cs-in","move":"hop","oneway":true,"hold":0},
+    {"a":"cs-in","b":"cs-counter-floor","move":"walk","oneway":false,"hold":0},
+    {"a":"cs-counter-floor","b":"cs-radio","move":"hop","oneway":false,"hold":0},
+    {"a":"cs-register","b":"cs-radio","move":"walk","oneway":false,"hold":0},
+    {"a":"cs-radio","b":"cs-lucky","move":"walk","oneway":false,"hold":0},
+    {"a":"cs-lucky","b":"cs-keeper","move":"walk","oneway":false,"hold":0},
+    {"a":"cs-keeper","b":"cs-shelf","move":"hop2","oneway":false,"hold":0},
+    {"a":"cs-in","b":"cs-n","move":"walk","oneway":false,"hold":0},
+    {"a":"cs-n","b":"cs-cans","move":"walk","oneway":false,"hold":0},
+    {"a":"cs-cans","b":"cs-back","move":"walk","oneway":false,"hold":0},
+    {"a":"cs-back","b":"cs-mouse","move":"walk","oneway":false,"hold":0},
+    {"a":"cs-cans","b":"cs-mouse","move":"walk","oneway":false,"hold":0},
+    {"a":"cs-in","b":"cs-cans","move":"walk","oneway":false,"hold":0},
+    {"a":"cs-in","b":"cs-s","move":"walk","oneway":false,"hold":0}
+  ],
+  "exits": [
+    {"node":"cs-door","to":"street:st-shop"}
+  ]
+}

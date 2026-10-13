@@ -99,7 +99,8 @@ function patchShop(src) {
   const d = structuredClone(src);
   d.lights = d.lights.filter((l) => l.id !== 'street');            // a cold blue blob inside a warm shop
   for (const p of d.pieces) {
-    if (p.glb.endsWith('/door.glb')) { p.open_nodes = { 'door.001': 1.35 }; p.no_collide_nodes = ['door.001']; }
+    // the leaf is the glb's 'door.001', which three's loader names 'door001' (dots are stripped from node names)
+    if (p.glb.endsWith('/door.glb')) { p.open_nodes = { door001: 1.35 }; p.no_collide_nodes = ['door001']; }
     if (p.glb.endsWith('shop_counter.glb')) p.keep_nodes = ['register_drawer', 'radio', 'lucky_paw'];
     if (p.id === 'cans') p.keep_nodes = ['top_can'];
     if (p.id === 'mouse') p.keep_nodes = ['whiskers'];
@@ -121,6 +122,15 @@ export async function buildTown(scene, apt, outside, { world, fx, camWorld }) {
   const street = await loadLayout(scene, patchStreet(streetData), { world, realLights: false, fx, place: PL.street });
   const park = await loadLayout(scene, patchPark(parkData), { world, realLights: false, fx, place: PL.park });
   const shop = await loadLayout(scene, patchShop(shopData), { world, realLights: false, fx, place: PL.corner_shop });
+  // the shop door's threshold is a 12 cm strip only a few cm deep: Ghost's capsule hangs on its edges (walking in, the
+  // step-up looks past it onto the shop floor; walking out, the corner holds Ghost). An invisible low ramp over it, both
+  // ways (22 degrees, no upright face anywhere), as wide as the doorway.
+  if (world) {
+    const c = shop.toWorld([1.0, 0.0, -0.25]), y0 = c.y, top = c.y + 0.13; // street and shop floor at c.y; the strip's top 0.12
+    const sh = new THREE.Shape([[-0.75, y0 - 0.01], [-0.45, top], [0.1, top], [0.45, y0 - 0.01]].map(([x, y]) => new THREE.Vector2(x, y)));
+    const ramp = new THREE.ExtrudeGeometry(sh, { depth: 0.85, bevelEnabled: false });
+    world.addGeometry(ramp, new THREE.Matrix4().makeTranslation(c.x, 0, c.z - 0.425)); ramp.dispose();
+  }
   // the curbs: an invisible ramp along each edge between the road and the sidewalks (a square 0.15 m edge can stall
   // the capsule's walk-up, and the tiles' own bevels sit right at the steepest walkable slope)
   if (world) {
@@ -142,6 +152,12 @@ export async function buildTown(scene, apt, outside, { world, fx, camWorld }) {
   const areas = { front, street, park, shop };
   const all = [front, street, park, shop];
   const placed = Object.assign({}, front.placed, street.placed, shop.placed, park.placed);
+  // the mailbox stands on four legs: Ghost could walk in under its body and not find the way out again. A solid block
+  // under it, as wide as it stands (like the one under the alley's AC)
+  if (world && placed.mail) {
+    const bb = new THREE.Box3().setFromObject(placed.mail), c = bb.getCenter(new THREE.Vector3()), sz = bb.getSize(new THREE.Vector3());
+    world.addBox(c.x, bb.min.y + 0.35, c.z, sz.x, 0.7, sz.z);
+  }
   for (const [k, o] of Object.entries(placed)) if (!apt.placed[k]) apt.placed[k] = o; else if (k !== 'counter') console.warn('[town] id clash', k); // (the shop's counter is only ever town's)
   // outdoor props drawn by a BatchedMesh wobble through home-outside's sync
   outside.areas.push(...all);

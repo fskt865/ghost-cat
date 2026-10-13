@@ -82,6 +82,13 @@ export function createAudio(config = {}) {
     if (wantRunning()) resume();
   }
 
+  // the classic iOS unlock: start a one-sample silent buffer inside the gesture. Repeated on any gesture that finds the
+  // context not running (the first touch may be a touchstart, which some iOS versions do not count as a gesture)
+  function kick() {
+    if (!ctx || ctx.state === 'closed') return;
+    try { const b = ctx.createBuffer(1, 1, ctx.sampleRate), s = ctx.createBufferSource(); s.buffer = b; s.connect(ctx.destination); s.start(0); silentDone = true; } catch (e) { /* ignore */ }
+  }
+
   function rebuild() {
     try { engine && engine.dispose(); } catch (e) { /* ignore */ }
     try { ctx && ctx.close && ctx.close().catch(() => {}); } catch (e) { /* ignore */ }
@@ -97,7 +104,7 @@ export function createAudio(config = {}) {
       if (t !== lastTime) { lastTime = t; lastTimeAt = t0; stalled = false; }
       else if (t0 - lastTimeAt > 1500 && !(doc && doc.hidden)) stalled = true;   // "running" but the clock is frozen (an iOS bug)
       try { engine.tick(t); } catch (e) { warn('tick', e); }
-    }
+    } else { lastTime = -1; lastTimeAt = t0; }   // suspended (put away, muted): the stall clock starts again on resume
     const ms = performance.now() - t0;
     tickStats.n++; tickStats.ms += ms; if (ms > tickStats.max) tickStats.max = ms;
   }
@@ -107,13 +114,15 @@ export function createAudio(config = {}) {
     const troubled = ctx.state !== 'running' && troubleSince && performance.now() - troubleSince > 3000;
     if (stalled || troubled || ctx.state === 'closed') rebuild();
     resume();
+    if (ctx && ctx.state !== 'running') kick();
   }
   function onVisibility() {
     if (!ctx) return;
-    if (doc.hidden) suspend(); else resume();
+    if (doc.hidden) suspend();
+    else { if (ctx.state !== 'running') troubleSince = performance.now(); resume(); }   // trouble counts from coming back, not from our own suspend
   }
   const listeners = [
-    ['pointerdown', onGesture], ['pointerup', onGesture], ['touchend', onGesture], ['click', onGesture], ['keydown', onGesture],
+    ['touchstart', onGesture], ['pointerdown', onGesture], ['pointerup', onGesture], ['touchend', onGesture], ['click', onGesture], ['keydown', onGesture],
     ['focus', onVisibility], ['pageshow', onVisibility], ['pagehide', () => suspend()],
   ];
   let listening = false;
@@ -133,11 +142,7 @@ export function createAudio(config = {}) {
       if (!ctx && !build()) return false;
       listen(true);
       if (mute !== 'all') resume();
-      if (!silentDone) {   // the classic iOS unlock: start a one-sample silent buffer inside the gesture
-        silentDone = true;
-        const b = ctx.createBuffer(1, 1, ctx.sampleRate), s = ctx.createBufferSource();
-        s.buffer = b; s.connect(ctx.destination); s.start(0);
-      }
+      if (!silentDone || ctx.state !== 'running') kick();
       return ctx.state === 'running';
     }),
     setArea: safe('setArea', (name) => {
@@ -172,7 +177,7 @@ export function createAudio(config = {}) {
       if (engine) {
         applyMix();
         if (mode === 'all') { engine.setMasterGain(0, ctx.currentTime, 0.05); setTimeout(() => { if (mute === 'all') suspend(); }, 300); }
-        else { engine.setMasterGain(1, ctx.currentTime, 0.05); resume(); }
+        else { engine.setMasterGain(1, ctx.currentTime, 0.05); if (ctx.state !== 'running') troubleSince = performance.now(); resume(); }
       }
       return mute;
     }),
@@ -211,6 +216,7 @@ export function createAudio(config = {}) {
       ctx = null; engine = null; store = null;
     }),
     get _engine() { return engine; },
+    get _ctx() { return ctx; },   // tests only (tests/lifecycle.mjs)
   };
   return api;
 }

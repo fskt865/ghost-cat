@@ -36,8 +36,14 @@ export function createUI() {
       if (sayAnchor) {
         v.copy(sayAnchor).project(camera);
         const half = sayW / 2 + 10;
-        const x = Math.min(Math.max((v.x * 0.5 + 0.5) * w, half), w - half);
-        const y = Math.min(Math.max((-v.y * 0.5 + 0.5) * h, sayH + 56), h - 60);
+        // below the HUD pills and the place name (top ~100 px); a point behind the camera has no place on screen, so
+        // the line sits under the place name rather than dropping to the bottom edge
+        // (and below the night's nudge while it shows)
+        const nudge = document.getElementById('hud-nudge'), nb = nudge && nudge.classList.contains('show') ? nudge.getBoundingClientRect().bottom + 10 : 0;
+        const top = sayH + Math.max(104, nb);
+        const behind = v.z > 1;
+        const x = behind ? w / 2 : Math.min(Math.max((v.x * 0.5 + 0.5) * w, half), w - half);
+        const y = behind ? top : Math.min(Math.max((-v.y * 0.5 + 0.5) * h, top), h - 60);
         say.style.transform = `translate(${x}px, ${y}px) translate(-50%, -100%)`;
       } else say.style.transform = `translate(${w / 2}px, ${h - 110}px) translate(-50%, -100%)`;
     }

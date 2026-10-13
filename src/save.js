@@ -1,4 +1,7 @@
 // Save: localStorage, versioned, validated on load, autosaved on every change (debounced) and on pagehide.
+// Storage may throw (blocked, private mode on old iOS), be full, or hold an old, newer or broken save: the game then
+// plays on from memory and says nothing. A broken or newer save is copied aside (key + '.bad' / '.v<N>') before
+// anything is written over it; an older one is migrated step by step (MIGRATIONS) and keeps its journal.
 // Persistent: night number, glimmers, journal (found + seen), decorations, places seen, lifetime stats.
 // Per night (reset when Ghost sleeps): switches, tap counts, what was poked, what was found tonight,
 // knocked-over things.
@@ -21,13 +24,24 @@ export function freshSave() {
 const int = (v, lo, hi, d) => (Number.isFinite(v) ? Math.max(lo, Math.min(hi, Math.round(v))) : d);
 const obj = (v) => (v && typeof v === 'object' && !Array.isArray(v) ? v : {});
 
+// Step migrations: MIGRATIONS[n] turns a version-n save into version n + 1. A save with no `v` is version 0 (the shape
+// before versions; same fields). When the schema grows: bump SAVE_VERSION, add MIGRATIONS[old] that fills or renames
+// fields, keep `found` and `seen` (the journal) as they are. A save from a newer build than this one is read for
+// what this build knows (validate drops the rest); createStore keeps the original aside.
+export const MIGRATIONS = {
+  0: (r) => ({ ...r, v: 1 }),
+};
+export function migrate(raw, to = SAVE_VERSION) {
+  let r = raw, v = Number.isInteger(raw.v) ? raw.v : 0;
+  while (v < to && MIGRATIONS[v]) { try { r = MIGRATIONS[v](r) || r; } catch (e) { /* keep what there is */ } v++; }
+  return r;
+}
+
 // Accepts anything; returns a clean save. Unknown ids are dropped, numbers clamped, types fixed.
 export function validate(raw) {
   const s = freshSave();
   if (!raw || typeof raw !== 'object') return s;
-  if (raw.v !== SAVE_VERSION) {
-    // future migrations go here; for now an unknown version starts fresh but keeps the journal if it parses
-  }
+  raw = migrate(raw);
   s.night = int(raw.night, 1, 100000, 1);
   s.glimmers = int(raw.glimmers, 0, 1e7, 0);
   for (const [k, v] of Object.entries(obj(raw.found))) if (ENTRY_IDS.has(k)) s.found[k] = int(v, 1, 100000, 1);
@@ -54,13 +68,36 @@ export function validate(raw) {
 export function createStore() {
   const key = CONFIG.saveKey || 'ghostcat3d.save';
   let data = freshSave(), timer = null, ok = true;
+  // false while a save may exist that could not be read (storage threw): never write a fresh one over it
+  let mayWrite = true;
+  const aside = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* full or blocked: nothing more to do */ } };
   try {
     const raw = localStorage.getItem(key);
-    if (raw) data = validate(JSON.parse(raw));
-  } catch (e) { console.warn('[save] could not read, starting fresh', e); ok = false; }
-  const write = () => {
+    if (raw) {
+      let parsed = null;
+      try { parsed = JSON.parse(raw); } catch (e) { /* broken below */ }
+      if (!parsed || typeof parsed !== 'object') { console.warn('[save] unreadable save kept as', key + '.bad', '; a fresh night'); aside(key + '.bad', raw); }
+      else {
+        if (Number.isInteger(parsed.v) && parsed.v > SAVE_VERSION) aside(key + '.v' + parsed.v, raw);
+        data = validate(parsed);
+      }
+    }
+  } catch (e) { console.warn('[save] storage not readable; playing from memory', e && e.message); ok = false; mayWrite = false; }
+  const canWrite = () => {
+    if (mayWrite) return true;
+    try { if (localStorage.getItem(key) === null) mayWrite = true; } catch (e) { /* still blocked */ }
+    return mayWrite;
+  };
+  const trySet = (v) => { try { localStorage.setItem(key, v); return true; } catch (e) { return false; } };
+  const write = (force) => {
     timer = null;
-    try { localStorage.setItem(key, JSON.stringify(data)); ok = true; } catch (e) { ok = false; }
+    if (!force && !canWrite()) { ok = false; return; }
+    let text; try { text = JSON.stringify(data); } catch (e) { ok = false; return; }
+    ok = trySet(text);
+    if (!ok) { // full: drop the copies set aside, then try once more
+      try { for (let i = localStorage.length - 1; i >= 0; i--) { const k = localStorage.key(i); if (k && k.startsWith(key + '.')) localStorage.removeItem(k); } } catch (e) { /* blocked */ }
+      ok = trySet(text);
+    }
   };
   const changed = () => { if (!timer) timer = setTimeout(write, 250); };
   addEventListener('pagehide', () => { if (timer) { clearTimeout(timer); write(); } });
@@ -68,7 +105,7 @@ export function createStore() {
   return {
     get data() { return data; },
     changed, flush: () => { if (timer) clearTimeout(timer); write(); },
-    reset: () => { data = freshSave(); write(); },
+    reset: () => { if (timer) clearTimeout(timer); data = freshSave(); mayWrite = true; write(true); },
     get ok() { return ok; }, key,
   };
 }
